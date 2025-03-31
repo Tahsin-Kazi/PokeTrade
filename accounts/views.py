@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from accounts.forms import RegisterForm
-from home.views import index
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -9,7 +8,6 @@ from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from movies.models import Review, Profile, Order, Movie
 
 
 def register(request):
@@ -33,7 +31,7 @@ def user_login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)  # Log the user in
-                return redirect(successful_login)  # Redirect to a success page
+                return redirect(profile)  # Redirect to a success page
     else:
         form = AuthenticationForm()
     return render(request, "accounts/login.html", {"form": form, "template_data": template_data})
@@ -51,10 +49,6 @@ def profile(request):
         # 'orders': get_orders(user),
     }
     return render(request, "accounts/profile.html", {"user": user, "template_data": template_data})
-
-def successful_login(request):
-    template_data = {'title': 'Success'}
-    return render(request, 'accounts/temp_success.html', {"template_data": template_data})
 
 # @login_required
 # def library(request):
