@@ -4,12 +4,9 @@ from collection.models import Pokemon
 
 
 class marketPlacePokemon(models.Model):
-    pokemon = models.ForeignObject(Pokemon)
+    pokemon = Pokemon.objects.get(id=1)
     price = models.FloatField()
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
-        return "Pokemon: " + self.pokemon.name + " Seller :" + self.seller.username + " Price: " + str(self.price)
+        return str(self.pokemon)
 
-
-class auctionHouse(models.Model):
-    marketPlacePokemon = models.ForeignKey(marketPlacePokemon, on_delete=models.CASCADE)
