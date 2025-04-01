@@ -3,10 +3,10 @@ from django.db import models
 from collection.models import Pokemon
 
 
-class marketPlacePokemon(models.Model):
-    pokemon = models.ForeignObject(Pokemon)
-    price = models.FloatField()
-    seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    def __str__(self):
-        return self.pokemon.name + self.seller + self.price
+# class marketPlacePokemon(models.Model):
+#     pokemon = models.ForeignObject(Pokemon)
+#     price = models.FloatField()
+#     seller = models.ForeignKey(User, on_delete=models.CASCADE)
+#     def __str__(self):
+#         return self.pokemon.name + self.seller + self.price
 
