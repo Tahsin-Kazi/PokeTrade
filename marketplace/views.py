@@ -14,7 +14,9 @@ def postPokemon(request, Pokemon):
 
 @loginIsNeeded
 def buyPokemon(marketPlacePokemon):
-
+    if account.currency > marketPlacePokemon.currency:
+        account.currency -= marketPlacePokemon.price
+        userCollection.add(marketPlace.remove(marketPlacePokemon))
 
 @loginIsNeeded
 def editPrice(marketPlacePokemon):
