@@ -1,12 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-
 from .models import *
 import requests
 
+@login_required(login_url='login')
 def index(request):
-    return render(request, 'collection/index.html')
+    return render(request, 'collection/index.html', {'user' : request.user, 'collection' : request.user.profile.collection.all()})
 
 def detail(request, pk):
     p = get_object_or_404(Pokemon, pk=pk)

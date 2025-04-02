@@ -8,7 +8,8 @@ from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-
+from home.views import index as home_view
+from collection.views import index as collection_view
 
 def register(request):
     template_data = {'title': 'Register'}
@@ -31,14 +32,14 @@ def user_login(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)  # Log the user in
-                return redirect(profile)  # Redirect to a success page
+                return redirect(collection_view)  # Redirect to a success page
     else:
         form = AuthenticationForm()
     return render(request, "accounts/login.html", {"form": form, "template_data": template_data})
 
 def user_logout(request):
     logout(request)  # Logs the user out
-    return redirect(index)  # Redirect to the landing page (or any other page)
+    return redirect(home_view)  # Redirect to the landing page (or any other page)
 
 @login_required
 def profile(request):
