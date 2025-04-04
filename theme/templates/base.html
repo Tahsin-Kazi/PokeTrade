@@ -1,0 +1,35 @@
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+    	<title>{% block title %}{% endblock title %}</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+
+	<body>
+		
+		<div class="navbar bg-accent shadow-sm">
+			<div class="flex-1">
+			  <a class="btn btn-ghost text-xl">PokeTrade</a>
+			</div>
+			<div class="flex-none">
+			  <ul class="menu menu-horizontal px-1">
+				<li><a>Register</a></li>
+				<li><a>Login</a></li>
+			  </ul>
+			</div>
+		</div>
+
+		<div class="content">
+			{% block content %}
+			{% endblock content %}
+		</div>
+
+	</body>
+
+</html>
