@@ -7,15 +7,7 @@
 <header class="masthead bg-index text-white text-center py-4">
   <div class="container d-flex align-items-center flex-column pt-2 text-black">
     <h2>Poke-Trade</h2>
-      <p>The best place to trade Pokemon!</p>
-    <div style="display: flex; flex-direction: row; column-gap: 1rem;">
-    <a href="{% url 'register' %}"><h3>Register</h3></a>
-    <a href="{% url 'login' %}"><h3>Login</h3></a>
-    {% if user.is_authenticated %}
-        <a href="{% url 'collection.index' %}"><h3>Collection</h3></a>
-        <a href="{% url 'logout' %}"><h3>Logout</h3></a>
-    {% endif %}
-    </div>
+    <p>The best place to trade Pokemon!</p>
   </div>
 </header>
 <div class="p-3">

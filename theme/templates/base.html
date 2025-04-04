@@ -15,12 +15,26 @@
 		
 		<div class="navbar bg-accent shadow-sm">
 			<div class="flex-1">
-			  <a class="btn btn-ghost text-xl">PokeTrade</a>
+			  <a class="btn btn-ghost text-xl" href="{% url 'home.index' %}">PokeTrade</a>
 			</div>
 			<div class="flex-none">
 			  <ul class="menu menu-horizontal px-1">
-				<li><a>Register</a></li>
-				<li><a>Login</a></li>
+				{% if user.is_authenticated %}
+					<li><a href="{% url 'collection.index' %}">Collection</a></li>
+					<li>
+						<details>
+						  <summary>{{ user.username }}</summary>
+						  <ul class="bg-accent rounded-t-none p-2">
+							<li><a href="{% url 'profile' %}">Profile</a></li>
+							<li><a href="{% url 'logout' %}">Logout</a></li>
+						  </ul>
+						</details>
+					</li>
+					
+				{% else %}
+					<li><a href="{% url 'register' %}">Register</a></li>
+					<li><a href="{% url 'login' %}">Login</a></li>
+				{% endif %}
 			  </ul>
 			</div>
 		</div>
