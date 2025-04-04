@@ -15,8 +15,10 @@
 		
 		<div class="navbar bg-accent shadow-sm">
 			<div class="flex-1">
-			  <a class="btn btn-ghost text-xl" href="{% url 'home.index' %}">PokeTrade</a>
-			</div>
+				<ul class="menu menu-horizontal px-1 text-xl font-semibold">
+					  <li><a href="{% url 'home.index' %}">PokeTrade</a></li>
+				</ul>
+			  </div>
 			<div class="flex-none">
 			  <ul class="menu menu-horizontal px-1">
 				{% if user.is_authenticated %}
@@ -26,11 +28,10 @@
 						  <summary>{{ user.username }}</summary>
 						  <ul class="bg-accent rounded-t-none p-2">
 							<li><a href="{% url 'profile' %}">Profile</a></li>
-							<li><a href="{% url 'logout' %}">Logout</a></li>
+							<li><a class="hover:bg-red-500"href="{% url 'logout' %}">Logout</a></li>
 						  </ul>
 						</details>
 					</li>
-					
 				{% else %}
 					<li><a href="{% url 'register' %}">Register</a></li>
 					<li><a href="{% url 'login' %}">Login</a></li>

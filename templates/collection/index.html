@@ -3,24 +3,26 @@
 {% block title %}Collection{% endblock title %}
 
 {% block content %}
+<div class="p-5">
+  <h1>{{ user.username }}'s Collection:</h1>
 
-<h1>{{ user.username }}'s Collection:</h1>
+  <form method="GET" action="{% url 'collection.index' %}">
+    <input type="text" name="q" placeholder="Search your Pokemon..." value="{{ request.GET.q }}">
+    <select name="search_field">
+      <option value="name" {% if request.GET.search_field == 'name' %}selected{% endif %}>Name</option>
+      <option value="pokemon" {% if request.GET.search_field == 'pokemon' %}selected{% endif %}>Pokemon</option>
+    </select>
+    <button type="submit">Search</button>
+  </form>
 
-<form method="GET" action="{% url 'collection.index' %}">
-  <input type="text" name="q" placeholder="Search your Pokemon..." value="{{ request.GET.q }}">
-  <select name="search_field">
-    <option value="name" {% if request.GET.search_field == 'name' %}selected{% endif %}>Name</option>
-    <option value="pokemon" {% if request.GET.search_field == 'pokemon' %}selected{% endif %}>Pokemon</option>
-  </select>
-  <button type="submit">Search</button>
-</form>
+  {% for pokemon in collection %}
+      <a style="" href="{% url 'collection.detail' pk=pokemon.pk %}">
+      <img src="{{ pokemon.image }}" width="100px" alt=""> {{ pokemon.name }}
+      </a>
+  {% empty %}
+      <h3>No Pokemon found in collection or search!</h3>
+  {% endfor %}
 
-{% for pokemon in collection %}
-    <a style="" href="{% url 'collection.detail' pk=pokemon.pk %}">
-    <img src="{{ pokemon.image }}" width="100px" alt=""> {{ pokemon.name }}
-    </a>
-{% empty %}
-    <h3>No Pokemon found in collection or search!</h3>
-{% endfor %}
+</div>
 
 {% endblock content%}
