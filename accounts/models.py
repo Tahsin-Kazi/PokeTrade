@@ -7,7 +7,8 @@ from collection.models import Pokemon
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    collection = models.ManyToManyField(Pokemon, blank=True, related_name='profile')
+    collection = models.ManyToManyField('collection.Pokemon', blank=True, related_name='profile')
+    friends = models.ManyToManyField(User, blank=True, related_name='friends')
 
     def __str__(self):
         return f"{self.user.username}"
