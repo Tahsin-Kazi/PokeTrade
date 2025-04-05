@@ -9,19 +9,27 @@
   <form method="GET" action="{% url 'collection.index' %}">
     <input type="text" name="q" placeholder="Search your Pokemon..." value="{{ request.GET.q }}">
     <select name="search_field">
-      <option value="name" {% if request.GET.search_field == 'name' %}selected{% endif %}>Name</option>
       <option value="pokemon" {% if request.GET.search_field == 'pokemon' %}selected{% endif %}>Pokemon</option>
+      <option value="name" {% if request.GET.search_field == 'name' %}selected{% endif %}>Name</option>
     </select>
     <button type="submit">Search</button>
   </form>
 
-  {% for pokemon in collection %}
-      <a style="" href="{% url 'collection.detail' pk=pokemon.pk %}">
-      <img src="{{ pokemon.image }}" width="100px" alt=""> {{ pokemon.name }}
-      </a>
-  {% empty %}
-      <h3>No Pokemon found in collection or search!</h3>
-  {% endfor %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+    {% for pokemon in collection %}
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <a href="{% url 'collection.detail' pk=pokemon.pk %}">
+                <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800">{{ pokemon.name }}</h3>
+                    <p class="text-sm text-gray-600">Type(s): {{ pokemon.data.types|join:", " }}</p>
+                </div>
+            </a>
+        </div>
+    {% empty %}
+        <h3 class="text-center text-gray-500 col-span-full">No Pokémon found in your collection or search!</h3>
+    {% endfor %}
+  </div>
 
 </div>
 

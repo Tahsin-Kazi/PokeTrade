@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 import requests
 
@@ -8,20 +8,25 @@ from random import randint
 
 @login_required(login_url='login')
 def index(request):
-    collection = request.user.profile.collection.all()
-    search_query = request.GET.get('q', '')
+    user = request.user
+    collection = user.profile.collection.all()
+    
+    query = request.GET.get('q', '')
     search_field = request.GET.get('search_field', 'name')
+    
+    if not user.is_authenticated:
+        return redirect('login')
 
-    if search_query:
-        filter_kwargs = {
-            f"{search_field}__icontains": search_query
-        }
-        collection = collection.filter(**filter_kwargs)
+    if query:
+        filter_kwargs = {f"{search_field}__icontains": query}
+        collection = Pokemon.objects.filter(owner=user.profile, **filter_kwargs)
+    else:
+        collection = Pokemon.objects.filter(owner=user.profile)
 
     context = {
-        'user': request.user,
+        'user': user,
         'collection' : collection,
-        'search_query': search_query,
+        'search_query': query,
     }
 
     return render(request, 'collection/index.html', context)
