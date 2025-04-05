@@ -22,6 +22,7 @@ class Pokemon(models.Model):
                     "weight": poke_data.weight,
                     "types": [t.type.name for t in poke_data.types],
                     "abilities": [a.ability.name for a in poke_data.abilities],
+                    "stats": {s.stat.name: s.base_stat for s in poke_data.stats},
                 }
                 # Set the image URL from the PokeAPI sprites
                 pokedex_number = str(poke_data.id).zfill(4)  # Ensure the number is zero-padded (e.g., 001, 025)
