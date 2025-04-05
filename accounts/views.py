@@ -10,6 +10,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from home.views import index as home_view
 from collection.views import index as collection_view
+from django.contrib import messages
 
 def register(request):
     template_data = {'title': 'Register'}
@@ -17,6 +18,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            messages.success(request, "You have successfully registered!")
             return redirect("login")  # Redirect to landing page
     else:
         form = RegisterForm()
@@ -31,8 +33,9 @@ def user_login(request):
             password = form.cleaned_data.get("password")
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)  # Log the user in
-                return redirect(home_view)  # Redirect to a success page
+                login(request, user)  
+                messages.success(request, "You have successfully logged in!")  # Success message
+                return redirect(home_view)  # Redirect to the home page
     else:
         form = AuthenticationForm()
     return render(request, "accounts/login.html", {"form": form, "template_data": template_data})

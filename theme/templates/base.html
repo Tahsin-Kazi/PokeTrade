@@ -41,6 +41,16 @@
 		</div>
 
 		<div class="content">
+			{% if messages %}
+			<div class="toast toast-end">
+				{% for message in messages %}
+				<div class="alert alert-success bg-accent">
+					<span>{{ message }}</span>
+				</div>
+				{% endfor %}
+			</div>
+			{% endif %}
+
 			{% block content %}
 			{% endblock content %}
 		</div>
