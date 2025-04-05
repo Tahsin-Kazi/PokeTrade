@@ -4,7 +4,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from collection.models import Pokemon
 
-
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     collection = models.ManyToManyField('collection.Pokemon', blank=True, related_name='profile')

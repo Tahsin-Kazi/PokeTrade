@@ -40,5 +40,8 @@ class Pokemon(models.Model):
 
         super().save(*args, **kwargs)  # Call the parent class's save method
 
+    class Meta:
+        verbose_name_plural = "Pokemon"
+
     def __str__(self):
         return f"{self.owner.user.username}'s {self.name}"
