@@ -42,6 +42,7 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)  # Logs the user out
+    messages.success(request, "You have successfully logged out!")
     return redirect(home_view)  # Redirect to the landing page (or any other page)
 
 @login_required
@@ -53,23 +54,3 @@ def profile(request):
         # 'orders': get_orders(user),
     }
     return render(request, "accounts/profile.html", {"user": user, "template_data": template_data})
-
-# @login_required
-# def library(request):
-#     user = request.user
-#     template_data = {
-#         'title': 'Library',
-#         'library': get_library(user),
-#     }
-#     return render(request, "accounts/library.html", {"user": user, "template_data": template_data})
-#
-# def get_orders(user):
-#     p = Profile.objects.get(user=user)
-#     return Order.objects.filter(profile=p).order_by('-created_at')
-#
-# def get_library(user):
-#     temp = Profile.objects.get(user=user).purchasedMovies
-#     res = []
-#     for movie_id, quantity in temp.items():
-#         res.append((get_object_or_404(Movie, id=movie_id), quantity))
-#     return res
