@@ -35,16 +35,13 @@ def detail(request, pk):
     p = get_object_or_404(Pokemon, pk=pk)
     return render(request,'collection/details.html', {'data': p.data})
 
-def create_pokemon(profile, name, pokemon, image):
-    p = Pokemon.objects.create()
-    p.name = name
-    p.pokemon = pokemon
-    p.owner = profile
-    p.image = image
-    p.data = requests.get("https://pokeapi.co/api/v2/pokemon/" + pokemon).json()
+def create_pokemon(name, pokemon, profile):
+    p = Pokemon(
+        name = name,
+        pokemon = pokemon,
+        owner = profile,
+    )
     p.save()
-    profile.collection.add(p)
-    profile.save()
     return p
 
 def database_filler():

@@ -2,6 +2,7 @@ from django.db import models
 from pokebase import pokemon as fetch_pokemon  # Import the pokebase library
 import os
 from django.conf import settings
+import random
 
 class Pokemon(models.Model):
     name = models.CharField(max_length=100)
@@ -15,13 +16,20 @@ class Pokemon(models.Model):
         if not self.pk or not self.image:
             try:
                 poke_data = fetch_pokemon(self.pokemon.lower())  # Fetch Pokemon by name
+                
+                varied_height = round(poke_data.height * random.uniform(0.9, 1,1), 2)
+                varied_weight = round(poke_data.weight * random.uniform(0.9, 1,1), 2)
+                
+                abilities = [a.ability.name for a in poke_data.abilities]
+                random_ability = random.choice(abilities) if abilities else None
+                
                 self.data = {
                     "id": poke_data.id,
                     "name": poke_data.name,
-                    "height": poke_data.height,
-                    "weight": poke_data.weight,
+                    "height": varied_height,
+                    "weight": varied_weight,
                     "types": [t.type.name for t in poke_data.types],
-                    "abilities": [a.ability.name for a in poke_data.abilities],
+                    "ability": random_ability,
                     "stats": {s.stat.name: s.base_stat for s in poke_data.stats},
                 }
                 # Set the image URL from the PokeAPI sprites
