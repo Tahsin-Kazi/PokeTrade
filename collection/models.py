@@ -23,10 +23,12 @@ class Pokemon(models.Model):
                 abilities = [a.ability.name for a in poke_data.abilities]
                 random_ability = random.choice(abilities) if abilities else None
                 
-                excluded = ["ho-oh", "porygon-z", "jangmo-o", "hakomo-o", "kommo-o", "wo-chien", "chien-pao", "ting-lu", "chi-yu"]
+                excluded = ["ho-oh", "porygon-z", "jangmo-o", "hakomo-o", "kommo-o", "wo-chien", "chien-pao", "ting-lu", "chi-yu", "-mega", "-gmax", "-galar", "galarian", "-alola", "-paldea", "zygarde", "necrozma", "kyurem", "terapagos", "ogerpon", "gimmighoul", "palafin", "ursaluna", "calyrex", "zarude", "urshifu", "eternatus", "zacian", "zamazenta", "mimikyu", "silvally", "lycanroc", "minior", "oricorio", "wishiwashi", "toxtricity", "aegislash", "vivillon", "greninja", "tornadus", "thundurus", "landorus", "deoxys", "castform", "sawsbuck", "flabebe", "florges", "keldeo", "dialga", "palkia", "giratina", "darmanitan", "basculin", "shaymin", "rotom", "kyogre", "groudon", "unown", "pikachu"]
                 
-                if poke_data.name in excluded:
+                if any(exclusion in poke_data.name for exclusion in excluded):
                     name = poke_data.name.title()
+                    if "Gmax" in name:
+                        name = name.replace("Gmax", "GMAX")
                 else:
                     name = poke_data.name.title().replace('-', ' ')
                 

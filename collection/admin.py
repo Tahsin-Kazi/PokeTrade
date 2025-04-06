@@ -1,12 +1,13 @@
 from django.contrib import admin
 from .models import Pokemon 
+from django.db.models.functions import Lower
 
 @admin.register(Pokemon)
 class PokemonAdmin(admin.ModelAdmin):
     list_display = ('pokemon', 'name', 'owner', 'id')
     search_fields = ('name', 'pokemon')
     list_filter = ('owner', 'date_collected')
-    ordering = ('pokemon',)
+    ordering = (Lower('pokemon'),)
     list_per_page = 30
 
     fields = ('pokemon', 'name', 'owner', 'image', 'data')
