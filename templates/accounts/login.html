@@ -3,12 +3,12 @@
 {% block title %}Login{% endblock title %}
 
 {% block content %}
-<div class="p-5 flex justify-center items-center min-h-[calc(100vh-5rem)]">
-    <div class="grid place-content-center">
+<div class="p-5 content-center min-h-[calc(100vh-5rem)]">
+    <div class="grid grid-cols-3 gap-4">
 
-        <h1 class="text-3xl font-semibold text-center">Login</h1> 
+        <h1 class="text-3xl font-semibold text-center col-start-2">Login</h1> 
 
-        <div class="py-3">
+        <div class="col-start-2">
             <form method="post" class="">
                 {% csrf_token %}
                 
@@ -18,7 +18,7 @@
                     </div>
                 {% endif %}
 
-                <fieldset class="fieldset flex flex-col items-center">
+                <fieldset class="fieldset max-w-md mx-auto">
                     <legend for="id_username" class="fieldset-legend">Username</legend>
                     <input type="text" name="username" id="id_username" 
                         class="input w-full"
@@ -31,7 +31,7 @@
                     {% endif %}
                 </fieldset>
 
-                <fieldset class="fieldset flex flex-col items-center">
+                <fieldset class="fieldset max-w-md mx-auto">
                     <legend for="id_password" class="fieldset-legend">Password</legend>
                     <input type="password" name="password" id="id_password" 
                         class="input w-full" 
@@ -50,9 +50,9 @@
             </form>
         </div>
         
-        <p class="text-center">Don't have an account? 
+        <p class="text-center col-start-2">Don't have an account? 
         <a href="{% url 'register' %}" class="link link-primary">Register here.</a></p>
-        <p class="text-center"><a href="{% url 'password_reset' %}" class="link link-primary">Forgot your password?</a></p>
+        <p class="text-center col-start-2"><a href="{% url 'password_reset' %}" class="link link-primary">Forgot your password?</a></p>
     </div>
 </div>
 

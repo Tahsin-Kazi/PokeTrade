@@ -3,11 +3,11 @@
 {% block title %}Register{% endblock title %} 
 
 {% block content %}
-<div class="p-5 flex justify-center items-center min-h-[calc(100vh-5rem)]">
-  <div class="grid place-content-center">
-    <h1 class="text-3xl font-semibold text-center">Register</h1>
+<div class="p-5 min-h-[calc(100vh-5rem)] content-center">
+  <div class="grid grid-cols-3 gap-4">
+    <h1 class="text-3xl font-semibold text-center col-start-2">Register</h1>
 
-    <div class="py-3">
+    <div class="col-start-2">
       <form method="post" id="registerForm">
         {% csrf_token %}
 
@@ -19,7 +19,7 @@
         {% endif %}
 
         <!-- Username Field -->
-        <fieldset class="fieldset flex flex-col items-center">
+        <fieldset class="fieldset max-w-md mx-auto">
           <legend for="id_username" class="fieldset-legend">Username</legend>
           <input
             type="text"
@@ -37,7 +37,7 @@
         </fieldset>
 
         <!-- Email Field -->
-        <fieldset class="fieldset flex flex-col items-center">
+        <fieldset class="fieldset max-w-md mx-auto">
           <legend for="id_email" class="fieldset-legend">Email</legend>
           <input
             type="email"
@@ -53,7 +53,7 @@
         </fieldset>
 
         <!-- Password Field -->
-        <fieldset class="fieldset flex flex-col items-center">
+        <fieldset class="fieldset max-w-md mx-auto">
           <legend for="id_password1" class="fieldset-legend">Password</legend>
           <input
             type="password"
@@ -70,7 +70,7 @@
         </fieldset>
 
         <!-- Confirm Password Field -->
-        <fieldset class="fieldset flex flex-col items-center">
+        <fieldset class="fieldset max-w-md mx-auto">
           <legend for="id_password2" class="fieldset-legend">
             Confirm Password
           </legend>
