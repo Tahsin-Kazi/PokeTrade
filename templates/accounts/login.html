@@ -4,11 +4,11 @@
 
 {% block content %}
 <div class="p-5 content-center min-h-[calc(100vh-5rem)]">
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
 
-        <h1 class="text-3xl font-semibold text-center col-start-2">Login</h1> 
+        <h1 class="text-3xl font-semibold text-center sm:col-start-2">Login</h1> 
 
-        <div class="col-start-2">
+        <div class="sm:col-start-2">
             <form method="post" class="">
                 {% csrf_token %}
                 
@@ -50,9 +50,9 @@
             </form>
         </div>
         
-        <p class="text-center col-start-2">Don't have an account? 
+        <p class="text-center sm:col-start-2">Don't have an account? 
         <a href="{% url 'register' %}" class="link link-primary">Register here.</a></p>
-        <p class="text-center col-start-2 -mt-3"><a href="{% url 'password_reset' %}" class="link link-primary">Forgot your password?</a></p>
+        <p class="text-center sm:col-start-2 -mt-3"><a href="{% url 'password_reset' %}" class="link link-primary">Forgot your password?</a></p>
     </div>
 </div>
 

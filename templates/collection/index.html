@@ -7,20 +7,21 @@
 
   <div class="grid grid-cols-2">
 
-    <h1 class="text-3xl font-semibold">{{ user.username }}'s Collection:</h1>
+    <h1 class="text-3xl font-semibold block sm:hidden">Collection:</h1>
+    <h1 class="text-3xl font-semibold hidden sm:block">{{ user.username }}'s Collection:</h1>
 
 
-      <form method="GET" action="{% url 'collection.index' %}" class="grid grid-cols-10 gap-2">
+      <form method="GET" action="{% url 'collection.index' %}" class="grid grid-cols-2 sm:grid-cols-10 gap-2">
         
-        <select name="search_field" class="select col-start-5 col-span-2">
+        <select name="search_field" class="select sm:col-start-5 sm:col-span-2 order-2 sm:order-1">
           <option disabled {% if not request.GET.search_field %}selected{% endif %}>Search By</option>
           <option value="pokemon" {% if request.GET.search_field == 'pokemon' or not request.GET.search_field %}selected{% endif %}>Pokemon</option>
           <option value="name" {% if request.GET.search_field == 'name' %}selected{% endif %}>Name</option>
         </select>
 
-        <input type="text" name="q" placeholder="Search your Pokemon..." class="input col-start-7 col-span-3" value="{{ request.GET.q }}">
+        <input type="text" name="q" placeholder="Search your Pokemon..." class="input col-span-2 sm:col-start-7 sm:col-span-3 order-1 sm:order-2" value="{{ request.GET.q }}">
 
-        <button type="submit" class="btn btn-accent rounded-lg col-start-10">Search</button>
+        <button type="submit" class="btn btn-accent rounded-lg sm:col-start-10 order-3 sm:order-3">Search</button>
 
       </form>
 
