@@ -47,7 +47,7 @@ TYPE_COLORS = {
     "Rock": "bg-yellow-700",
     "Ghost": "bg-purple-700",
     "Dragon": "bg-indigo-500",
-    "Dark": "bg-gray-800",
+    "Dark": "bg-gray-700",
     "Steel": "bg-gray-500",
     "Fairy": "bg-pink-300",
 }
