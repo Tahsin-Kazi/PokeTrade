@@ -4,12 +4,9 @@
 
 {% block content %}
 <div class="p-5">
-
   <div class="grid grid-cols-2">
-
     <h1 class="text-3xl font-semibold block sm:hidden">Friends List:</h1>
     <h1 class="text-3xl font-semibold hidden sm:block">Here are all of {{ user.username }}'s Friends:</h1>
-
       <div class="p-3">
           <div class="container">
               <div class="row mt-3">
@@ -24,27 +21,20 @@
                                   <div class="input-group-text">
                                       Search
                                   </div>
-                                   <input type="text" name="q" placeholder="Search for a friend..." class="input col-span-2 sm:col-start-7 sm:col-span-3 order-1 sm:order-2" value="{{ request.GET.q }}">
+                                  <input type="text" name="q" placeholder="Search for a friend..." class="input col-span-2 sm:col-start-7 sm:col-span-3 order-1 sm:order-2" value="{{ request.GET.q }}">
                               </div>
                           </div>
                           <div class="col-auto">
                               <button class="btn bg-dark text-white" type="submit">Search</button>
                           </div>
-                      </div>
-                  </form>
+                        </div>
+                        </form>
                       </p>
-
-
                   </div>
-
               </div>
-
           </div>
-
       </div>
-
   </div>
   {% endif %}
 </div>
-
 {% endblock content%}
