@@ -1,15 +1,50 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Pokemon (Temp){% endblock title %}
+{% block title %}{{ data.nickname }}{% endblock title %}
 
 {% block content %}
 
 <div class="p-5">
+    
+    <btn class="btn btn-accent rounded-md"><a href="{{ request.META.HTTP_REFERER }}" class="flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>Back
+    </a></btn>
 
-    {% for item in data.values %}
-        <p>Pokemon: {{ item }}</p>
-    {% endfor %}
-
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <div class="sm:col-start-1 sm:col-span-2 pb-4">
+            <img src="{{ data.image }}" alt="{{data.name}}" class="w-full object-cover">
+        </div>
+        <div class="sm:col-start-3">
+            <h1 class="text-5xl font-semibold mb-4">{{ data.nickname }}</h1>
+            <ul class="gap-4 space-y-4 text-2xl">
+                <h1 class=""><span class="text-gray-500">Species:</span> {{ data.name }}</h1>
+                <h1 class=""><span class="text-gray-500">Pokedex Number:</span> {{ data.id }}</h1>
+                <h1 class="">
+                    <span class="text-gray-500">Type:</span>
+                    {% for type in data.types_with_colors %}
+                        <span class="px-2 py-1 rounded-md shadow-md text-white font-semibold {{type.color}}">{{ type.type }}</span>
+                    {% endfor %}
+                </h1>
+                <h1 class=""><span class="text-gray-500">Ability:</span> {{ data.ability }}</h1>
+                <h1 class=""><span class="text-gray-500">Height:</span> {{ data.height }} m</h1>
+                <h1 class=""><span class="text-gray-500">Weight:</span> {{ data.weight }} kg</h1>
+            </ul>
+        </div>
+        <div class="sm:col-start-4">
+            <h1 class="text-5xl font-semibold mb-4">Stats</h1>
+            <ul class="gap-4 space-y-4 text-2xl">
+                <h1 class=""><span class="text-gray-500">HP:</span> {{ data.stats.hp }}</h1>
+                <h1 class=""><span class="text-gray-500">Attack:</span> {{ data.stats.attack }}</h1>
+                <h1 class=""><span class="text-gray-500">Defense:</span> {{ data.stats.defense }}</h1>
+                <h1 class=""><span class="text-gray-500">Special Attack:</span> {{ data.stats.specialattack }}</h1>
+                <h1 class=""><span class="text-gray-500">Special Defense:</span> {{ data.stats.specialdefense }}</h1>
+                <h1 class=""><span class="text-gray-500">Speed:</span> {{ data.stats.speed }}</h1>
+                <h1 class=""><span class="text-gray-500">Base Stat Total:</span> {{ data.total }}</h1>
+            </ul>
+        </div>
+    </div>
 
 </div>
 

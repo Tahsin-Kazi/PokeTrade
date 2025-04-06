@@ -39,7 +39,7 @@ class Pokemon(models.Model):
                     "weight": varied_weight,
                     "types": [t.type.name.title() for t in poke_data.types],
                     "ability": random_ability.replace('-', ' ').title(),
-                    "stats": {s.stat.name.replace('-', ' ').title(): s.base_stat for s in poke_data.stats},
+                    "stats": {s.stat.name.replace('-',''): int(round(s.base_stat * random.uniform(0.8, 1.2), 0)) for s in poke_data.stats},
                 }
                 
                 self.image = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{poke_data.id}.png"

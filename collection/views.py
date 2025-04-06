@@ -31,10 +31,39 @@ def index(request):
 
     return render(request, 'collection/index.html', context)
 
+TYPE_COLORS = {
+    "Normal": "bg-gray-400",
+    "Fire": "bg-red-500",
+    "Water": "bg-blue-500",
+    "Electric": "bg-yellow-400",
+    "Grass": "bg-green-500",
+    "Ice": "bg-blue-300",
+    "Fighting": "bg-red-700",
+    "Poison": "bg-purple-500",
+    "Ground": "bg-yellow-600",
+    "Flying": "bg-blue-400",
+    "Psychic": "bg-pink-500",
+    "Bug": "bg-green-600",
+    "Rock": "bg-yellow-700",
+    "Ghost": "bg-purple-700",
+    "Dragon": "bg-indigo-500",
+    "Dark": "bg-gray-800",
+    "Steel": "bg-gray-500",
+    "Fairy": "bg-pink-300",
+}
+
 def detail(request, id):
     
     p = get_object_or_404(Pokemon, id=id)
     data = p.data
+    data['image'] = p.image
+    data['nickname'] = p.name
+    data['total'] = sum(data['stats'].values())
+    
+    data['types_with_colors'] = [
+        {"type": t, "color": TYPE_COLORS.get(t, "bg-gray-200")} for t in data.get("types", [])
+    ]
+    
     return render(request,'collection/details.html', {'data': data})
 
 def create_pokemon(name, pokemon, profile):
