@@ -31,9 +31,11 @@ def index(request):
 
     return render(request, 'collection/index.html', context)
 
-def detail(request, pk):
-    p = get_object_or_404(Pokemon, pk=pk)
-    return render(request,'collection/details.html', {'data': p.data})
+def detail(request, id):
+    
+    p = get_object_or_404(Pokemon, id=id)
+    data = p.data
+    return render(request,'collection/details.html', {'data': data})
 
 def create_pokemon(name, pokemon, profile):
     p = Pokemon(

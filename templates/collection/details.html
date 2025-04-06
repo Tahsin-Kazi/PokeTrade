@@ -3,6 +3,14 @@
 {% block title %}Pokemon (Temp){% endblock title %}
 
 {% block content %}
-    <div>Pokemon: </div>
-    <p>{{data}}</p>
+
+<div class="p-5">
+
+    {% for item in data.values %}
+        <p>Pokemon: {{ item }}</p>
+    {% endfor %}
+
+
+</div>
+
 {% endblock content %}
