@@ -3,11 +3,11 @@ from django.contrib import admin
 from django.db.models.functions import Lower
 
 
-@admin.register(Friends)
+@admin.register(friends)
 class FriendsAdmin(admin.ModelAdmin):
     list_display = ('friend', 'name', 'owner', 'id')
     search_fields = ('name')
-    list_filter = ('date_found')
+    list_filter = ('date_met')
     list_per_page = 30
 
     fields = ('friend', 'name', 'owner', 'data')
