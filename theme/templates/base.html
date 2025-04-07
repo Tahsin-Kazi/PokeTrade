@@ -22,6 +22,7 @@
 			<div class="flex-none">
 			  <ul class="menu menu-horizontal px-1">
 				{% if user.is_authenticated %}
+					<li><a href="{% url 'friends.index' %}">Friends</a></li>
 					<li><a href="{% url 'collection.index' %}">Collection</a></li>
 					<li>
 						<details>
