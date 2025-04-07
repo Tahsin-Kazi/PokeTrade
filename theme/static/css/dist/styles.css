@@ -902,6 +902,9 @@
   .col-span-2 {
     grid-column: span 2 / span 2;
   }
+  .col-span-4 {
+    grid-column: span 4 / span 4;
+  }
   .hero {
     display: grid;
     width: 100%;
@@ -1193,6 +1196,12 @@
   }
   .grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
   .place-content-center {
     place-content: center;
@@ -1575,6 +1584,16 @@
   @media (width >= 40rem) {
     .sm\:grid-cols-4 {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  @media (width >= 40rem) {
+    .sm\:grid-cols-5 {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+  @media (width >= 40rem) {
+    .sm\:grid-cols-7 {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
     }
   }
   @media (width >= 40rem) {

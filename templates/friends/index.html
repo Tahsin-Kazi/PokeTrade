@@ -4,36 +4,41 @@
 
 {% block content %}
 <div class="p-5">
-  <div class="grid grid-cols-2">
-    <h1 class="text-3xl font-semibold block sm:hidden">Friends List:</h1>
-    <h1 class="text-3xl font-semibold hidden sm:block">Here are all of {{ user.username }}'s Friends:</h1>
-      <div class="p-3">
-          <div class="container">
-              <div class="row mt-3">
-                  <div class="col mx-auto text-center mb-3">
-                      <h2>List of Friends</h2>
-                      <hr />
-                      <p class="card-text">
-                          <form method="GET" class="d-flex justify-content-center">
-                      <div class="row">
-                          <div class="col-auto">
-                              <div class="imput-group col-auto">
-                                  <div class="input-group-text">
-                                      Search
-                                  </div>
-                                  <input type="text" name="q" placeholder="Search for a friend..." class="input col-span-2 sm:col-start-7 sm:col-span-3 order-1 sm:order-2" value="{{ request.GET.q }}">
-                              </div>
-                          </div>
-                          <div class="col-auto">
-                              <button class="btn bg-dark text-white" type="submit">Search</button>
-                          </div>
-                        </div>
-                        </form>
-                      </p>
-                  </div>
-              </div>
-          </div>
+    <div class="grid grid-cols-2">
+        <h1 class="text-3xl font-semibold">Friends:</h1>
+
+        <form method="GET" action="{% url 'friends.index' %}" class="grid grid-cols-3 sm:grid-cols-10 gap-2">
+            <input type="text" name="q" placeholder="Search for a friend..." class="input col-span-2 sm:col-span-3 sm:col-start-7" value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-accent rounded-lg sm:col-start-10">Search</button>
+        </form>
+    </div>
+
+    {% if request.GET.q and friends.count != 0 %}
+    <div class="text-center mt-4">
+      <p class="text-lg font-normal">Showing results for "{{ request.GET.q }}"</p>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
+        {% for friend in friends %} 
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-4 text-center">
+                    <h3 class="text-lg font-semibold text-gray-800">{{ friend.username }}</h3>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+    {% if friends.count == 0 %}
+    <div class="flex justify-center items-center min-h-[calc(100vh-14rem)]">
+      <div class="grid place-content-center">
+        <h1 class="text-3xl font-semibold text-center">No friends found...</h1>
+        <img src="/media/empty.png" alt="empty" class="mt-5 w-1/4 mx-auto">
       </div>
-  </div>
+    </div>
+  {% endif %}
+
 </div>
+
 {% endblock content%}
