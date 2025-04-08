@@ -22,3 +22,7 @@ class Profile(models.Model):
             instance.profile.save()
         except:
             Profile.objects.create(user=instance)
+
+    # @receiver(post_save, sender=User)
+    # def find_friend_user_profile(sender, instance, **kwargs):
+    #     ..............
