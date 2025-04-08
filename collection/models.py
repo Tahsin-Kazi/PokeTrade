@@ -23,6 +23,8 @@ class Pokemon(models.Model):
                 abilities = [a.ability.name for a in poke_data.abilities]
                 random_ability = random.choice(abilities) if abilities else None
                 
+                species_id = int(poke_data.species.url.split('/')[-2])
+                
                 excluded = ["ho-oh", "porygon-z", "jangmo-o", "hakomo-o", "kommo-o", "wo-chien", "chien-pao", "ting-lu", "chi-yu", "-mega", "-gmax", "-galar", "galarian", "-alola", "-paldea", "zygarde", "necrozma", "kyurem", "terapagos", "ogerpon", "gimmighoul", "palafin", "ursaluna", "calyrex", "zarude", "urshifu", "eternatus", "zacian", "zamazenta", "mimikyu", "silvally", "lycanroc", "minior", "oricorio", "wishiwashi", "toxtricity", "aegislash", "vivillon", "greninja", "tornadus", "thundurus", "landorus", "deoxys", "castform", "sawsbuck", "flabebe", "florges", "keldeo", "dialga", "palkia", "giratina", "darmanitan", "basculin", "shaymin", "rotom", "kyogre", "groudon", "unown", "pikachu"]
                 
                 if any(exclusion in poke_data.name for exclusion in excluded):
@@ -33,7 +35,7 @@ class Pokemon(models.Model):
                     name = poke_data.name.title().replace('-', ' ')
                 
                 self.data = {
-                    "id": poke_data.id,
+                    "id": species_id,
                     "name": name,
                     "height": varied_height,
                     "weight": varied_weight,
