@@ -30,7 +30,6 @@
 			{% if user.is_authenticated %}
 			<li><a href="{% url 'friends.index' %}">Friends</a></li>
 			<li><a href="{% url 'collection.index' %}">Collection</a></li>
-      <li><a href="{% url 'marketplace.index' %}">Marketplace</a></li>
 			<li>
 				<details>
 				<summary>{{ user.username }}</summary>
