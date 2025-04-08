@@ -15,6 +15,7 @@
           <option disabled {% if not request.GET.search_field %}selected{% endif %}>Search By</option>
           <option value="pokemon" {% if request.GET.search_field == 'pokemon' or not request.GET.search_field %}selected{% endif %}>Pokemon</option>
           <option value="name" {% if request.GET.search_field == 'name' %}selected{% endif %}>Name</option>
+          <option value="data__types" {% if request.GET.search_field == 'data__types' %}selected{% endif %}>Types</option>
         </select>
 
         <input type="text" name="q" placeholder="Search your Pokemon..." class="input col-span-2 sm:col-start-7 sm:col-span-3 order-1 sm:order-2" value="{{ request.GET.q }}">

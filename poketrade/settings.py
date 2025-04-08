@@ -10,9 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os, certifi
 from os.path import join
 from pathlib import Path
 from shutil import which
+
+os.environ['SSL_CERT_FILE'] = certifi.where()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +29,15 @@ SECRET_KEY = 'django-insecure-5v-*rn#pj%n+*e^m$6n-qq-8lq8nkk9sbp=w(v-@pe)yu-p476
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+LOGIN_URL = '/login/'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "moviestorewesley3@gmail.com"  # Your Gmail address
+EMAIL_HOST_PASSWORD = "xpae oubf mwnb ilis"  # Your Gmail password or app-specific password
 
 ALLOWED_HOSTS = []
 

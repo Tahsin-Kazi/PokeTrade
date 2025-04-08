@@ -7,7 +7,7 @@
     <div class="grid grid-cols-2">
         <h1 class="text-3xl font-semibold">Friends:</h1>
 
-        <form method="GET" action="{% url 'friends.index' %}" class="grid grid-cols-3 sm:grid-cols-10 gap-2">
+        <form method="GET" action="{% url 'friends_index' %}" class="grid grid-cols-3 sm:grid-cols-10 gap-2">
             <input type="text" name="q" placeholder="Search for a friend..." class="input col-span-2 sm:col-span-3 sm:col-start-7" value="{{ request.GET.q }}">
             <button type="submit" class="btn btn-accent rounded-lg sm:col-start-10">Search</button>
         </form>
