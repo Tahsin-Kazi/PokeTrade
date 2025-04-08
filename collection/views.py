@@ -75,8 +75,9 @@ def create_pokemon(name, pokemon, profile):
     p.save()
     return p
 
-def database_filler():
-    profile = User.objects.first().profile
+def database_filler(i):
+    profile = User.objects.all()[i].profile
+    names = {1 : "Ahad", 2 : "Kazi", 3 : "Matthew", 4 : "Jason"}
     pokemons = {1 : "pikachu", 2 : "ditto", 3 : "clefairy", 4 : "bulbasaur", 5 : "charizard"}
-    for x in range(10):
-        create_pokemon(profile, "pet" + str(x), str(pokemons[randint(1, 5)]), "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Pokebola-pokeball-png-0.png/481px-Pokebola-pokeball-png-0.png")
+    for x in range(3):
+        create_pokemon(names[randint(1, 4)], pokemons[randint(1, 5)], profile)
