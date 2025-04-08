@@ -17,17 +17,15 @@
 
   <body>
     <div class="navbar bg-accent shadow-sm">
-      <div class="flex-1">
-		<ul class="menu menu-horizontal">
-        	<li>
-				<a href="{% url 'home.index' %}">
-					<img src="{% static 'images/pokeball.png' %}" alt="logo" class="size-8"/>
-				</a>
-			</li>
-          	<li><a href="{% url 'home.index' %}"><span class="text-xl font-semibold">PokeTrade</span></a></li>
-		</ul>
+      <div class="flex-1 px-1">
+		    <ul class="flex items-center space-x-2">
+        	<li class="flex items-center"><a href="{% url 'home.index' %}">
+					  <img src="{% static 'images/pokeball.png' %}" alt="logo" class="size-8 align-middle"/>
+				  </a></li>
+          	<li class="flex items-center"><a href="{% url 'home.index' %}"><span class="text-xl font-semibold">PokeTrade</span></a></li>
+		    </ul>
     </div>
-      	<div class="flex-none">
+    <div class="flex-none">
 			<ul class="menu menu-horizontal px-1">
 			{% if user.is_authenticated %}
 			<li><a href="{% url 'friends.index' %}">Friends</a></li>
