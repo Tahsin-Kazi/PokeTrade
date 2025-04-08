@@ -2,5 +2,5 @@ from django.urls import models
 from . import views
 
 urlpatterns = [
-    path('marketplace/', views.marketplace, name = 'marketplace.index'),
+    path('', views.marketplace, name = 'marketplace.index'),
 ]
