@@ -54,3 +54,16 @@ def profile(request):
         # 'orders': get_orders(user),
     }
     return render(request, "accounts/profile.html", {"user": user, "template_data": template_data})
+
+def index(request):
+    user = request.user
+    profile = user.profile
+    friends = profile.friends.all()
+
+    query = request.GET.get('q', '')
+    if query:
+        friends = profile.friends.filter(username__icontains=query)
+    else:
+        friends = profile.friends.all()
+
+    return render(request, 'friends/index.html', {'friends': friends})
