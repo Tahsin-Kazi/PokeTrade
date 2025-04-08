@@ -8,7 +8,9 @@ from django.db import models
 #     seller = models.ForeignKey(User, on_delete=models.CASCADE)
 #     def __str__(self):
 #         return self.pokemon.name + self.seller + self.price
-     
+
+#   <li><a href="{% url 'marketplace.index' %}">Marketplace</a></li>
+
 
 
 
