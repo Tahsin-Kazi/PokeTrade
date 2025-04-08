@@ -55,7 +55,7 @@ def profile(request):
     }
     return render(request, "accounts/profile.html", {"user": user, "template_data": template_data})
 
-def index(request):
+def friends_index(request):
     user = request.user
     profile = user.profile
     friends = profile.friends.all()
