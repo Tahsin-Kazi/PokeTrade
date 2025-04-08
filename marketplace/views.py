@@ -6,11 +6,13 @@ def postPokemon(request, Pokemon):
     Pokemon = get_object__or_404(request, dexNumber)
     template_data = {
         'name' = Pokemon.name,
-        price = input('Price: ')
+        price = input('Price: '),
+
     }
+    marketplaceListing.append(marketplacePokemon)
 
     if request.method == 'POST':
-        return
+        return postPokemon
 
 @loginIsNeeded
 def buyPokemon(marketPlacePokemon):

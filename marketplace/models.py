@@ -2,13 +2,15 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-#class marketPlacePokemon(models.Model):
-#     pokemon = models.ForeignObject("collection.Pokemon")
-#     price = models.FloatField()
-#     seller = models.ForeignKey(User, on_delete=models.CASCADE)
-#     def __str__(self):
-#         return self.pokemon.name + self.seller + self.price
 
+
+class Listing(models.Model):
+    pokemon = models.ForeignKey("collection.Pokemon", on_delete=models.CASCADE, default=1) 
+    price = models.IntegerField(max_length = 500)
+    date_posted = models.DateField(2025, 4, 6)
+    status = models.CharField(max_length = 100)
+    seller = models.ForeignKey("accounts.user", on_delete=models.CASCADE)
+    buyer = models.ForeignKey("accounts.user", on_delete=models.CASCADE)
 
 
 
