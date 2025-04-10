@@ -18,8 +18,8 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, "You have successfully registered!")
-            return redirect("login")  # Redirect to landing page
+            messages.success(request, "You have successfully registered! Go to Collection to see your starters!")
+            return redirect(user_login)  # Redirect to landing page
     else:
         form = RegisterForm()
     return render(request, "accounts/register.html", {"form": form, "template_data": template_data})

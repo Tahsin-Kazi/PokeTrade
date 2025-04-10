@@ -6,7 +6,7 @@
 
 <div class="p-5">
     
-    <btn class="btn btn-accent rounded-md"><a href="{{ request.META.HTTP_REFERER }}" class="flex items-center gap-1">
+    <btn class="btn btn-accent rounded-md"><a href="{% url 'collection.index' %}" class="flex items-center gap-1">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
         </svg>Back
@@ -30,6 +30,16 @@
                 <h1 class=""><span class="text-gray-500">Ability:</span> {{ data.ability }}</h1>
                 <h1 class=""><span class="text-gray-500">Height:</span> {{ data.height }} m</h1>
                 <h1 class=""><span class="text-gray-500">Weight:</span> {{ data.weight }} kg</h1>
+
+                <button id="edit-name-btn" class="">Edit Nickname</button>
+
+                <form id="edit-name" method="POST" action="{% url 'collection.detail' data.id %}" style="display: none;">
+                    {% csrf_token %}
+                    <input type="text" name="name" value="{{ data.nickname }}" required>
+                    <button type="submit" class="">Save</button>
+                    <button type="button" id="cancel-edit" class="">Cancel</button>
+                </form>
+
             </ul>
         </div>
         <div class="sm:col-start-4">
@@ -47,5 +57,17 @@
     </div>
 
 </div>
+
+<script>
+document.getElementById('edit-name-btn').addEventListener('click', function() {
+this.style.display = 'none';
+document.getElementById('edit-name').style.display = 'block';
+});
+
+document.getElementById('cancel-edit').addEventListener('click', function() {
+document.getElementById('edit-name').style.display = 'none';
+document.getElementById('edit-name-btn').style.display = 'inline-block';
+});
+</script>
 
 {% endblock content %}

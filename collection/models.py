@@ -10,7 +10,7 @@ class Pokemon(models.Model):
     owner = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, default=1)
     image = models.CharField(max_length=255, blank=True, null=True)
     date_collected = models.DateTimeField(auto_now_add=True)
-    data = models.JSONField(default=dict)  
+    data = models.JSONField(default=dict)
 
     def save(self, *args, **kwargs):
         if not self.pk or not self.image:
