@@ -69,7 +69,7 @@ def detail(request, id):
     data['image'] = p.image
     data['nickname'] = p.name
     data['total'] = sum(data['stats'].values())
-    data['id'] = p.id
+    data['internal_id'] = p.id
     
     data['types_with_colors'] = [
         {"type": t, "color": TYPE_COLORS.get(t, "bg-gray-200")} for t in data.get("types", [])
@@ -77,22 +77,23 @@ def detail(request, id):
 
     return render(request,'collection/details.html', {'data': data})
 
-def add_pokemon(name, pokemon, profile):
+def add_pokemon(pokemon, profile):
+    
+    name = pokemon.name
     p = Pokemon(
-        name = name,
-        pokemon = pokemon,
+        pokemon = name,
         owner = profile,
     )
     p.save()
-    profile.collection.add(p)
+    # profile.collection.add(p) this line is redundant
     return p
 
 def add_starters(profile):
-    x, y, z = randint(1, 1000), randint(1, 1000), randint(1, 1000)
+    x, y, z = randint(1, 1025), randint(1, 1025), randint(1, 1025)
     x, y, z = fetch_pokemon(x), fetch_pokemon(y), fetch_pokemon(z)
-    add_pokemon(capfirst(x.name), x.name, profile)
-    add_pokemon(capfirst(y.name), y.name, profile)
-    add_pokemon(capfirst(z.name), z.name, profile)
+    add_pokemon(x, profile)
+    add_pokemon(y, profile)
+    add_pokemon(z, profile)
 
 def database_filler(i):
     profile = User.objects.all()[i].profile
