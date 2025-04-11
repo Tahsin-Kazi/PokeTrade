@@ -11,6 +11,7 @@ from django.utils.encoding import force_bytes
 from home.views import index as home_view
 from collection.views import index as collection_view
 from django.contrib import messages
+from .forms import MessageForm
 
 def register(request):
     template_data = {'title': 'Register'}
@@ -67,3 +68,16 @@ def friends_index(request):
         friends = profile.friends.all()
 
     return render(request, 'friends/index.html', {'friends': friends})
+
+@login_required
+def send_message(request):
+    if request.method == "POST":
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.save()
+            return redirect('inbox') #or anywhere you want. May need to create an inbox
+    else:
+        form = MessageForm()
+    return render(request, 'send_message.html', {'form': form})
