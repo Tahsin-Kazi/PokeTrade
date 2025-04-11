@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'collection',
     'tailwind',
     'theme',
+    'trades',
     'django_browser_reload',
 ]
 

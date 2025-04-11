@@ -85,7 +85,7 @@ def add_pokemon(pokemon, profile):
         owner = profile,
     )
     p.save()
-    # profile.collection.add(p) this line is redundant
+    profile.collection.add(p)
     return p
 
 def add_starters(profile):

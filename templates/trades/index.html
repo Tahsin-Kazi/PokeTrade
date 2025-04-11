@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Send a Trade:</h1>
+    <div>
+    {% for friend in friends %}
+        <div>
+            <a href="{% url 'trades.send_trade' friend.profile.pk %}"><h1>{{ friend.username }}</h1></a>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}

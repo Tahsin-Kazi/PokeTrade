@@ -8,8 +8,3 @@ class Listing(models.Model):
     status = models.CharField(max_length = 100)
     seller = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="seller")
     buyer = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="buyer")
-
-
-
-
-    
