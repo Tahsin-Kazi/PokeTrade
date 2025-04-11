@@ -25,6 +25,17 @@ class Listing(models.Model):
 
             Listing.append(Pokemon)
 
+    def post_Pokemon(Pokemon, Collection):
+        if(Profile.contains(Pokemon)):
+            Collection.remove(Pokemon)
+            Listing.Pokemon.price == int(input('Price: '))
+            Listing.date_posted = date.today()
+            Listing.status = 'Not Sold'
+            Listing.seller = User
+            Listing.buyer = null
+
+            Listing.append(Pokemon)
+
 
 
 
