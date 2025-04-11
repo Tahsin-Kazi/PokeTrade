@@ -81,3 +81,8 @@ def send_message(request):
     else:
         form = MessageForm()
     return render(request, 'send_message.html', {'form': form})
+
+@login_required
+def inbox(request):
+    messages = request.user.received_messages.order_by('-timestamp')
+    return render(request, 'inbox.html', {'messages': messages})
