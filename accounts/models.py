@@ -28,10 +28,12 @@ class Profile(models.Model):
 
     @receiver(post_save, sender=User)
     class FriendRequest(models.Model):
-        sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
-        recipient = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+        sender = models.ForeignKey(User, related_name='sent_request', on_delete=models.CASCADE)
+        recipient = models.ForeignKey(User, related_name='received_request', on_delete=models.CASCADE)
+        #
         subject = models.CharField(max_length=240, blank=True)
         body = models.TextField(blank=True)
+        #
         timestamp = models.DateTimeField(auto_now_add=True)
         is_read= models.BooleanField(default=False)
 

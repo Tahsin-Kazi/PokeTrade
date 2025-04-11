@@ -70,17 +70,17 @@ def friends_index(request):
     return render(request, 'friends/index.html', {'friends': friends})
 
 @login_required
-def send_message(request):
+def send_friendRequest(request):
     if request.method == "POST":
         form = MessageForm(request.POST)
         if form.is_valid():
             message = form.save(commit=False)
             message.sender = request.user
             message.save()
-            return redirect('inbox') #or anywhere you want. May need to create an inbox
+            return redirect('inbox') #or anywhere you want.
     else:
         form = MessageForm()
-    return render(request, 'send_message.html', {'form': form})
+    return render(request, 'send_friendRequest.html', {'form': form})
 
 @login_required
 def inbox(request):
