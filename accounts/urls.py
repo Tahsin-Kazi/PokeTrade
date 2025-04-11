@@ -9,12 +9,6 @@ urlpatterns = [
     path("profile/", views.profile, name="profile"),
     path("friends/", views.friends_index, name ='friends_index'),
 
-    # # URLS Version 1
-    # path("friend_request", views.send_friendRequest, name='send_friendRequest.html'),
-    # path("inbox",views.inbox, name="inbox.html"),
-
-    #URLS Version 2
-
     path('send_request/<int:user_id>/', views.send_friend_request, name='send_friend_request'),
     path('accept_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
 

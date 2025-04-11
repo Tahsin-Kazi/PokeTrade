@@ -72,27 +72,6 @@ def friends_index(request):
 
     return render(request, 'friends/index.html', {'friends': friends})
 
-# # Views Version 1
-#
-# @login_required
-# def send_friendRequest(request):
-#     if request.method == "POST":
-#         form = MessageForm(request.POST)
-#         if form.is_valid():
-#             message = form.save(commit=False)
-#             message.sender = request.user
-#             message.save()
-#             return redirect('inbox') #or anywhere you want.
-#     else:
-#         form = MessageForm()
-#     return render(request, 'send_friendRequest.html', {'form': form})
-#
-# @login_required
-# def inbox(request):
-#     messages = request.user.received_messages.order_by('-timestamp')
-#     return render(request, 'inbox.html', {'messages': messages})
-
-# Views Version 2
 @login_required
 def send_friend_request(request, user_id):
     to_user = get_object_or_404(User, id=user_id)

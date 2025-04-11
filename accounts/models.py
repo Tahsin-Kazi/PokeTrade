@@ -27,26 +27,7 @@ class Profile(models.Model):
         except:
             Profile.objects.create(user=instance)
 
-# # Model Version 1
-#
-# class Message(models.Model):
-#         sender = models.ForeignKey(User, related_name='sent_request', on_delete=models.CASCADE)
-#         recipient = models.ForeignKey(User, related_name='received_request', on_delete=models.CASCADE)
-#         #
-#         subject = models.CharField(max_length=240, blank=True)
-#         body = models.TextField(blank=True)
-#         #
-#         timestamp = models.DateTimeField(auto_now_add=True)
-#         is_read= models.BooleanField(default=False)
-#
-#         def __str__(self):
-#             return f"From {self.sender} to {self.recipient}: {self.subject}"
-# #
-#
-#
-#
 
-# Model version 2
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
     to_user = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
