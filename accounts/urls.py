@@ -8,7 +8,6 @@ urlpatterns = [
     path("logout/", views.user_logout, name="logout"),
     path("profile/", views.profile, name="profile"),
     path("friends/", views.friends_index, name ='friends_index'),
-
     path('send_request/<int:user_id>/', views.send_friend_request, name='send_friend_request'),
     path('accept_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
 

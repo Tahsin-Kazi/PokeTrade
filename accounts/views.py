@@ -11,9 +11,6 @@ from django.utils.encoding import force_bytes
 from home.views import index as home_view
 from collection.views import index as collection_view
 from django.contrib import messages
-
-from .forms import MessageForm
-
 from .models import FriendRequest
 
 def register(request):
@@ -91,9 +88,5 @@ def accept_friend_request(request, request_id):
     if friend_request.to_user == request.user:
         friend_request.is_accepted = True
         friend_request.save()
-
-        # You can now create a 'Friend' relation, or just filter accepted requests
-        # Optionally: Delete the request after accepting
-        # friend_request.delete()
 
     return redirect('inbox')  # or friends list or wherever
