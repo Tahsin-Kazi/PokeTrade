@@ -1,33 +1,24 @@
 from django.shortcuts import render
-import keyboard
+import keyboard, random
+
 
 @loginIsNeeded
-def postPokemon(request, Pokemon):
-    Pokemon = get_object__or_404(request, dexNumber)
-    template_data = {
-        'name' = Pokemon.name,
-        price = input('Price: '),
-
-    }
-    marketplaceListing.append(marketplacePokemon)
-
-    if request.method == 'POST':
-        return postPokemon
-
-@loginIsNeeded
-def buyPokemon(marketPlacePokemon):
-    if user.currency > Listing.price:
+def buyPokemon(Pokemon, Listing, user, profile):
+    if user.currency >= Listing.price:
         user.currency -= Listing.price
         Listing.remove(Pokemon)
-        user.Collection.add(Ppokemon)
+        user.Collection.add_pokemon(Pokemon, profile)
 
 @loginIsNeeded
-def editPrice(marketPlacePokemon):
-    if marketPlacePokemon.seller == account.username:
+def editPrice(Pokemon, Listing, Profile):
+    if Listing.Pokemon.seller == Profile.user:
         try:
-            marketPlacePokemon.price == int(input('New Price: '))
+            Listing.Pokemon.price == int(input('New Price: '))
         except ValueError:
             print('This is an invalid price. Please enter an integer')
+
+def listingDeal(Listing):
+    Listing.post_Pokemon(starters, )
 
 
 
