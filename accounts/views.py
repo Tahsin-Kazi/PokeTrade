@@ -11,7 +11,10 @@ from django.utils.encoding import force_bytes
 from home.views import index as home_view
 from collection.views import index as collection_view
 from django.contrib import messages
+
 from .forms import MessageForm
+
+from .models import FriendRequest
 
 def register(request):
     template_data = {'title': 'Register'}
@@ -69,20 +72,49 @@ def friends_index(request):
 
     return render(request, 'friends/index.html', {'friends': friends})
 
-@login_required
-def send_friendRequest(request):
-    if request.method == "POST":
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            message = form.save(commit=False)
-            message.sender = request.user
-            message.save()
-            return redirect('inbox') #or anywhere you want.
-    else:
-        form = MessageForm()
-    return render(request, 'send_friendRequest.html', {'form': form})
+# # Views Version 1
+#
+# @login_required
+# def send_friendRequest(request):
+#     if request.method == "POST":
+#         form = MessageForm(request.POST)
+#         if form.is_valid():
+#             message = form.save(commit=False)
+#             message.sender = request.user
+#             message.save()
+#             return redirect('inbox') #or anywhere you want.
+#     else:
+#         form = MessageForm()
+#     return render(request, 'send_friendRequest.html', {'form': form})
+#
+# @login_required
+# def inbox(request):
+#     messages = request.user.received_messages.order_by('-timestamp')
+#     return render(request, 'inbox.html', {'messages': messages})
 
+# Views Version 2
 @login_required
-def inbox(request):
-    messages = request.user.received_messages.order_by('-timestamp')
-    return render(request, 'inbox.html', {'messages': messages})
+def send_friend_request(request, user_id):
+    to_user = get_object_or_404(User, id=user_id)
+
+    if to_user != request.user:
+        friend_request, created = FriendRequest.objects.get_or_create(
+            from_user=request.user,
+            to_user=to_user
+        )
+        # You can flash a message if you want: "Friend request sent!"
+
+    return redirect('profile', user_id=to_user.id)  # or wherever you want to redirect
+
+def accept_friend_request(request, request_id):
+    friend_request = get_object_or_404(FriendRequest, id=request_id)
+
+    if friend_request.to_user == request.user:
+        friend_request.is_accepted = True
+        friend_request.save()
+
+        # You can now create a 'Friend' relation, or just filter accepted requests
+        # Optionally: Delete the request after accepting
+        # friend_request.delete()
+
+    return redirect('inbox')  # or friends list or wherever
