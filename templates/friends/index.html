@@ -10,11 +10,11 @@
         <form method="GET" action="{% url 'friends_index' %}" class="grid grid-cols-3 sm:grid-cols-10 gap-2">
             <input type="text" name="q" placeholder="Search for a friend..." class="input col-span-2 sm:col-span-3 sm:col-start-7" value="{{ request.GET.q }}">
 
-            <!-- send_message.html -->
-            <h1>Send Friend Request</h1>
-            <form method="post">
-              {% csrf_token %}
-              {{ form.as_p }}
+{#            <!-- send_message.html -->#}
+{#            <h1>Send Friend Request</h1>#}
+{#            <form method="post">#}
+{#              {% csrf_token %}#}
+{#              {{ form.as_p }}#}
 
             <button type="submit" class="btn btn-accent rounded-lg sm:col-start-10">Search</button>
         </form>

@@ -27,16 +27,40 @@ class Profile(models.Model):
         except:
             Profile.objects.create(user=instance)
 
-    @receiver(post_save, sender=User)
-    class FriendRequest(models.Model):
-        sender = models.ForeignKey(User, related_name='sent_request', on_delete=models.CASCADE)
-        recipient = models.ForeignKey(User, related_name='received_request', on_delete=models.CASCADE)
-        #
-        subject = models.CharField(max_length=240, blank=True)
-        body = models.TextField(blank=True)
-        #
-        timestamp = models.DateTimeField(auto_now_add=True)
-        is_read= models.BooleanField(default=False)
+# # Model Version 1
+#
+# class Message(models.Model):
+#         sender = models.ForeignKey(User, related_name='sent_request', on_delete=models.CASCADE)
+#         recipient = models.ForeignKey(User, related_name='received_request', on_delete=models.CASCADE)
+#         #
+#         subject = models.CharField(max_length=240, blank=True)
+#         body = models.TextField(blank=True)
+#         #
+#         timestamp = models.DateTimeField(auto_now_add=True)
+#         is_read= models.BooleanField(default=False)
+#
+#         def __str__(self):
+#             return f"From {self.sender} to {self.recipient}: {self.subject}"
+# #
+#
+#
+#
 
-        def __str__(self):
-            return f"From {self.sender} to {self.recipient}: {self.subject}"
+# Model version 2
+class FriendRequest(models.Model):
+    from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
+    is_accepted = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('from_user', 'to_user')  # Prevent duplicate requests
+
+    def __str__(self):
+        return f"{self.from_user} ➡️ {self.to_user}"
+
+def get_friends(user):
+    sent = FriendRequest.objects.filter(from_user=user, is_accepted=True).values_list('to_user', flat=True)
+    received = FriendRequest.objects.filter(to_user=user, is_accepted=True).values_list('from_user', flat=True)
+    return User.objects.filter(id__in=list(sent) + list(received))
+
