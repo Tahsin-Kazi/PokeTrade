@@ -21,9 +21,13 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.from_user} ➡️ {self.to_user}"
 
-
     def __str__(self):
         return f"{self.user.username}"
+
+    def get_friends(user):
+        sent = FriendRequest.objects.filter(from_user=user, is_accepted=True).values_list('to_user', flat=True)
+        received = FriendRequest.objects.filter(to_user=user, is_accepted=True).values_list('from_user', flat=True)
+        return User.objects.filter(id__in=list(sent) + list(received))
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
@@ -41,8 +45,5 @@ class Profile(models.Model):
 
 
 
-def get_friends(user):
-    sent = FriendRequest.objects.filter(from_user=user, is_accepted=True).values_list('to_user', flat=True)
-    received = FriendRequest.objects.filter(to_user=user, is_accepted=True).values_list('from_user', flat=True)
-    return User.objects.filter(id__in=list(sent) + list(received))
+
 
