@@ -26,6 +26,14 @@ class Profile(models.Model):
         except:
             Profile.objects.create(user=instance)
 
-    # @receiver(post_save, sender=User)
-    # def find_friend_user_profile(sender, instance, **kwargs):
-    #     ..............
+    @receiver(post_save, sender=User)
+    class FriendRequest(models.Model):
+        sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+        recipient = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+        subject = models.CharField(max_length=240, blank=True)
+        body = models.TextField(blank=True)
+        timestamp = models.DateTimeField(auto_now_add=True)
+        is_read= models.BooleanField(default=False)
+
+        def __str__(self):
+            return f"From {self.sender} to {self.recipient}: {self.subject}"
