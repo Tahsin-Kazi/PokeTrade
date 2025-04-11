@@ -10,24 +10,8 @@ class Profile(models.Model):
     friends = models.ManyToManyField(User, blank=True, related_name='friends')
     currency = models.PositiveBigIntegerField()
 
-    from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
-    to_user = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
-    is_accepted = models.BooleanField(default=False)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('from_user', 'to_user')  # Prevent duplicate requests
-
-    def __str__(self):
-        return f"{self.from_user} ➡️ {self.to_user}"
-
     def __str__(self):
         return f"{self.user.username}"
-
-    def get_friends(user):
-        sent = FriendRequest.objects.filter(from_user=user, is_accepted=True).values_list('to_user', flat=True)
-        received = FriendRequest.objects.filter(to_user=user, is_accepted=True).values_list('from_user', flat=True)
-        return User.objects.filter(id__in=list(sent) + list(received))
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
@@ -43,7 +27,29 @@ class Profile(models.Model):
         except:
             Profile.objects.create(user=instance)
 
+    def get_friends(user):
+        sent = FriendRequest.objects.filter(from_user=user, is_accepted=True).values_list('to_user', flat=True)
+        received = FriendRequest.objects.filter(to_user=user, is_accepted=True).values_list('from_user', flat=True)
+        return User.objects.filter(id__in=list(sent) + list(received))
 
+
+class FriendRequest(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
+
+    from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('from_user', 'to_user')  # Prevent duplicate requests
+
+    def __str__(self):
+        return f"{self.from_user} -> {self.to_user}"
 
 
 
