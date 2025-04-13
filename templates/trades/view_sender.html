@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="trade-container">
+    <h2>Trade Offer to {{ trade.receiver.user.username }}</h2>
+    <p class="trade-meta">Sent on {{ trade.date_posted|date:"F j, Y" }}</p>
+
+    <div class="trade-display">
+        <!-- Sender's Offer -->
+        <div class="trade-column">
+            <h3>You are offering:</h3>
+            <div class="pokemon-grid">
+                {% for pokemon in sender_pokemon %}
+                <div class="pokemon-card">
+                    <img src="{{ pokemon.image }}" alt="{{ pokemon.pokemon }}">
+                    <p>{{ pokemon.name }}</p>
+                </div>
+                {% empty %}
+                <p>No Pokemon Offered</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Trade arrows (visual) -->
+        <div class="trade-arrows">
+            <span class="arrow">⇄</span>
+        </div>
+
+        <!-- Receiver's Offer -->
+        <div class="trade-column">
+            <h3>For {{ trade.receiver.user.username }}'s :</h3>
+            <div class="pokemon-grid">
+                {% for pokemon in receiver_pokemon %}
+                <div class="pokemon-card">
+                    <img src="{{ pokemon.image }}" alt="{{ pokemon.pokemon }}">
+                    <p>{{ pokemon.name }}</p>
+                </div>
+                {% empty %}
+                <p>No Pokemon Requested</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .trade-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .trade-meta {
+        color: #666;
+        font-style: italic;
+        margin-bottom: 20px;
+    }
+
+    .trade-display {
+        display: flex;
+        gap: 30px;
+        margin: 30px 0;
+        align-items: flex-start;
+    }
+
+    .trade-column {
+        flex: 1;
+        border: 2px solid #eee;
+        padding: 20px;
+        border-radius: 8px;
+        background: #f9f9f9;
+    }
+
+    .trade-arrows {
+        display: flex;
+        align-items: center;
+        font-size: 2rem;
+        color: #666;
+    }
+
+    .pokemon-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .pokemon-card {
+        text-align: center;
+        padding: 10px;
+        background: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .pokemon-card img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .trade-actions {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-accept {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .btn-reject {
+        background-color: #f44336;
+        color: white;
+    }
+
+    .btn-counter {
+        background-color: #2196F3;
+        color: white;
+    }
+</style>
+{% endblock %}

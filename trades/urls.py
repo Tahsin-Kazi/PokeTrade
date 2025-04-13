@@ -4,5 +4,7 @@ from . import views
 
 urlpatterns = [
     path('trades/', views.index, name='trades.index'),
-    path('trades/send/<int:pk>/', views.send_trade, name='trades.send_trade'),
+    path('trades/send/<int:id>/', views.send, name='trades.send'),
+    path('trades/view/<int:id>/', views.view, name='trades.view'),
+    path('trade//process/<int:id>', views.process_trade, name='trade.process'),
 ]

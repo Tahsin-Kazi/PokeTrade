@@ -4,13 +4,11 @@ class Trade(models.Model):
 
     status_choices = [
         ('pending', 'Pending'),
-        ('accepted', 'Accepted'),
-        ('countered', 'Countered'),
-        ('canceled', 'Canceled'),
+        ('Accepted', 'Accepted'),
     ]
 
-    sender = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="sender_trade")
-    receiver = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="receiver_trade")
+    sender = models.ForeignKey("accounts.Profile", on_delete=models.CASCADE, related_name="sender_trade")
+    receiver = models.ForeignKey("accounts.Profile", on_delete=models.CASCADE, related_name="receiver_trade")
     sender_pokemon = models.ManyToManyField('collection.Pokemon', blank=True, related_name='sender_pokemon_trade')
     receiver_pokemon = models.ManyToManyField('collection.Pokemon', blank=True, related_name='receiver_pokemon_trade')
     date_posted = models.DateField(auto_now=True)

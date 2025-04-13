@@ -1,11 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
+<h1>Incoming Trades: </h1>
+    <div>
+        {% for trade in incoming_trades %}
+            <a href="{% url 'trades.view' trade.id %}"><h1>Trade #{{ trade.id }}</h1></a>
+        {% endfor %}
+    </div>
+<h1>Outgoing Trades: </h1>
+    <div>
+        {% for trade in outgoing_trades %}
+            <a href="{% url 'trades.view' trade.id %}"><h1>Trade #{{ trade.id }}</h1></a>
+        {% endfor %}
+    </div>
 <h1>Send a Trade:</h1>
     <div>
     {% for friend in friends %}
-        <div>
-            <a href="{% url 'trades.send_trade' friend.profile.pk %}"><h1>{{ friend.username }}</h1></a>
-        </div>
+        <a href="{% url 'trades.send' friend.profile.id %}"><h1>{{ friend.username }}</h1></a>
     {% endfor %}
     </div>
 {% endblock %}
