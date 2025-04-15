@@ -1,10 +1,34 @@
-<!-- To send a request -->
-<a href="{% url 'send_friend_request' user.id %}">Send Friend Request</a>
+{#<!-- To send a request -->#}
+{#<a href="{% url 'send_friend_request' user.id %}">Send Friend Request</a>#}
+{##}
+{#<!-- To accept a request -->#}
+{#{% for request in request.user.received_requests.all %}#}
+{#  {% if not request.is_accepted %}#}
+{#    <p>{{ request.from_user }} wants to be your friend</p>#}
+{#    <a href="{% url 'accept_friend_request' request.id %}">Accept</a>#}
+{#  {% endif %}#}
+{#{% endfor %}#}
 
-<!-- To accept a request -->
-{% for request in request.user.received_requests.all %}
-  {% if not request.is_accepted %}
-    <p>{{ request.from_user }} wants to be your friend</p>
-    <a href="{% url 'accept_friend_request' request.id %}">Accept</a>
-  {% endif %}
-{% endfor %}
+{##}
+
+<ul class="all_users">
+
+{#<!-- To send a request -->#}
+
+    {% for user in allusers %}
+    {% if not user.is_superuser %}
+    {% if user is not in request.user.friends.all and user != request.user %}
+    <h1>{{user}} <a href="/send_friend_request/{{user.id}}/">send friend request</a></h1>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+
+{# <!-- To accept a request --> #}
+    {% for friend_request in all_friend_requests %}
+        <h1>{{ friend_request.from_user }}
+        <a href="/accept_friend_request/{{friend_request.id}}/"></a>
+        </h1>
+    {% endfor %}
+</ul>
+
+{##}
