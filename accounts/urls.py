@@ -2,14 +2,24 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import views
 
+#
+from .views import send_friend_request, accept_friend_request
+#
+
 urlpatterns = [
     path("register/", views.register, name="register"),
     path("login/", views.user_login, name="login"),
     path("logout/", views.user_logout, name="logout"),
     path("profile/", views.profile, name="profile"),
     path("friends/", views.friends_index, name ='friends_index'),
-    path('send_request/<int:user_id>/', views.send_friend_request, name='send_friend_request'),
-    path('accept_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
+    # path('send_request/<int:user_id>/', views.send_friend_request, name='send_friend_request'),
+    # path('accept_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
+
+    #
+    path('send_friend_request/<int:userID>/', send_friend_request, name='send friend request'),
+    path('accept_friend_request/<int:requestID>/', accept_friend_request, name='accept friend request'),
+    #
+
 
 
 
