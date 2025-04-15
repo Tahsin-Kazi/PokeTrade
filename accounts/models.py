@@ -4,6 +4,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from collection.views import add_starters
 
+#
+from django.contrib.auth.models import AbstractUser
+#
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     collection = models.ManyToManyField('collection.Pokemon', blank=True, related_name='profile')
@@ -32,6 +36,10 @@ class Profile(models.Model):
         received = FriendRequest.objects.filter(to_user=user, is_accepted=True).values_list('from_user', flat=True)
         return User.objects.filter(id__in=list(sent) + list(received))
 
+#
+class User(AbstractUser):
+    friends = models.ManyToManyField("User", blank=True)
+#
 
 class FriendRequest(models.Model):
     STATUS_CHOICES = [
@@ -42,6 +50,7 @@ class FriendRequest(models.Model):
 
     from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
     to_user = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
+
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     timestamp = models.DateTimeField(auto_now_add=True)
 

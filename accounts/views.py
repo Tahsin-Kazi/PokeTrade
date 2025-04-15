@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from accounts.forms import RegisterForm
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -71,22 +72,44 @@ def friends_index(request):
 
 @login_required
 def send_friend_request(request, user_id):
-    to_user = get_object_or_404(User, id=user_id)
+    # to_user = get_object_or_404(User, id=user_id)
 
-    if to_user != request.user:
-        friend_request, created = FriendRequest.objects.get_or_create(
-            from_user=request.user,
-            to_user=to_user
-        )
-        # You can flash a message if you want: "Friend request sent!"
+    #
+    from_user = request.user
+    to_user = User.objects.get(id=user_id)
+    friend_request, created = FriendRequest.objects.get_or_create(from_user=from_user, to_user=to_user)
+    if created:
+        return HttpResponse('friend request sent')
+    else:
+        return HttpResponse('friend request already sent')
+    #
 
-    return redirect('profile', user_id=to_user.id)  # or wherever you want to redirect
+    # if to_user != request.user:
+    #     friend_request, created = FriendRequest.objects.get_or_create(
+    #         from_user=request.user,
+    #         to_user=to_user
+    #     )
+    #     # You can flash a message if you want: "Friend request sent!"
 
+    # return redirect('profile', user_id=to_user.id)  # or wherever you want to redirect
+
+@login_required
 def accept_friend_request(request, request_id):
-    friend_request = get_object_or_404(FriendRequest, id=request_id)
+    # friend_request = get_object_or_404(FriendRequest, id=request_id)
+    # if friend_request.to_user == request.user:
+    #     friend_request.is_accepted = True
+    #     friend_request.save()
+    #
+    # return redirect('inbox')  # or friends list or wherever
 
+    #
+    friend_request = FriendRequest.objects.get(id=request_id)
     if friend_request.to_user == request.user:
-        friend_request.is_accepted = True
-        friend_request.save()
+        friend_request.to_user.friends.add(friend_request.from_user)
+        friend_request.from_user.friends.add(friend_request.to_user)
+        friend_request.delete()
+        return HttpResponse('friend request accepted')
+    else:
+        return HttpResponse('friend request not accepted')
+    #
 
-    return redirect('inbox')  # or friends list or wherever
