@@ -25,7 +25,8 @@ urlpatterns = [
     path("", include("home.urls")),
     path('collection/', include("collection.urls")),
     path("", include("accounts.urls")),
-    path("", include("trades.urls"))
+    path("", include("trades.urls")),
+    path("", include("marketplace.urls"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

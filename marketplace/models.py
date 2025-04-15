@@ -10,9 +10,9 @@ class Listing(models.Model):
     seller = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="seller_listing")
     buyer = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="buyer_listing")
 
-    def post_Pokemon(pokemon, collection):
-        if(Profile.contains(pokemon)):
-            Collection.remove(pokemon)
+    def post_Pokemon(pokemon, collection, profile):
+        if(profile.contains(pokemon)):
+            collection.remove(pokemon)
             Listing.Pokemon.price == int(input('Price: '))
             Listing.date_posted = date.today()
             Listing.status = 'Not Sold'
@@ -31,3 +31,4 @@ class Listing(models.Model):
             Listing.buyer = null
 
             Listing.append(Pokemon)
+
