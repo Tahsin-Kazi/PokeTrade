@@ -5,7 +5,7 @@ from django.conf import settings
 import random
 
 class Pokemon(models.Model):
-    name = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=50, blank=True)
     pokemon = models.CharField(max_length=100)
     owner = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, default=1)
     image = models.CharField(max_length=255, blank=True, null=True)

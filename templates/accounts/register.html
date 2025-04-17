@@ -98,6 +98,17 @@
   </div>
 </div>
 
-
+<script>
+  document.getElementById("registerForm").addEventListener("submit", function (event) {
+    const form = event.target;
+    const button = form.querySelector("button[type='submit']");
+    
+    if (form.checkValidity()) {
+      
+      button.disabled = true;
+      button.innerHTML = '<span class="loading loading-spinner"></span>';
+    }
+  });
+</script>
 
 {% endblock %}

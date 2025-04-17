@@ -8,7 +8,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     collection = models.ManyToManyField('collection.Pokemon', blank=True, related_name='profile')
     friends = models.ManyToManyField(User, blank=True, related_name='friends')
-    currency = models.PositiveBigIntegerField()
+    currency = models.PositiveBigIntegerField(default=100)
 
     def __str__(self):
         return f"{self.user.username}"

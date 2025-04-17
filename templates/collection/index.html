@@ -7,9 +7,9 @@
 
   <div class="grid grid-cols-2">
 
-    <h1 class="text-3xl font-semibold ">Collection:</h1>
+    <h1 class="text-3xl font-semibold">Collection:</h1>
 
-      <form method="GET" action="{% url 'collection.index' %}" class="grid grid-cols-2 sm:grid-cols-10 gap-2">
+      <form method="GET" action="{% url 'collection.index' %}" class="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-10 gap-2">
         
         <select name="search_field" class="select sm:col-start-5 sm:col-span-2 order-2 sm:order-1">
           <option disabled {% if not request.GET.search_field %}selected{% endif %}>Search By</option>
@@ -39,8 +39,8 @@
               <a href="{% url 'collection.detail' id=pokemon.id %}" class="flex flex-col h-full">
                   <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}" class="w-full object-cover">
                   <div class="p-4 flex flex-col justify-between flex-grow">
-                      <h3 class="text-lg font-semibold text-gray-800">{{ pokemon.name }}</h3>
-                      <p class="text-lg font-normal text-gray-500 mt-auto">{{ pokemon.data.name }}</p>
+                      <p class="text-lg font-semibold text-gray-800 truncate">{{ pokemon.name }}</p>
+                      <p class="text-lg font-normal text-gray-500 mt-auto truncate">{{ pokemon.data.name }}</p>
                   </div>
               </a>
           </div>
