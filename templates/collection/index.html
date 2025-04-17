@@ -34,17 +34,20 @@
   {% endif %}
 
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4 auto-rows-fr">
-      {% for pokemon in collection %}
-          <div class="bg-white shadow-md rounded-lg overflow-hidden flex flex-col">
-              <a href="{% url 'collection.detail' id=pokemon.id %}" class="flex flex-col h-full">
-                  <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}" class="w-full object-cover">
-                  <div class="p-4 flex flex-col justify-between flex-grow">
-                      <p class="text-lg font-semibold text-gray-800 truncate">{{ pokemon.name }}</p>
-                      <p class="text-lg font-normal text-gray-500 mt-auto truncate">{{ pokemon.data.name }}</p>
-                  </div>
-              </a>
+    {% for pokemon in collection %}
+      <div class="card bg-white border border-gray-200 w-full shadow-md hover:shadow-lg transition-shadow duration-300">
+        <figure>
+          <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}" class="w-full object-cover">
+        </figure>
+        <div class="card-body">
+          <p class="text-xl font-semibold text-gray-800 truncate">{{ pokemon.name }}</p>
+          <p class="text-lg text-gray-600 truncate">{{ pokemon.data.name }}</p>
+          <div class="card-actions justify-end mt-2">
+            <a href="{% url 'collection.detail' id=pokemon.id %}" class="btn btn-outline btn-sm">View Details</a>
           </div>
-      {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
   </div>
 
   {% if collection.count == 0 %}
