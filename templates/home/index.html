@@ -12,10 +12,15 @@
         The best place to trade Pokemon!
       </p>
       {% if user.is_authenticated %}
+      <div class="space-x-2">
         <a href="{% url 'collection.index' %}"><button class="btn btn-accent rounded-full">Collection</button></a>
+        <a href="{% url 'trades.index' %}"><button class="btn btn-accent rounded-full">Trades</button></a>
+      </div>
       {% else %}
-        <a href="{% url 'login' %}"><button class="btn btn-accent rounded-full mr-1">Login</button></a>
-        <a href="{% url 'register' %}"><button class="btn btn-info rounded-full ml-1">Register</button></a>
+      <div class="space-x-2">
+        <a href="{% url 'login' %}"><button class="btn btn-accent rounded-full">Login</button></a>
+        <a href="{% url 'register' %}"><button class="btn btn-info rounded-full">Register</button></a>
+      </div>
       {% endif %}
     </div>
   </div>

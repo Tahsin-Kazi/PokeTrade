@@ -1,135 +1,112 @@
-{% extends 'base.html' %}
-{% block title %}Trade Offer to {{ trade.receiver.user.username }}{% endblock title %}
+{% extends 'base.html' %} 
+{% block title %}Trade Offer to {{ trade.receiver.user.username }}{% endblock title %} 
 
 {% block content %}
-<div class="trade-container">
-    <h2>Trade Offer to {{ trade.receiver.user.username }}</h2>
-    <p class="trade-meta">Sent on {{ trade.date_posted|date:"F j, Y" }}</p>
 
-    <div class="trade-display">
-        <!-- Sender's Offer -->
-        <div class="trade-column">
-            <h3>You are offering:</h3>
-            <div class="pokemon-grid">
-                {% for pokemon in sender_pokemon %}
-                <div class="pokemon-card">
-                    <img src="{{ pokemon.image }}" alt="{{ pokemon.pokemon }}">
-                    <p>{{ pokemon.name }}</p>
-                </div>
-                {% empty %}
-                <p>No Pokemon Offered</p>
-                {% endfor %}
+<div class="p-5">
+  <btn class="btn btn-accent rounded-md mr-2 mb-2">
+    <a href="{% url 'trades.index' %}" class="flex items-center gap-1">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+        />
+      </svg>
+      Back
+    </a>
+  </btn>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <h1 class="text-3xl font-semibold text-center md:col-start-2">
+      Trade Offer to {{ trade.receiver.user.username }}
+    </h1>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-6">
+    <!-- Sender's Pokémon -->
+    <div
+      class="col-span-1 md:col-span-2 bg-white border border-gray-200 rounded-lg shadow-md p-4 min-h-[45rem] rounded-xl"
+    >
+      <h2 class="text-xl font-semibold mb-4 text-center">You are offering:</h2>
+      {% if sender_pokemon %}
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+        {% for pokemon in sender_pokemon %}
+        <div>
+          <label
+            class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-gray-300"
+          >
+            <figure>
+              <img
+                src="{{ pokemon.image }}"
+                alt="{{ pokemon.name }}"
+                class="w-full object-cover"
+              />
+            </figure>
+            <div class="card-body p-2">
+              <p
+                class="text-sm font-semibold text-gray-800 truncate text-center"
+              >
+                {{ pokemon.name }}
+              </p>
             </div>
+          </label>
         </div>
-
-        <!-- Trade arrows (visual) -->
-        <div class="trade-arrows">
-            <span class="arrow">⇄</span>
-        </div>
-
-        <!-- Receiver's Offer -->
-        <div class="trade-column">
-            <h3>For {{ trade.receiver.user.username }}'s :</h3>
-            <div class="pokemon-grid">
-                {% for pokemon in receiver_pokemon %}
-                <div class="pokemon-card">
-                    <img src="{{ pokemon.image }}" alt="{{ pokemon.pokemon }}">
-                    <p>{{ pokemon.name }}</p>
-                </div>
-                {% empty %}
-                <p>No Pokemon Requested</p>
-                {% endfor %}
-            </div>
-        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-center text-gray-500">No Pokemon Offered</p>
+      {% endif %}
     </div>
+
+    <!-- Trade Arrows -->
+    <div class="col-span-1 flex flex-col justify-center items-center gap-4">
+      <span class="text-4xl text-gray-600">⇄</span>
+    </div>
+
+    <!-- Receiver's Pokémon -->
+    <div
+      class="col-span-1 md:col-span-2 bg-white border border-gray-200 rounded-lg shadow-md p-4 min-h-[45rem] rounded-xl"
+    >
+      <h2 class="text-xl font-semibold mb-4 text-center">
+        For {{ trade.receiver.user.username }}'s:
+      </h2>
+      {% if receiver_pokemon %}
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+        {% for pokemon in receiver_pokemon %}
+        <div>
+          <label
+            class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-gray-300"
+          >
+            <figure>
+              <img
+                src="{{ pokemon.image }}"
+                alt="{{ pokemon.name }}"
+                class="w-full object-cover"
+              />
+            </figure>
+            <div class="card-body p-2">
+              <p
+                class="text-sm font-semibold text-gray-800 truncate text-center"
+              >
+                {{ pokemon.name }}
+              </p>
+            </div>
+          </label>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-center text-gray-500">No Pokemon Requested</p>
+      {% endif %}
+    </div>
+  </div>
 </div>
-
-<style>
-    .trade-container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .trade-meta {
-        color: #666;
-        font-style: italic;
-        margin-bottom: 20px;
-    }
-
-    .trade-display {
-        display: flex;
-        gap: 30px;
-        margin: 30px 0;
-        align-items: flex-start;
-    }
-
-    .trade-column {
-        flex: 1;
-        border: 2px solid #eee;
-        padding: 20px;
-        border-radius: 8px;
-        background: #f9f9f9;
-    }
-
-    .trade-arrows {
-        display: flex;
-        align-items: center;
-        font-size: 2rem;
-        color: #666;
-    }
-
-    .pokemon-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 15px;
-        margin-top: 15px;
-    }
-
-    .pokemon-card {
-        text-align: center;
-        padding: 10px;
-        background: white;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .pokemon-card img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .trade-actions {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 30px;
-    }
-
-    .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-accept {
-        background-color: #4CAF50;
-        color: white;
-    }
-
-    .btn-reject {
-        background-color: #f44336;
-        color: white;
-    }
-
-    .btn-counter {
-        background-color: #2196F3;
-        color: white;
-    }
-</style>
 {% endblock %}
