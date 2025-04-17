@@ -124,3 +124,12 @@ def transfer_pokemon(trade):
     for pokemon in trade.receiver_pokemon.all():
         pokemon.owner = trade.sender
         pokemon.save()
+        
+        
+@login_required
+def cancel_trade(request, id):
+    trade = get_object_or_404(Trade, id=id)
+
+    trade.delete()
+    messages.success(request, "Trade canceled successfully.")
+    return redirect('trades.index')

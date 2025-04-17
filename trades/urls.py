@@ -6,5 +6,6 @@ urlpatterns = [
     path('trades/', views.index, name='trades.index'),
     path('trades/send/<int:id>/', views.send, name='trades.send'),
     path('trades/view/<int:id>/', views.view, name='trades.view'),
-    path('trade//process/<int:id>', views.process_trade, name='trade.process'),
+    path('trade/process/<int:id>', views.process_trade, name='trade.process'),
+    path('trade/cancel/<int:id>', views.cancel_trade, name='trade.cancel'),
 ]
