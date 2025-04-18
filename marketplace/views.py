@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import keyboard, schedule, time
 from random import randint
+from datetime import date
 
 
 @loginIsNeeded
@@ -11,19 +12,30 @@ def buyPokemon(Pokemon, Listing, user, profile):
         profile.collection.add(Pokemon, profile)
 
 @loginIsNeeded
-def editPrice(Pokemon, Listing, Profile):
-    if Listing.Pokemon.seller == Profile.user:
+def editPrice(pokemon, listing, profile):
+    if listing.pokemon.seller == profile.user:
         try:
-            Listing.Pokemon.price == int(input('New Price: '))
+            edit_pokemon = listing.objects.get(pokemon = object_id)
+            edit_pokemon.price = int
+
         except ValueError:
             print('This is an invalid price. Please enter an integer')
 
-def listingDeal(Listing):
+def add_to_listing(pokemon, Listing):
     randomDex = randint(1, 1025)
     randomPokemon = fetch_pokemon(randomDex)
-    Listing.add_pokemon(randomPokemon, Listing)
 
-schedule.every(24).hours.do(listingDeal)
+    listing = Listing.objects.create (
+        pokemon = randomPokemon,
+        price = 200,
+        date_posted = date.today(),
+        status = "Not Sold",
+        seller = "PokeTrade",
+        buyer = None
+    )
+    listing.save()
+
+schedule.every(24).hours.do(add_to_listing)
 
 
 
