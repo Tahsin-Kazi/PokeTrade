@@ -36,10 +36,10 @@ class Profile(models.Model):
         received = FriendRequest.objects.filter(to_user=user, is_accepted=True).values_list('from_user', flat=True)
         return User.objects.filter(id__in=list(sent) + list(received))
 
-#
-class User(AbstractUser):
-    friends = models.ManyToManyField("User", blank=True)
-#
+# #
+# class User(AbstractUser):
+#     friends = models.ManyToManyField("User", blank=True)
+# #
 
 class FriendRequest(models.Model):
     STATUS_CHOICES = [
@@ -47,6 +47,7 @@ class FriendRequest(models.Model):
         ('accepted', 'Accepted'),
         ('rejected', 'Rejected'),
     ]
+
 
     from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
     to_user = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)

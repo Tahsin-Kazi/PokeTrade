@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'theme',
     'trades',
     'django_browser_reload',
+    'friend'
 ]
 
 MIDDLEWARE = [

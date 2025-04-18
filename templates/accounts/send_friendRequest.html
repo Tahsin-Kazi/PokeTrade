@@ -13,7 +13,7 @@
 
 <ul class="all_users">
 
-{#<!-- To send a request -->#}
+<!-- To send a request -->
 
     {% for user in allusers %}
     {% if not user.is_superuser %}
@@ -23,7 +23,7 @@
     {% endif %}
     {% endfor %}
 
-{# <!-- To accept a request --> #}
+ <!-- To accept a request -->
     {% for friend_request in all_friend_requests %}
         <h1>{{ friend_request.from_user }}
         <a href="/accept_friend_request/{{friend_request.id}}/"></a>
