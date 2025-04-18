@@ -113,3 +113,4 @@ def accept_friend_request(request, request_id):
         return HttpResponse('friend request not accepted')
     #
 
+
