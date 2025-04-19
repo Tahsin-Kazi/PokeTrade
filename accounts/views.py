@@ -49,8 +49,13 @@ def user_logout(request):
 @login_required
 def profile(request):
     user = request.user
+    sent_requests = FriendRequest.objects.filter(from_user=user)
+    received_requests = FriendRequest.objects.filter(to_user=user, status='pending')
+
     template_data = {
         'title': 'Profile',
+        'sent_requests': sent_requests,
+        'received_requests': received_requests,
         # 'reviews': Review.objects.filter(user=user).order_by('-created_at'),
         # 'orders': get_orders(user),
     }
@@ -105,3 +110,13 @@ def reject_friend_request(request, request_id):
         friend_request.save()
 
     return redirect('profile')
+
+@login_required
+def view_user_profile(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+    is_friend = target_user in request.user.profile.get_friends()
+
+    return render(request, "accounts/user_profile.html", {
+        "target_user": target_user,
+        "is_friend": is_friend,
+    })
