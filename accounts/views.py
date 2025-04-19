@@ -11,7 +11,7 @@ from django.utils.encoding import force_bytes
 from home.views import index as home_view
 from collection.views import index as collection_view
 from django.contrib import messages
-from .models import FriendRequest
+from .models import FriendRequest, send_friend_request, accept_friend_request, reject_friend_request
 
 def register(request):
     template_data = {'title': 'Register'}
