@@ -8,10 +8,13 @@ urlpatterns = [
     path("logout/", views.user_logout, name="logout"),
     path("profile/", views.profile, name="profile"),
     path("friends/", views.friends_index, name ='friends_index'),
-    path('send_request/<int:user_id>/', views.send_friend_request, name='send_friend_request'),
-    path('accept_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
+    # path('send_request/<int:user_id>/', views.send_friend_request, name='send_friend_request'),
+    # path('accept_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
 
-
+    path('send-request/<int:user_id>/', views.send_request_view, name='send_friend_request'),
+    path('accept-request/<int:request_id>/', views.accept_request_view, name='accept_friend_request'),
+    path('reject-request/<int:request_id>/', views.reject_request_view, name='reject_friend_request'),
+    path('friend-requests/', views.friend_requests_view, name='friend_requests'),
 
     path(
         "password-reset/",

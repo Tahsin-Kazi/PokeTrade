@@ -54,39 +54,33 @@ def profile(request):
         # 'reviews': Review.objects.filter(user=user).order_by('-created_at'),
         # 'orders': get_orders(user),
     }
+
+    from django.shortcuts import render, redirect
+
     return render(request, "accounts/profile.html", {"user": user, "template_data": template_data})
 
+@login_required
 def friends_index(request):
-    user = request.user
-    profile = user.profile
-    friends = profile.friends.all()
-
-    query = request.GET.get('q', '')
-    if query:
-        friends = profile.friends.filter(username__icontains=query)
-    else:
-        friends = profile.friends.all()
-
-    return render(request, 'friends/index.html', {'friends': friends})
+    return render(request, 'accounts/friends_index.html')  # or your appropriate template
 
 @login_required
-def send_friend_request(request, user_id):
+def send_request_view(request, user_id):
+    from_user = request.user
     to_user = get_object_or_404(User, id=user_id)
+    FriendRequest.objects.get_or_create(from_user=from_user, to_user=to_user)
+    return redirect('home')
 
-    if to_user != request.user:
-        friend_request, created = FriendRequest.objects.get_or_create(
-            from_user=request.user,
-            to_user=to_user
-        )
-        # You can flash a message if you want: "Friend request sent!"
+@login_required
+def accept_request_view(request, request_id):
+    accept_friend_request(request_id)
+    return redirect('friend_requests')
 
-    return redirect('profile', user_id=to_user.id)  # or wherever you want to redirect
+@login_required
+def reject_request_view(request, request_id):
+    reject_friend_request(request_id)
+    return redirect('friend_requests')
 
-def accept_friend_request(request, request_id):
-    friend_request = get_object_or_404(FriendRequest, id=request_id)
-
-    if friend_request.to_user == request.user:
-        friend_request.is_accepted = True
-        friend_request.save()
-
-    return redirect('inbox')  # or friends list or wherever
+@login_required
+def friend_requests_view(request):
+    incoming_requests = FriendRequest.objects.filter(to_user=request.user, status='pending')
+    return render(request, 'friends/requests.html', {'requests': incoming_requests})

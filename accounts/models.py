@@ -13,19 +13,28 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username}"
 
+    # @receiver(post_save, sender=User)
+    # def create_user_profile(sender, instance, created, **kwargs):
+    #     if created:
+    #         profile = Profile.objects.create(user=instance)
+    #         add_starters(profile)
+    #         profile.save()
+    #
+    # @receiver(post_save, sender=User)
+    # def save_user_profile(sender, instance, **kwargs):
+    #     try:
+    #         instance.profile.save()
+    #     except:
+    #         Profile.objects.create(user=instance)
+
     @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
+    def create_or_save_user_profile(sender, instance, created, **kwargs):
         if created:
             profile = Profile.objects.create(user=instance)
             add_starters(profile)
             profile.save()
-
-    @receiver(post_save, sender=User)
-    def save_user_profile(sender, instance, **kwargs):
-        try:
+        else:
             instance.profile.save()
-        except:
-            Profile.objects.create(user=instance)
 
     def get_friends(self):
         sent = FriendRequest.objects.filter(from_user=self.user, status='accepted').values_list('to_user', flat=True)
