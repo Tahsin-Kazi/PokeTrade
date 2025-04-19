@@ -50,16 +50,20 @@ def user_logout(request):
 def profile(request):
     user = request.user
     sent_requests = FriendRequest.objects.filter(from_user=user)
-    received_requests = FriendRequest.objects.filter(to_user=user, status='pending')
+    received_requests = FriendRequest.objects.filter(to_user=user)
 
     template_data = {
         'title': 'Profile',
         'sent_requests': sent_requests,
         'received_requests': received_requests,
-        # 'reviews': Review.objects.filter(user=user).order_by('-created_at'),
-        # 'orders': get_orders(user),
     }
-    return render(request, "accounts/profile.html", {"user": user, "template_data": template_data})
+
+    return render(request, "accounts/profile.html", {
+        "user": user,
+        "template_data": template_data,
+        "sent_requests": sent_requests,
+        "received_requests": received_requests,
+    })
 
 def friends_index(request):
     user = request.user
