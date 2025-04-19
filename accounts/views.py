@@ -74,42 +74,70 @@ def friends_index(request):
 
     return render(request, 'friends/index.html', {'friends': friends})
 
+
+@login_required
+def find_friends(request):
+    query = request.GET.get('q', '')
+    users = User.objects.exclude(id=request.user.id)  # Exclude self
+
+    if query:
+        users = users.filter(username__icontains=query)
+
+    # Check which users have already been sent requests or are friends
+    sent_requests = FriendRequest.objects.filter(from_user=request.user)
+    sent_user_ids = [req.to_user.id for req in sent_requests]
+    friends_ids = [friend.id for friend in request.user.profile.get_friends()]
+
+    return render(request, "accounts/find_friends.html", {
+        "users": users,
+        "sent_user_ids": sent_user_ids,
+        "friends_ids": friends_ids,
+        "query": query,
+    })
+
+
 @login_required
 def send_friend_request(request, user_id):
     to_user = get_object_or_404(User, id=user_id)
 
     if to_user != request.user:
-        friend_request, created = FriendRequest.objects.get_or_create(
+        FriendRequest.objects.get_or_create(
             from_user=request.user,
             to_user=to_user
         )
-        # You can flash a message if you want: "Friend request sent!"
 
-    return redirect('profile', user_id=to_user.id)  # or wherever you want to redirect
+    return redirect('find_friends')
+
+@login_required
+def incoming_requests(request):
+    requests = FriendRequest.objects.filter(to_user=request.user, status='pending')
+    return render(request, 'accounts/incoming_requests.html', {'requests': requests})
+
 
 @login_required
 def accept_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id)
 
-    if friend_request.to_user == request.user and friend_request.status == 'pending':
+    if friend_request.to_user == request.user:
         friend_request.status = 'accepted'
         friend_request.save()
 
-        # Add each user to the other’s friend list
+        # Add both as friends
         friend_request.from_user.profile.friends.add(friend_request.to_user)
         friend_request.to_user.profile.friends.add(friend_request.from_user)
 
-    return redirect('profile')
+    return redirect('incoming_requests')
 
+@login_required
 @login_required
 def reject_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id)
 
-    if friend_request.to_user == request.user and friend_request.status == 'pending':
+    if friend_request.to_user == request.user:
         friend_request.status = 'rejected'
         friend_request.save()
 
-    return redirect('profile')
+    return redirect('incoming_requests')
 
 @login_required
 def view_user_profile(request, user_id):
