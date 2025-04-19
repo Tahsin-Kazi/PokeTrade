@@ -82,11 +82,26 @@ def send_friend_request(request, user_id):
 
     return redirect('profile', user_id=to_user.id)  # or wherever you want to redirect
 
+@login_required
 def accept_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id)
 
-    if friend_request.to_user == request.user:
-        friend_request.is_accepted = True
+    if friend_request.to_user == request.user and friend_request.status == 'pending':
+        friend_request.status = 'accepted'
         friend_request.save()
 
-    return redirect('inbox')  # or friends list or wherever
+        # Add each user to the other’s friend list
+        friend_request.from_user.profile.friends.add(friend_request.to_user)
+        friend_request.to_user.profile.friends.add(friend_request.from_user)
+
+    return redirect('profile')
+
+@login_required
+def reject_friend_request(request, request_id):
+    friend_request = get_object_or_404(FriendRequest, id=request_id)
+
+    if friend_request.to_user == request.user and friend_request.status == 'pending':
+        friend_request.status = 'rejected'
+        friend_request.save()
+
+    return redirect('profile')
