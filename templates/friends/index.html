@@ -39,7 +39,6 @@
     </div>
   {% endif %}
 
-    <div class
 
 </div>
 
@@ -53,29 +52,27 @@
     </div>
 
     <div class="overflow-x-auto">
-        <table class="table w-full">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Username</th>
-                    <th>Currency</th>
-                    <th>Pokémon Count</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for profile in leaderboard %}
-                <tr {% if profile.user == request.user %}class="bg-green-100"{% endif %}>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ profile.user.username }}</td>
-                    <td>{{ profile.currency }}</td>
-                    <td>{{ profile.pokemon_count }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-100 text-center">
+                <th class="px-4 py-2 border border-gray-300 font-semibold">Rank</th>
+                <th class="px-4 py-2 border border-gray-300 font-semibold">Username</th>
+                <th class="px-4 py-2 border border-gray-300 font-semibold">Currency</th>
+                <th class="px-4 py-2 border border-gray-300 font-semibold">Pokémon Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in leaderboard %}
+            <tr class="text-center {% if profile.user == request.user %}bg-green-100{% endif %}">
+                <td class="px-4 py-2 border border-gray-300">{{ forloop.counter }}</td>
+                <td class="px-4 py-2 border border-gray-300">{{ profile.user.username }}</td>
+                <td class="px-4 py-2 border border-gray-300">{{ profile.currency }}</td>
+                <td class="px-4 py-2 border border-gray-300">{{ profile.pokemon_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
-
 
 {% endblock content%}
 
