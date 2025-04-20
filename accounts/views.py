@@ -12,6 +12,8 @@ from home.views import index as home_view
 from collection.views import index as collection_view
 from django.contrib import messages
 from .models import FriendRequest, send_friend_request, accept_friend_request, reject_friend_request
+from django.db.models import Count
+from accounts.models import Profile
 
 def register(request):
     template_data = {'title': 'Register'}
@@ -65,19 +67,30 @@ def profile(request):
         "received_requests": received_requests,
     })
 
+@login_required
 def friends_index(request):
-    user = request.user
-    profile = user.profile
-    friends = profile.friends.all()
-
     query = request.GET.get('q', '')
+    sort_by = request.GET.get('sort', 'currency')  # Default sort: currency
+
+    # Filter friends if a search is made
+    friends = request.user.profile.get_friends()
     if query:
-        friends = profile.friends.filter(username__icontains=query)
+        friends = friends.filter(username__icontains=query)
+
+    # Leaderboard: all users with their profile info and Pokémon count
+    profiles = Profile.objects.annotate(pokemon_count=Count('collection'))
+
+    if sort_by == 'pokemon':
+        leaderboard = profiles.order_by('-pokemon_count', '-currency')
     else:
-        friends = profile.friends.all()
+        leaderboard = profiles.order_by('-currency', '-pokemon_count')
 
-    return render(request, 'friends/index.html', {'friends': friends})
-
+    context = {
+        'friends': friends,
+        'leaderboard': leaderboard,
+        'sort_by': sort_by,
+    }
+    return render(request, 'friends/index.html', context)
 
 @login_required
 def find_friends(request):
@@ -132,7 +145,6 @@ def accept_friend_request(request, request_id):
 
     return redirect('incoming_requests')
 
-@login_required
 @login_required
 def reject_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id)
