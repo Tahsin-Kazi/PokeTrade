@@ -55,6 +55,7 @@
     <table class="table-auto w-full border-collapse border border-gray-300">
         <thead>
             <tr class="bg-gray-100 text-center">
+                {# The headers for the catagories                #}
                 <th class="px-4 py-2 border border-gray-300 font-semibold">Rank</th>
                 <th class="px-4 py-2 border border-gray-300 font-semibold">Username</th>
                 <th class="px-4 py-2 border border-gray-300 font-semibold">Currency</th>
@@ -63,6 +64,7 @@
         </thead>
         <tbody>
             {% for profile in leaderboard %}
+            {# Centers the values of each category within their box #}
             <tr class="text-center {% if profile.user == request.user %}bg-green-100{% endif %}">
                 <td class="px-4 py-2 border border-gray-300">{{ forloop.counter }}</td>
                 <td class="px-4 py-2 border border-gray-300">{{ profile.user.username }}</td>
@@ -76,4 +78,4 @@
 
 {% endblock content%}
 
-{#Edit this template to display all current users for the website#}
+
