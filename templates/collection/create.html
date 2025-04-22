@@ -2,87 +2,70 @@
 {% block title %}Create Pokemon{% endblock title %}
 
 {% block content %}
+<div class="flex justify-center items-center min-h-[calc(100vh-5rem)] p-5">
 
-<style>
-        .type-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-            max-width: 600px;
-            margin: 20px 0;
-        }
+    <div class="card bg-white shadow-xl rounded-3xl w-full max-w-4xl p-8">
 
-        .type-option {
-            cursor: pointer;
-            text-align: center;
-            color: black;
-        }
+        <h1 class="text-3xl font-bold text-center mb-2">Create a New Pokémon</h1>
+        <p class="text-center text-gray-500 mb-6">Spend <span class="font-semibold text-accent">100 PokeDollars</span> to create your own custom Pokémon!</p>
 
-        .type-option input {
-            opacity: 0;
-        }
+        <form method="POST" class="space-y-5">
+            {% csrf_token %}
 
-        .type-option.selected {
-            box-shadow: 0 0 0 2px black;
-        }
-</style>
-<body>
-    <form method="POST">
-        {% csrf_token %}
+            <div>
+                <label for="pokemon" class="block font-semibold mb-1">Species Name</label>
+                <input type="text" name="pokemon" id="pokemon" class="input input-bordered w-full" placeholder="e.g. Dragonite" required/>
+            </div>
 
-        <h3>Let's Create a New Pokemon:</h3>
+            <div>
+                <label for="name" class="block font-semibold mb-1">Nickname</label>
+                <input type="text" name="name" id="name" class="input input-bordered w-full" placeholder="e.g. Sparky" required/>
+            </div>
 
-        <br>
-        <label for="pokemon">What is this species called?</label>
-        <input type="text" name="pokemon">
+            <div>
+                <label for="prompt" class="block font-semibold mb-1">What does this Pokémon look like?</label>
+                <textarea name="prompt" id="prompt" class="textarea textarea-bordered w-full" rows="2" placeholder="Describe your Pokémon's appearance..." required></textarea>
+            </div>
 
-        <br>
-        <label for="name">What's your Pokemon's nickname?</label>
-        <input type="text" name="name">
+            <div>
+                <label class="block font-semibold mb-2">Select Types
+                    <span class="text-xs text-gray-400"> (1-2)</span>
+                </label>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {% for type_name, color in types %}
+                    <label class="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all {{ color }} bg-opacity-20 hover:bg-opacity-40">
+                        <input type="checkbox" name="types" value="{{ type_name }}" class="checkbox checkbox-sm accent-{{ color|slice:'3:' }}"/>
+                        <span class="font-semibold">{{ type_name }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 mt-2">
+                <input type="checkbox" name="confirm" id="confirm" class="checkbox checkbox-accent" required/>
+                <label for="confirm" class="font-medium">Yes, spend 100 PokeDollars to create this Pokémon</label>
+            </div>
 
-        <br>
-        <label for="prompt">What does this Pokemon look like?</label>
-        <textarea type="text" name="prompt"> </textarea>
+            <div class="flex justify-center mt-6">
+                <button type="submit" class="btn btn-accent btn-wide rounded-full text-lg font-semibold shadow-md">Create Pokémon</button>
+            </div>
 
-        <br>
-        <br>
-        <h4>Select Types (1-2):</h4>
-        <div class="type-grid">
-            {% for type_name, color in types %}
-            <label class="type-option {{ color }}" data-type="{{ type_name }}">
-                <input type="checkbox" name="types" value="{{ type_name }}">
-                {{ type_name }}
-            </label>
-            {% endfor %}
-        </div>
+        </form>
 
-        <br>
-        <h3>Are you sure you want to spend 100 PokeDollars to create a custom Pokemon?</h3>
-        <label for="confirm">Yes</label>
-        <input type="checkbox" name="confirm">
-
-        <br><br>
-        <button type="submit">Create Pokemon</button>
-    </form>
+    </div>
+    
+</div>
 
 <script>
-    const maxTypes = 2;
-    const typeOptions = document.querySelectorAll('.type-option');
-
-    typeOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            const checkbox = this.querySelector('input');
-            const selected = document.querySelectorAll('input[name="types"]:checked');
-
-            if (!checkbox.checked && selected.length >= maxTypes) {
-                alert(`Maximum of ${maxTypes} types allowed`);
-                return;
-            }
-
-            checkbox.checked = !checkbox.checked;
-            this.classList.toggle('selected', checkbox.checked);
-        });
+  document.querySelectorAll('input[name="types"]').forEach((input) => {
+    input.addEventListener("change", function () {
+      const checked = document.querySelectorAll('input[name="types"]:checked');
+      if (checked.length > 2) {
+        this.checked = false;
+        alert("You can select up to 2 types only.");
+      }
     });
+  });
 </script>
 
 {% endblock %}
