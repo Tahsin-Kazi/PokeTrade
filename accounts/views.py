@@ -15,6 +15,10 @@ from .models import FriendRequest, send_friend_request, accept_friend_request, r
 from django.db.models import Count
 from accounts.models import Profile
 
+# Altered Code
+from django.views.decorators.http import require_POST
+# Altered Code
+
 def register(request):
     template_data = {'title': 'Register'}
     if request.method == "POST":
@@ -140,19 +144,41 @@ def incoming_requests(request):
     return render(request, 'accounts/incoming_requests.html', {'requests': requests})
 
 
+
+
+
+
+
+
+# Altered Code
+
 @login_required
 def accept_friend_request(request, request_id):
-    friend_request = get_object_or_404(FriendRequest, id=request_id)
+    friend_request = get_object_or_404(FriendRequest, id=request_id, to_user=request.user)
 
-    if friend_request.to_user == request.user:
+    if friend_request.status == 'pending':
         friend_request.status = 'accepted'
         friend_request.save()
 
-        # Add both as friends
-        friend_request.from_user.profile.friends.add(friend_request.to_user)
-        friend_request.to_user.profile.friends.add(friend_request.from_user)
+        # Add both users to each other's friend lists
+        request.user.profile.friends.add(friend_request.from_user)
+        friend_request.from_user.profile.friends.add(request.user)
 
-    return redirect('incoming_requests')
+        messages.success(request, f"You are now friends with {friend_request.from_user.username}!")
+    else:
+        messages.warning(request, "This friend request has already been handled.")
+
+    return redirect('profile')
+
+# Altered Code
+
+
+
+
+
+
+
+
 
 @login_required
 def reject_friend_request(request, request_id):
@@ -164,12 +190,58 @@ def reject_friend_request(request, request_id):
 
     return redirect('incoming_requests')
 
+
+
+
+
+
+
+
+# Altered Code
+
+@login_required
+@require_POST
+def delete_friend_request(request, request_id):
+    # Get the request the user sent
+    fr = get_object_or_404(FriendRequest, id=request_id, from_user=request.user)
+
+    if fr.status == 'pending':
+        messages.error(request, "You can't delete a pending request. Cancel it instead.")
+    elif fr.status == 'accepted':
+        # Only delete the FriendRequest object — don't remove friendship
+        fr.delete()
+        messages.success(request, "Friend request removed. You are still friends.")
+    elif fr.status == 'rejected':
+        fr.delete()
+        messages.success(request, "Rejected friend request removed.")
+
+    return redirect('profile')
+
+@login_required
+@require_POST
+def cancel_friend_request(request, request_id):
+    fr = get_object_or_404(FriendRequest, id=request_id, from_user=request.user)
+
+    if fr.status == 'pending':
+        fr.delete()
+        messages.success(request, "Friend request canceled.")
+    else:
+        messages.error(request, "Only pending friend requests can be canceled.")
+
+    return redirect('profile')
+
 @login_required
 def view_user_profile(request, user_id):
     target_user = get_object_or_404(User, id=user_id)
+    target_profile = get_object_or_404(Profile, user=target_user)
+    pokemon_collection = target_profile.collection.all()
     is_friend = target_user in request.user.profile.get_friends()
 
-    return render(request, "accounts/user_profile.html", {
+    return render(request, "accounts/friend_profile.html", {
         "target_user": target_user,
+        "target_profile": target_profile,
+        "pokemon_collection": pokemon_collection,
         "is_friend": is_friend,
     })
+
+# Altered Code
