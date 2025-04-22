@@ -123,6 +123,47 @@
         {% endif %}
     </div>
 
+        <div>
+
+        <h1 class="text-2xl font-bold mb-4">Previous Trades:</h1>
+
+        {% if previous_trades.count != 0 %}
+
+            <ul class="list bg-base-100 rounded-box shadow-md mb-8 bg-white">
+
+            {% for trade in previous_trades %}
+                <li class="list-row flex items-center gap-4 p-4">
+                    <div>
+                        <div class="font-semibold">From: {{ trade.sender }}</div>
+                        <div class="text-xs uppercase font-semibold opacity-60">
+                            {{ trade.date_posted }}
+                        </div>
+                    </div>
+                    <a href="{% url 'trades.view' trade.id %}" class="btn btn-square btn-ghost ml-auto">
+                        <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor">
+                                <path d="M6 3L20 12 6 21 6 3z"></path>
+                            </g>
+                        </svg>
+                    </a>
+                </li>
+            {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <div role="alert" class="alert mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>No previous trades.</span>
+            </div>
+
+        {% endif %}
+    </div>
+
+
 </div>
 
 {% endblock %}

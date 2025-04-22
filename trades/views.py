@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
@@ -13,7 +13,8 @@ def index(request):
         "profile": request.user.profile,
         "friends": request.user.profile.friends.all(),
         "incoming_trades": Trade.objects.filter(receiver=request.user.profile, status="pending").all(),
-        "outgoing_trades": Trade.objects.filter(sender=request.user.profile, status="pending").all()
+        "outgoing_trades": Trade.objects.filter(sender=request.user.profile, status="pending").all(),
+        "previous_trades" : Trade.objects.filter(sender=request.user.profile, status="accepted").all().union(Trade.objects.filter(receiver=request.user.profile, status="accepted").all()),
     }
     return render(request, "trades/index.html", context=context)
 
@@ -77,6 +78,9 @@ def view(request, id):
         'receiver_pokemon': trade.receiver_pokemon.all(),
     }
 
+    if trade.status == 'accepted':
+        return render(request, "trades/view_previous.html", context)
+
     if request.user.profile != trade.receiver:
         return render(request, "trades/view_sender.html", context)
 
@@ -92,6 +96,7 @@ def process_trade(request, id):
         if validate_trade(trade):
             transfer_pokemon(trade)
             trade.status = 'accepted'
+            trade.date_posted = date.today()
             trade.save()
             messages.success(request, "Trade accepted! Pokemon have been traded.")
         else:

@@ -1,0 +1,112 @@
+{% extends 'base.html' %} 
+{% block title %}Trade Offer to {{ trade.receiver.user.username }}{% endblock title %} 
+
+{% block content %}
+
+<div class="p-5">
+  <btn class="btn btn-accent rounded-md mr-2 mb-2">
+    <a href="{% url 'trades.index' %}" class="flex items-center gap-1">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+        />
+      </svg>
+      Back
+    </a>
+  </btn>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <h1 class="text-3xl font-semibold text-center md:col-start-2">
+      Trade Offer to {{ trade.receiver.user.username }}
+      <br>
+      Trade Accepted on {{ trade.date_posted }}
+    </h1>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-6">
+    <!-- Sender's Pokémon -->
+    <div
+      class="col-span-1 md:col-span-2 bg-white border border-gray-200 rounded-lg shadow-md p-4 min-h-[45rem] rounded-xl"
+    >
+      <h2 class="text-xl font-semibold mb-4 text-center">You traded:</h2>
+      {% if sender_pokemon %}
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+        {% for pokemon in sender_pokemon %}
+        <div>
+          <label
+            class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-gray-300"
+          >
+            <figure>
+              <img
+                src="{{ pokemon.image }}"
+                alt="{{ pokemon.name }}"
+                class="w-full object-cover"
+              />
+            </figure>
+            <div class="card-body p-2">
+              <p
+                class="text-sm font-semibold text-gray-800 truncate text-center"
+              >
+                {{ pokemon.name }}
+              </p>
+            </div>
+          </label>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+        <p class="text-center text-gray-500">No Pokemon Offered</p>
+      {% endif %}
+    </div>
+
+    <div class="col-span-1 flex flex-col justify-center items-center gap-4">
+    </div>
+
+    <!-- Receiver's Pokémon -->
+    <div
+      class="col-span-1 md:col-span-2 bg-white border border-gray-200 rounded-lg shadow-md p-4 min-h-[45rem] rounded-xl"
+    >
+      <h2 class="text-xl font-semibold mb-4 text-center">
+        For {{ trade.receiver.user.username }}'s:
+      </h2>
+      {% if receiver_pokemon %}
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+        {% for pokemon in receiver_pokemon %}
+        <div>
+          <label
+            class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer border-2 border-transparent hover:border-gray-300"
+          >
+            <figure>
+              <img
+                src="{{ pokemon.image }}"
+                alt="{{ pokemon.name }}"
+                class="w-full object-cover"
+              />
+            </figure>
+            <div class="card-body p-2">
+              <p
+                class="text-sm font-semibold text-gray-800 truncate text-center"
+              >
+                {{ pokemon.name }}
+              </p>
+            </div>
+          </label>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-center text-gray-500">No Pokemon Requested</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

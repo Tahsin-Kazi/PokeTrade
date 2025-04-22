@@ -42,9 +42,9 @@ def index(request):
 
     if query:
         filter_kwargs = {f"{search_field}__icontains": query}
-        collection = Pokemon.objects.filter(owner=user.profile, **filter_kwargs)
+        collection = user.profile.collection.filter(owner=user.profile, **filter_kwargs)
     else:
-        collection = Pokemon.objects.filter(owner=user.profile)
+        collection = user.profile.collection.filter(owner=user.profile)
 
     context = {
         'user': user,
