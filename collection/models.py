@@ -1,7 +1,5 @@
 from django.db import models
-from pokebase import pokemon as fetch_pokemon  # Import the pokebase library
-import os
-from django.conf import settings
+from pokebase import pokemon as fetch_pokemon
 import random
 
 class Pokemon(models.Model):
@@ -13,7 +11,7 @@ class Pokemon(models.Model):
     data = models.JSONField(default=dict)
 
     def save(self, *args, **kwargs):
-        if not self.pk or not self.image:
+        if not self.image:
             try:
                 poke_data = fetch_pokemon(self.pokemon.lower())  # Fetch Pokemon by name
                 
@@ -53,7 +51,7 @@ class Pokemon(models.Model):
                 print(f"Error fetching data from PokeAPI: {e}")
                 self.data = {"error": "Could not fetch data from PokeAPI"}
 
-        super().save(*args, **kwargs)  # Call the parent class's save method
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Pokemon"

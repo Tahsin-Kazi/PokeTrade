@@ -5,9 +5,10 @@
 {% block content %}
 <div class="p-5">
 
+    <a href="{% url 'collection.create' %}"><h1 class="text-3xl font-bold">Create Pokemon</h1></a>
   <div class="grid grid-cols-2">
 
-    <h1 class="text-3xl font-semibold">Collection:</h1>
+  <h1 class="text-3xl font-semibold">Collection:</h1>
 
       <form method="GET" action="{% url 'collection.index' %}" class="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-10 gap-2">
         
@@ -23,7 +24,6 @@
         <button type="submit" class="btn btn-accent rounded-lg sm:col-start-10 order-3 sm:order-3">Search</button>
 
       </form>
-
 
   </div>
 

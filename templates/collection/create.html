@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            max-width: 600px;
+            margin: 20px 0;
+        }
+
+        .type-option {
+            cursor: pointer;
+            text-align: center;
+            color: black;
+        }
+
+        .type-option input {
+            opacity: 0;
+        }
+
+        .type-option.selected {
+            box-shadow: 0 0 0 2px black;
+        }
+</style>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+
+        <h3>Let's Create a New Pokemon:</h3>
+
+        <br>
+        <label for="pokemon">What is this species called?</label>
+        <input type="text" name="pokemon">
+
+        <br>
+        <label for="name">What's your Pokemon's nickname?</label>
+        <input type="text" name="name">
+
+        <br>
+        <label for="prompt">What does this Pokemon look like?</label>
+        <textarea type="text" name="prompt"> </textarea>
+
+        <br>
+        <br>
+        <h4>Select Types (1-2):</h4>
+        <div class="type-grid">
+            {% for type_name, color in types %}
+            <label class="type-option {{ color }}" data-type="{{ type_name }}">
+                <input type="checkbox" name="types" value="{{ type_name }}">
+                {{ type_name }}
+            </label>
+            {% endfor %}
+        </div>
+
+        <br>
+        <h3>Are you sure you want to spend 1000 PokeDollars to create a custom Pokemon?</h3>
+        <label for="confirm">Yes</label>
+        <input type="checkbox" name="confirm">
+
+        <br><br>
+        <button type="submit">Create Pokemon</button>
+    </form>
+
+<script>
+    const maxTypes = 2;
+    const typeOptions = document.querySelectorAll('.type-option');
+
+    typeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const checkbox = this.querySelector('input');
+            const selected = document.querySelectorAll('input[name="types"]:checked');
+
+            if (!checkbox.checked && selected.length >= maxTypes) {
+                alert(`Maximum of ${maxTypes} types allowed`);
+                return;
+            }
+
+            checkbox.checked = !checkbox.checked;
+            this.classList.toggle('selected', checkbox.checked);
+        });
+    });
+</script>
+
+{% endblock %}
