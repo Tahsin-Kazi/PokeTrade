@@ -15,6 +15,10 @@ urlpatterns = [
     path("find_friends/", views.find_friends, name="find_friends"),
     path("incoming_requests/", views.incoming_requests, name="incoming_requests"),
 
+    # altered Code
+    path("profile/<int:user_id>/", views.view_user_profile, name="view_user_profile"),
+    # altered Code
+
 
 
     path(

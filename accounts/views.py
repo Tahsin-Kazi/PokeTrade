@@ -155,12 +155,21 @@ def reject_friend_request(request, request_id):
 
     return redirect('incoming_requests')
 
+# Altered Code
+
 @login_required
 def view_user_profile(request, user_id):
     target_user = get_object_or_404(User, id=user_id)
+    target_profile = get_object_or_404(Profile, user=target_user)
+    pokemon_collection = target_profile.collection.all()
     is_friend = target_user in request.user.profile.get_friends()
 
-    return render(request, "accounts/user_profile.html", {
+    return render(request, "accounts/friend_profile.html", {
         "target_user": target_user,
+        "target_profile": target_profile,
+        "pokemon_collection": pokemon_collection,
         "is_friend": is_friend,
     })
+
+
+# Altered Code

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ target_user.username }}'s Profile{% endblock title %}
+
+{% block content %}
+<div class="container mx-auto max-w-4xl p-6 space-y-8">
+
+    <!-- User Profile Box -->
+    <div class="bg-white shadow-xl rounded-3xl p-8">
+        <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-6">{{ target_user.username }}'s Profile</h2>
+        <div class="space-y-4 text-gray-700">
+            <p><strong class="font-semibold">In-game Currency:</strong> {{ target_profile.currency }} PokeDollars</p>
+            <p><strong class="font-semibold">Member Since:</strong> {{ target_user.date_joined|date:"F j, Y" }}</p>
+            <p><strong class="font-semibold">Last Login:</strong> {{ target_user.last_login|date:"F j, Y, g:i a" }}</p>
+            {% if is_friend %}
+                <p class="text-green-600 font-medium">✓ You are friends</p>
+            {% else %}
+                <p class="text-gray-500 italic">You are not friends with this user.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Pokémon Collection -->
+    <div class="bg-white shadow-xl rounded-3xl p-8">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4">{{ target_user.username }}'s Pokémon Collection</h3>
+        {% if pokemon_collection %}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {% for pokemon in pokemon_collection %}
+                    <div class="border p-3 rounded-xl shadow hover:shadow-md transition text-center">
+                        <p class="font-semibold text-lg">{{ pokemon.name }}</p>
+                        {% if pokemon.image %}
+                            <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}" class="h-24 mx-auto mt-2">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500 italic">This user has no Pokémon in their collection.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
