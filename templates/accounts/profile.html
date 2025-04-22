@@ -28,6 +28,26 @@
             {% for request in sent_requests %}
                 <li class="text-gray-700">
                     To: <strong>{{ request.to_user.username }}</strong> — Status: <span class="capitalize">{{ request.get_status_display }}</span>
+
+{#Altered Code#}
+                    {# show Delete button once it’s accepted or rejected #}
+                    {% if request.status != 'pending' %}
+                      <form
+                        method="post"
+                        action="{% url 'delete_friend_request' request.id %}"
+                        class="inline-block"
+                      >
+                        {% csrf_token %}
+                        <button
+                          type="submit"
+                          class="btn btn-sm btn-outline btn-error"
+                        >
+                          Delete
+                        </button>
+                      </form>
+                    {% endif %}
+{#Altered Code#}
+
                 </li>
             {% empty %}
                 <li class="text-gray-500">You haven't sent any friend requests.</li>
@@ -44,10 +64,18 @@
                     <span>
                         From: <strong>{{ request.from_user.username }}</strong>
                     </span>
-                    <span class="space-x-2">
-                        <a href="{% url 'accept_friend_request' request.id %}" class="btn btn-success btn-sm">Accept</a>
-                        <a href="{% url 'reject_friend_request' request.id %}" class="btn btn-danger btn-sm">Reject</a>
-                    </span>
+
+{#Altered Code#}
+                    {% if request.status == 'pending' %}
+                        <span class="space-x-2">
+                            <a href="{% url 'accept_friend_request' request.id %}" class="btn btn-success btn-sm">Accept</a>
+                            <a href="{% url 'reject_friend_request' request.id %}" class="btn btn-danger btn-sm">Reject</a>
+                        </span>
+                    {% else %}
+                        <span class="text-sm text-grey-500 italic">You have {{ request.status }} this request.</span>
+                    {% endif %}
+{#Altered Code#}
+
                 </li>
             {% empty %}
                 <li class="text-gray-500">No incoming friend requests.</li>

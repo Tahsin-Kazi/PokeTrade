@@ -15,6 +15,10 @@ from .models import FriendRequest, send_friend_request, accept_friend_request, r
 from django.db.models import Count
 from accounts.models import Profile
 
+# Altered Code
+from django.views.decorators.http import require_POST
+# Altered Code
+
 def register(request):
     template_data = {'title': 'Register'}
     if request.method == "POST":
@@ -158,6 +162,24 @@ def reject_friend_request(request, request_id):
 # Altered Code
 
 @login_required
+@require_POST
+def delete_friend_request(request, request_id):
+    # Only allow deletions of requests _they_ sent, and that are no longer pending
+    fr = get_object_or_404(
+        FriendRequest,
+        id=request_id,
+        from_user=request.user
+    )
+
+    if fr.status in ('accepted', 'rejected'):
+        fr.delete()
+        messages.success(request, "Friend request removed.")
+    else:
+        messages.error(request, "You can only delete accepted or rejected requests.")
+
+    return redirect('profile')
+
+@login_required
 def view_user_profile(request, user_id):
     target_user = get_object_or_404(User, id=user_id)
     target_profile = get_object_or_404(Profile, user=target_user)
@@ -170,6 +192,5 @@ def view_user_profile(request, user_id):
         "pokemon_collection": pokemon_collection,
         "is_friend": is_friend,
     })
-
 
 # Altered Code
