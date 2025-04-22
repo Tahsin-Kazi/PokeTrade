@@ -5,7 +5,6 @@
 {% block content %}
 <div class="p-5">
 
-    <a href="{% url 'collection.create' %}"><h1 class="text-3xl font-bold">Create Pokemon</h1></a>
   <div class="grid grid-cols-2">
 
   <h1 class="text-3xl font-semibold">Collection:</h1>
@@ -50,7 +49,7 @@
       </div>
     </div>
   {% endfor %}
-</div>
+  </div>
 
   {% if collection.count == 0 %}
     <div class="flex justify-center items-center min-h-[calc(100vh-14rem)]">
@@ -61,6 +60,14 @@
     </div>
   {% endif %}
 
+
+
 </div>
+
+<a href="{% url 'collection.create' %}" class="fixed bottom-8 right-8 btn btn-accent btn-circle text-2xl shadow-lg-50">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+  </svg>
+</a>
 
 {% endblock content%}

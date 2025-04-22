@@ -34,7 +34,9 @@
             <p class="text-5xl font-semibold mb-4 truncate">{{ data.nickname }}</p>
             <ul class="gap-4 space-y-4 text-2xl">
                 <p class=""><span class="text-gray-500">Species:</span> {{ data.name }}</p>
-                <h1 class=""><span class="text-gray-500">Pokedex Number:</span> {{ data.id }}</h1>
+                {% if data.id != "X" %}
+                    <h1 class=""><span class="text-gray-500">Pokedex Number:</span> {{ data.id }}</h1>
+                {% endif %}
                 <h1 class="">
                     <span class="text-gray-500">Type:</span>
                     {% for type in data.types_with_colors %}
