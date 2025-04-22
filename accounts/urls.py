@@ -19,6 +19,7 @@ urlpatterns = [
     path("profile/<int:user_id>/", views.view_user_profile, name="view_user_profile"),
 
     path('delete_request/<int:request_id>/', views.delete_friend_request, name='delete_friend_request'),
+    path('friend-request/<int:request_id>/cancel/', views.cancel_friend_request, name='cancel_friend_request'),
     # altered Code
 
 
