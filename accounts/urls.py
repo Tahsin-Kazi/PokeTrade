@@ -28,6 +28,8 @@ urlpatterns = [
 
     path('delete_request/<int:request_id>/', views.delete_friend_request, name='delete_friend_request'),
     path('friend-request/<int:request_id>/cancel/', views.cancel_friend_request, name='cancel_friend_request'),
+    path('friend-request/<int:request_id>/cancel/', views.cancel_friend_request, name='cancel_friend_request'),
+    path('friend-request/<int:request_id>/delete/', views.delete_friend_request, name='delete_friend_request'),
     # altered Code
 
 

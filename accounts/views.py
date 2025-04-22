@@ -55,7 +55,7 @@ def user_logout(request):
 @login_required
 def profile(request):
     user = request.user
-    sent_requests = FriendRequest.objects.filter(from_user=user)
+    sent_requests = FriendRequest.objects.filter(from_user=request.user, hidden_by_sender=False)
     received_requests = FriendRequest.objects.filter(to_user=user)
 
     template_data = {
@@ -202,33 +202,20 @@ def reject_friend_request(request, request_id):
 @login_required
 @require_POST
 def delete_friend_request(request, request_id):
-    # Get the request the user sent
-    fr = get_object_or_404(FriendRequest, id=request_id, from_user=request.user)
-
-    if fr.status == 'pending':
-        messages.error(request, "You can't delete a pending request. Cancel it instead.")
-    elif fr.status == 'accepted':
-        # Only delete the FriendRequest object — don't remove friendship
-        fr.delete()
-        messages.success(request, "Friend request removed. You are still friends.")
-    elif fr.status == 'rejected':
-        fr.delete()
-        messages.success(request, "Rejected friend request removed.")
-
-    return redirect('profile')
+    friend_request = get_object_or_404(FriendRequest, id=request_id, from_user=request.user)
+    if friend_request.status in ['accepted', 'rejected']:
+        friend_request.hidden_by_sender = True
+        friend_request.save()
+    return redirect('profile')  # Adjust as needed
 
 @login_required
 @require_POST
 def cancel_friend_request(request, request_id):
-    fr = get_object_or_404(FriendRequest, id=request_id, from_user=request.user)
+    friend_request = get_object_or_404(FriendRequest, id=request_id, from_user=request.user, status='pending')
+    friend_request.hidden_by_sender = True
+    friend_request.save()
+    return redirect('profile')  # Adjust as needed
 
-    if fr.status == 'pending':
-        fr.delete()
-        messages.success(request, "Friend request canceled.")
-    else:
-        messages.error(request, "Only pending friend requests can be canceled.")
-
-    return redirect('profile')
 
 @login_required
 def view_user_profile(request, user_id):

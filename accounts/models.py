@@ -30,22 +30,20 @@ class Profile(models.Model):
 
 
 class FriendRequest(models.Model):
-    STATUS_CHOICES = [
+    from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, choices=[
         ('pending', 'Pending'),
         ('accepted', 'Accepted'),
         ('rejected', 'Rejected'),
-    ]
-
-    from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
-    to_user = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('from_user', 'to_user')  # Prevent duplicate requests
+    ])
+    hidden_by_sender = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.from_user} -> {self.to_user}"
+        return f"{self.from_user} ➝ {self.to_user} [{self.status}]"
+
+#     ffffffffffffffffffffffffffffffff
 
 def send_friend_request(from_user, to_user):
     if from_user != to_user and not FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
