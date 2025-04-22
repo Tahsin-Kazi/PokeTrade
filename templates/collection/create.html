@@ -2,55 +2,66 @@
 {% block title %}Create Pokemon{% endblock title %}
 
 {% block content %}
-<div class="flex justify-center items-center min-h-[calc(100vh-5rem)] p-5">
+<div class=" p-5">
 
-    <div class="card bg-white shadow-xl rounded-3xl w-full max-w-4xl p-8">
+    <btn class="btn btn-accent rounded-md mr-2 mb-4"><a href="{% url 'collection.index' %}" class="flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        Back
+    </a></btn>
 
-        <h1 class="text-3xl font-bold text-center mb-2">Create a New Pokémon</h1>
-        <p class="text-center text-gray-500 mb-6">Spend <span class="font-semibold text-accent">100 PokeDollars</span> to create your own custom Pokémon!</p>
+    <div class="flex justify-center items-center min-h-[calc(100vh-5rem)]">
 
-        <form method="POST" class="space-y-5">
-            {% csrf_token %}
+        <div class="card bg-white shadow-xl rounded-3xl w-full max-w-4xl p-8">
 
-            <div>
-                <label for="pokemon" class="block font-semibold mb-1">Species Name</label>
-                <input type="text" name="pokemon" id="pokemon" class="input input-bordered w-full" placeholder="e.g. Dragonite" required/>
-            </div>
+            <h1 class="text-3xl font-bold text-center mb-2">Create a New Pokémon</h1>
+            <p class="text-center text-gray-500 mb-6">Spend <span class="font-semibold text-accent">100 PokeDollars</span> to create your own custom Pokémon!</p>
 
-            <div>
-                <label for="name" class="block font-semibold mb-1">Nickname</label>
-                <input type="text" name="name" id="name" class="input input-bordered w-full" placeholder="e.g. Sparky" required/>
-            </div>
+            <form method="POST" class="space-y-5">
+                {% csrf_token %}
 
-            <div>
-                <label for="prompt" class="block font-semibold mb-1">What does this Pokémon look like?</label>
-                <textarea name="prompt" id="prompt" class="textarea textarea-bordered w-full" rows="2" placeholder="Describe your Pokémon's appearance..." required></textarea>
-            </div>
-
-            <div>
-                <label class="block font-semibold mb-2">Select Types
-                    <span class="text-xs text-gray-400"> (1-2)</span>
-                </label>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {% for type_name, color in types %}
-                    <label class="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all {{ color }} bg-opacity-20 hover:bg-opacity-40">
-                        <input type="checkbox" name="types" value="{{ type_name }}" class="checkbox checkbox-sm accent-{{ color|slice:'3:' }}"/>
-                        <span class="font-semibold">{{ type_name }}</span>
-                    </label>
-                    {% endfor %}
+                <div>
+                    <label for="pokemon" class="block font-semibold mb-1">Species Name</label>
+                    <input type="text" name="pokemon" id="pokemon" class="input input-bordered w-full" placeholder="e.g. Dragonite" required/>
                 </div>
-            </div>
-            
-            <div class="flex items-center gap-2 mt-2">
-                <input type="checkbox" name="confirm" id="confirm" class="checkbox checkbox-accent" required/>
-                <label for="confirm" class="font-medium">Yes, spend 100 PokeDollars to create this Pokémon</label>
-            </div>
 
-            <div class="flex justify-center mt-6">
-                <button type="submit" class="btn btn-accent btn-wide rounded-full text-lg font-semibold shadow-md">Create Pokémon</button>
-            </div>
+                <div>
+                    <label for="name" class="block font-semibold mb-1">Nickname</label>
+                    <input type="text" name="name" id="name" class="input input-bordered w-full" placeholder="e.g. Sparky" required/>
+                </div>
 
-        </form>
+                <div>
+                    <label for="prompt" class="block font-semibold mb-1">What does this Pokémon look like?</label>
+                    <textarea name="prompt" id="prompt" class="textarea textarea-bordered w-full" rows="2" placeholder="Describe your Pokémon's appearance..." required></textarea>
+                </div>
+
+                <div>
+                    <label class="block font-semibold mb-2">Select Types
+                        <span class="text-xs text-gray-400"> (1-2)</span>
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {% for type_name, color in types %}
+                        <label class="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all {{ color }} bg-opacity-20 hover:bg-opacity-40">
+                            <input type="checkbox" name="types" value="{{ type_name }}" class="checkbox checkbox-sm accent-{{ color|slice:'3:' }}"/>
+                            <span class="font-semibold">{{ type_name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-2 mt-2">
+                    <input type="checkbox" name="confirm" id="confirm" class="checkbox checkbox-accent" required/>
+                    <label for="confirm" class="font-medium">Yes, spend 100 PokeDollars to create this Pokémon</label>
+                </div>
+
+                <div class="flex justify-center mt-6">
+                    <button type="submit" class="btn btn-accent btn-wide rounded-full text-lg font-semibold shadow-md">Create Pokémon</button>
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
     

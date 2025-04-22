@@ -26,26 +26,58 @@
 		    </ul>
     </div>
     <div class="flex-none">
-			<ul class="menu menu-horizontal px-1">
-			{% if user.is_authenticated %}
-			<li><a href="{% url 'friends_index' %}">Friends & Leaderboard</a></li>
-      <li><a href="{% url 'trades.index' %}">Trades</a></li>
-			<li><a href="{% url 'collection.index' %}">Collection</a></li>
-			<li>
-				<details class="relative z-50">
-				<summary>{{ user.username }}</summary>
-				<ul class="bg-accent rounded-t-none p-2">
-					<li><a href="{% url 'profile' %}">Profile</a></li>
-					<li><a class="hover:bg-red-500" href="{% url 'logout' %}">Logout</a>					</li>
-				</ul>
-				</details>
-			</li>
-			{% else %}
-			<li><a href="{% url 'register' %}">Register</a></li>
-			<li><a href="{% url 'login' %}">Login</a></li>
-			{% endif %}
+
+      <ul class="menu menu-horizontal px-1 sm:hidden">
+        <li>
+          <details class="relative z-50">
+            <summary>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+            </summary>
+            <ul class="absolute right-0 left-auto top-full mt-2 bg-accent rounded-box p-2 min-w-[12rem] shadow z-50">
+              {% if user.is_authenticated %}
+                <li><a href="{% url 'friends_index' %}">Friends</a></li>
+                <li><a href="{% url 'trades.index' %}">Trades</a></li>
+                <li><a href="{% url 'collection.index' %}">Collection</a></li>
+                <li>
+                  <details>
+                    <summary>{{ user.username }}</summary>
+                    <ul>
+                      <li><a href="{% url 'profile' %}">Profile</a></li>
+                      <li><a class="hover:bg-red-500" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                  </details>
+                </li>
+              {% else %}
+                <li><a href="{% url 'register' %}">Register</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+              {% endif %}
+            </ul>
+          </details>
+        </li>
+      </ul>
+
+			<ul class="menu menu-horizontal px-1 hidden sm:flex">
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'friends_index' %}">Friends</a></li>
+          <li><a href="{% url 'trades.index' %}">Trades</a></li>
+          <li><a href="{% url 'collection.index' %}">Collection</a></li>
+          <li>
+            <details class="relative z-50">
+            <summary>{{ user.username }}</summary>
+            <ul class="absolute right-0 left-auto top-full mt-2 bg-accent rounded-box p-2 w-full shadow z-50"">
+              <li><a href="{% url 'profile' %}">Profile</a></li>
+              <li><a class="hover:bg-red-500" href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+            </details>
+          </li>
+        {% else %}
+          <li><a href="{% url 'register' %}">Register</a></li>
+          <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
 			</ul>
-      	</div>
+    </div>
     </div>
 
     <div class="content">
