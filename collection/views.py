@@ -82,9 +82,10 @@ def detail(request, id):
 def get_custom_image(username, pokemon, prompt):
     client = genai.Client(api_key=GENAI_API_KEY)
 
-    contents = ('Hi, can you generate a 2D, clipart, cartoon, '
-                'white background, square image of'
-                'a Pokemon like creature that is a') + prompt
+    contents = ('Hi, can you generate a 2D, clipart, cartoony, '
+                'white background, no shadows, thin black outline,'
+                'Pokemon game style, square image of a'
+                'a Pokemon that is a') + prompt
 
     response = client.models.generate_content(
         model="gemini-2.0-flash-exp-image-generation",
