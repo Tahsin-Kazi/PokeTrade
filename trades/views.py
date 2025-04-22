@@ -123,10 +123,14 @@ def validate_trade(trade):
 
 def transfer_pokemon(trade):
     for pokemon in trade.sender_pokemon.all():
+        trade.sender.collection.remove(pokemon)
+        trade.receiver.collection.add(pokemon)
         pokemon.owner = trade.receiver
         pokemon.save()
 
     for pokemon in trade.receiver_pokemon.all():
+        trade.receiver.collection.remove(pokemon)
+        trade.sender.collection.add(pokemon)
         pokemon.owner = trade.sender
         pokemon.save()
         
