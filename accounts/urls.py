@@ -14,6 +14,7 @@ urlpatterns = [
     path("user/<int:user_id>/", views.view_user_profile, name="view_user_profile"),
     path("find_friends/", views.find_friends, name="find_friends"),
     path("incoming_requests/", views.incoming_requests, name="incoming_requests"),
+    path("leaderboard/", views.leaderboard, name="leaderboard"),
 
 
 

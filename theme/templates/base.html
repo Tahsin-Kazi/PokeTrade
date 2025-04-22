@@ -35,7 +35,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
               </svg>
             </summary>
-            <ul class="absolute right-0 left-auto top-full mt-2 bg-accent rounded-box p-2 min-w-[12rem] shadow z-50">
+            <ul class="absolute right-0 left-auto top-full mt-2 bg-accent rounded-box p-2 min-w-[8rem] shadow z-50">
               {% if user.is_authenticated %}
                 <li><a href="{% url 'friends_index' %}">Friends</a></li>
                 <li><a href="{% url 'trades.index' %}">Trades</a></li>
@@ -45,6 +45,7 @@
                     <summary>{{ user.username }}</summary>
                     <ul>
                       <li><a href="{% url 'profile' %}">Profile</a></li>
+                      <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
                       <li><a class="hover:bg-red-500" href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                   </details>
@@ -66,8 +67,9 @@
           <li>
             <details class="relative z-50">
             <summary>{{ user.username }}</summary>
-            <ul class="absolute right-0 left-auto top-full mt-2 bg-accent rounded-box p-2 w-full shadow z-50"">
+            <ul class="absolute right-0 left-auto top-full mt-2 bg-accent rounded-box p-2 min-w-[8rem] shadow z-50"">
               <li><a href="{% url 'profile' %}">Profile</a></li>
+              <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
               <li><a class="hover:bg-red-500" href="{% url 'logout' %}">Logout</a></li>
             </ul>
             </details>

@@ -4,12 +4,13 @@
 
 {% block content %}
 <div class="p-5">
+
     <div class="grid grid-cols-2">
         <h1 class="text-3xl font-semibold">Friends:</h1>
 
-        <form method="GET" action="{% url 'friends_index' %}" class="grid grid-cols-3 md:grid-cols-4 sm:grid-cols-10 gap-2">
-            <input type="text" name="q" placeholder="Search for a friend..." class="input col-span-2 sm:col-span-3 sm:col-start-7" value="{{ request.GET.q }}">
-            <button type="submit" class="btn btn-accent rounded-lg sm:col-start-10">Search</button>
+        <form method="GET" action="{% url 'friends_index' %}" class="grid grid-cols-2 md:grid-cols-5 sm:grid-cols-10 gap-2">
+            <input type="text" name="q" placeholder="Search for a friend..." class="input col-span-2 sm:col-start-7 sm:col-span-3" value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-accent rounded-lg col-span-2 sm:col-start-10">Search</button>
         </form>
     </div>
 
@@ -39,41 +40,6 @@
     </div>
   {% endif %}
 
-
-</div>
-
-<!-- Leaderboard Section -->
-<div class="mt-10">
-    <h2 class="text-2xl font-semibold mb-4">Leaderboard</h2>
-
-    <div class="mb-4 space-x-4">
-        <a href="?sort=currency" class="btn {% if sort_by == 'currency' %}btn-primary{% else %}btn-outline{% endif %}">Sort by Currency</a>
-        <a href="?sort=pokemon" class="btn {% if sort_by == 'pokemon' %}btn-primary{% else %}btn-outline{% endif %}">Sort by Pokémon</a>
-    </div>
-
-    <div class="overflow-x-auto">
-    <table class="table-auto w-full border-collapse border border-gray-300">
-        <thead>
-            <tr class="bg-gray-100 text-center">
-                {# The headers for the catagories                #}
-                <th class="px-4 py-2 border border-gray-300 font-semibold">Rank</th>
-                <th class="px-4 py-2 border border-gray-300 font-semibold">Username</th>
-                <th class="px-4 py-2 border border-gray-300 font-semibold">Currency</th>
-                <th class="px-4 py-2 border border-gray-300 font-semibold">Pokémon Count</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for profile in leaderboard %}
-            {# Centers the values of each category within their box #}
-            <tr class="text-center {% if profile.user == request.user %}bg-green-100{% endif %}">
-                <td class="px-4 py-2 border border-gray-300">{{ forloop.counter }}</td>
-                <td class="px-4 py-2 border border-gray-300">{{ profile.user.username }}</td>
-                <td class="px-4 py-2 border border-gray-300">{{ profile.currency }}</td>
-                <td class="px-4 py-2 border border-gray-300">{{ profile.pokemon_count }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 </div>
 
 {% endblock content%}

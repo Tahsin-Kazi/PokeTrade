@@ -77,6 +77,16 @@ def friends_index(request):
     if query:
         friends = friends.filter(username__icontains=query)
 
+    context = {
+        'friends': friends,
+        'sort_by': sort_by,
+    }
+    return render(request, 'friends/index.html', context)
+
+@login_required
+def leaderboard(request):
+    sort_by = request.GET.get('sort', 'currency')  # Default sort: currency
+
     # Leaderboard: all users with their profile info and Pokémon count
     profiles = Profile.objects.annotate(pokemon_count=Count('collection'))
 
@@ -86,11 +96,10 @@ def friends_index(request):
         leaderboard = profiles.order_by('-currency', '-pokemon_count')
 
     context = {
-        'friends': friends,
         'leaderboard': leaderboard,
         'sort_by': sort_by,
     }
-    return render(request, 'friends/index.html', context)
+    return render(request, 'friends/leaderboard.html', context)
 
 @login_required
 def find_friends(request):
