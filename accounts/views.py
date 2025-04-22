@@ -134,6 +134,13 @@ def incoming_requests(request):
     requests = FriendRequest.objects.filter(to_user=request.user, status='pending')
     return render(request, 'accounts/incoming_requests.html', {'requests': requests})
 
+
+
+
+
+
+
+
 # Altered Code
 
 @login_required
@@ -156,6 +163,14 @@ def accept_friend_request(request, request_id):
 
 # Altered Code
 
+
+
+
+
+
+
+
+
 @login_required
 def reject_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id)
@@ -165,6 +180,13 @@ def reject_friend_request(request, request_id):
         friend_request.save()
 
     return redirect('incoming_requests')
+
+
+
+
+
+
+
 
 # Altered Code
 
