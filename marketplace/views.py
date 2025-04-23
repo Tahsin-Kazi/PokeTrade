@@ -1,41 +1,93 @@
-from django.shortcuts import render
-import keyboard, schedule, time
+from django.shortcuts import render, get_object_or_404
+from django.db import transaction
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+import time
+import schedule
 from random import randint
 from datetime import date
+from .models import Listing
+
+@login_required(login_url='login')
+def index(request):
+    context = {
+        'listing' : Listing
+    }
+    return render(request, 'marketplace/index.html',context)
+
+@login_required
+def buyPokemon(request, listing_id):
+    listing = get_object_or_404(Listing, id=listing_id)
+    pokemon = listing.pokemon
+    user = request.user
+    profile = user.profile
+    if user.currency >= listing.price and listing.status == "Not Sold":
+        with transaction.atomic():
+            user.currency -= listing.price
+            user.save()
+            listing.status = "Sold"
+            listing.buyer = user
+            profile.collection.add(pokemon)
+            messages.success(request, f"You have purchased {pokemon.name} from {listing.seller}!")
+            return redirect('marketplace.index')
+    else:
+        messages.error(request, "You do not have enough")
+        return redirect('marketplace.index')
+
+@login_required
+def editPrice(request, listing_id):
+    listing = get_object_or_404(Listing, id=listing_id)
+    if listing.seller == request.user:
+        if request.method == 'POST':
+            try:
+                new_price = int(request.POST.get('price'))
+                if new_price >= 0:
+                    listing.price = new_price
+                    listing.save()
+                    messages.sussess(request, "Price updated")
+                    return redirect('marketplace.index')
+                else:
+                    messages.error(request, "This price is negative")
+            except ValueError:
+                messages.error(request, "Invalid proce. Please enter an non-negative integer")
+        return render(request, 'edit_price.html', {'listing': listing})
+    else:
+        messages.error(request, "You did not put this pokemon on the marketplace so you" \
+        "cannot edit its price")
+        return redirect('marketplace.index')
+
+def add_to_listing():
+    random_dex = randint(1, 1025)
+    random_pokemon = fetch_pokemon(random_dex)
+    if random_pokemon:
+        Listing.objects.create(
+            pokemon = random_pokemon,
+            price = 200,
+            date_posted = date.today(),
+            status = "Not Sold",
+            seller = "PokeTrade",
+            buyer = None
+        )
+    else:
+        print(f"There is no pokemon with that dex number")
+
+def run_scheduler():
+    schedule.every(24).hours.do(add_to_listing)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+def all_pokemon(request):
+    listings = Listing.pokemon.all()
+    return render(request, 'index.html', {'listings': listings})
+
+def detail(request, listing_id):
+    listing_id = get_object_or_404(Listing, id = listing_id)
 
 
-@loginIsNeeded
-def buyPokemon(Pokemon, Listing, user, profile):
-    if user.currency >= Listing.price:
-        user.currency -= Listing.price
-        Listing.remove(Pokemon)
-        profile.collection.add(Pokemon, profile)
-
-@loginIsNeeded
-def editPrice(pokemon, listing, profile):
-    if listing.pokemon.seller == profile.user:
-        try:
-            edit_pokemon = listing.objects.get(pokemon = object_id)
-            edit_pokemon.price = int
-
-        except ValueError:
-            print('This is an invalid price. Please enter an integer')
-
-def add_to_listing(pokemon, Listing):
-    randomDex = randint(1, 1025)
-    randomPokemon = fetch_pokemon(randomDex)
-
-    listing = Listing.objects.create (
-        pokemon = randomPokemon,
-        price = 200,
-        date_posted = date.today(),
-        status = "Not Sold",
-        seller = "PokeTrade",
-        buyer = None
-    )
-    listing.save()
-
-schedule.every(24).hours.do(add_to_listing)
+    return render(request, 'item/detail.html', {
+        'listing' : listing_id
+    })
 
 
 

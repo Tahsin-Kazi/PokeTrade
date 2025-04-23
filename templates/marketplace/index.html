@@ -1,8 +1,31 @@
-{% extends "base.html" %}
-{% load static %}
-{% block title %}Marketplace{% endblock title %}
+{% extends 'home/base.html' %}
 
+{% block title %} Welcome to the Marketplace! {% endblock %}
 
-{% block content %}
-    <h1>Welcome to the Marketplace</h1>
+{% block content%}
+    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+        <h2 class="mb-12 text-2xl text-center">On Sale</h2>
+
+        <div class="grid grid-cols-4 gap-3">
+            {% for listing in marketplace %}
+                <div>
+                    <a href="#">
+                        <div class="text-center">
+                        <div>
+                            <p class="text-lg font-semibold">{{ listing.pokemon}}</p>                       
+                        </div>
+
+                        <div class="p-6 bg-white rounded-b-xl">
+                            <h2 class="text-2xl">{{listing.pokemon}}</h2>
+                            <p class="text-grey-500">Price: {{listing.price}} </p>
+                            <p class="text-grey-500">Date Posted: {{listing.date_posted}}</p>
+                            <p class="text-grey-500">Status: {{listing.status}}</p>
+                            <p class="text-grey-500">Seller: {{listing.seller}}</p>
+                            <p class="text-grey-500">Buyer: {{listing.buyer}}</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

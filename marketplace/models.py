@@ -3,12 +3,18 @@ from django.db import models
 from datetime import date
 
 class Listing(models.Model):
+    STATUS_OPTIONS = [
+        ('not_sold', 'Not Sold'),
+        ('sold', 'Sold'),
+    ]
     pokemon = models.ForeignKey("collection.Pokemon", on_delete=models.CASCADE, default=1) 
     price = models.PositiveBigIntegerField()
     date_posted = models.DateField(auto_now=True)
-    status = models.CharField(max_length = 100)
+    status = models.CharField(max_length = 10, choices=STATUS_OPTIONS, default='not_sold')
     seller = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="seller_listing")
-    buyer = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="buyer_listing")
+    buyer = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="buyer_listing", null=True, blank=True)
+    def __str__(self):
+        return str(self.pokemon)
 
     def post_Pokemon(pokemon, collection, profile):
         if(profile.contains(pokemon)):
