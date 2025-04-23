@@ -40,7 +40,6 @@ class FriendRequest(models.Model):
     def __str__(self):
         return f"{self.from_user} ➝ {self.to_user} [{self.status}]"
 
-#     ffffffffffffffffffffffffffffffff
 
 def send_friend_request(from_user, to_user):
     if from_user != to_user and not FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
