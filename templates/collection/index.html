@@ -13,9 +13,18 @@
       
       <select name="search_field" class="select sm:col-start-5 sm:col-span-2 order-2 sm:order-1">
         <option disabled {% if not request.GET.search_field %}selected{% endif %}>Search By</option>
-        <option value="pokemon" {% if request.GET.search_field == 'pokemon' or not request.GET.search_field %}selected{% endif %}>Pokemon</option>
+        <option value="pokemon" {% if request.GET.search_field == 'pokemon' %}selected{% endif %}>Pokemon</option>
         <option value="name" {% if request.GET.search_field == 'name' %}selected{% endif %}>Name</option>
         <option value="data__types" {% if request.GET.search_field == 'data__types' %}selected{% endif %}>Types</option>
+      </select>
+
+
+      <select name="sort" class="select sm:col-start-5 sm:col-span-2 order-2 sm:order-1">
+        <option disabled {% if not request.GET.sort %}selected{% endif %}>Sort By</option>
+        <option value="-date_collected" {% if request.GET.sort == '-date_collected' %}selected{% endif %}>Recent</option>
+        <option value="name" {% if request.GET.sort == 'name' %}selected{% endif %}>Name</option>
+        <option value="pokemon" {% if request.GET.sort == 'pokemon' %}selected{% endif %}>Species</option>
+        <option value="data__id" {% if request.GET.sort == 'data__id' %}selected{% endif %}>Pokedex ID</option>
       </select>
 
       <input type="text" name="q" placeholder="Search your Pokemon..." class="input col-span-2 sm:col-start-7 sm:col-span-3 order-1 sm:order-2" value="{{ request.GET.q }}">
