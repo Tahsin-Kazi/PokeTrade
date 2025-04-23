@@ -1,10 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from tensorflow.python.ops.metrics_impl import false_negatives
-
 from .models import *
-from os.path import exists
 from poketrade.settings import GENAI_API_KEY
 from random import randint
 from google import genai
@@ -40,7 +37,7 @@ def index(request):
     query = request.GET.get('q', '')
     sort = request.GET.get('sort', 'name')
     search_field = request.GET.get('search_field', 'name')
-    
+
     if not user.is_authenticated:
         return redirect('login')
 
