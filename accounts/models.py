@@ -23,10 +23,7 @@ class Profile(models.Model):
             instance.profile.save()
 
     def get_friends(self):
-        sent = FriendRequest.objects.filter(from_user=self.user, status='accepted').values_list('to_user', flat=True)
-        received = FriendRequest.objects.filter(to_user=self.user, status='accepted').values_list('from_user',
-                                                                                                  flat=True)
-        return User.objects.filter(id__in=list(sent) + list(received))
+        return self.friends.all()
 
 
 class FriendRequest(models.Model):

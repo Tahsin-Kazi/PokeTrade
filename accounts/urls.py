@@ -15,24 +15,14 @@ urlpatterns = [
     path("find_friends/", views.find_friends, name="find_friends"),
     path("incoming_requests/", views.incoming_requests, name="incoming_requests"),
     path("leaderboard/", views.leaderboard, name="leaderboard"),
-
-    # altered Code
     path("profile/<int:user_id>/", views.view_user_profile, name="view_user_profile"),
-
     path('delete_request/<int:request_id>/', views.delete_friend_request, name='delete_friend_request'),
     path('friend-request/<int:request_id>/cancel/', views.cancel_friend_request, name='cancel_friend_request'),
-    # altered Code
-
-    # altered Code
     path("profile/<int:user_id>/", views.view_user_profile, name="view_user_profile"),
-
     path('delete_request/<int:request_id>/', views.delete_friend_request, name='delete_friend_request'),
-    path('friend-request/<int:request_id>/cancel/', views.cancel_friend_request, name='cancel_friend_request'),
     path('friend-request/<int:request_id>/cancel/', views.cancel_friend_request, name='cancel_friend_request'),
     path('friend-request/<int:request_id>/delete/', views.delete_friend_request, name='delete_friend_request'),
-    # altered Code
-
-
+    path('friends/remove/<int:user_id>/', views.remove_friend, name='remove_friend'),
 
     path(
         "password-reset/",

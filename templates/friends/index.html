@@ -23,10 +23,17 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4 auto-rows-fr">
         {% for friend in friends %} 
             <div class="card bg-white border border-gray-200 w-full shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div class="card-body">
+                <div class="card-body flex flex-col items-center gap-3">
                     <a href="{% url 'view_user_profile' friend.id %}" class="text-lg font-semibold text-gray-800 text-center truncate block hover:text-blue-600 transition-colors">
                         {{ friend.username }}
                     </a>
+
+                    <form method="POST" action="{% url 'remove_friend' friend.id %}" onsubmit="return confirm('Are you sure you want to remove {{ friend.username }} from your friends list?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-error btn-sm rounded-lg">
+                            Remove
+                        </button>
+                    </form>
                 </div>
             </div>
         {% endfor %}

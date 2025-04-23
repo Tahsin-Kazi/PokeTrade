@@ -73,10 +73,11 @@ def profile(request):
 
 @login_required
 def friends_index(request):
-    query = request.GET.get('q', '')
-    sort_by = request.GET.get('sort', 'currency')  # Default sort: currency
+    request.user.profile.refresh_from_db()  # ✅ Refresh latest state
 
-    # Filter friends if a search is made
+    query = request.GET.get('q', '')
+    sort_by = request.GET.get('sort', 'currency')
+
     friends = request.user.profile.get_friends()
     if query:
         friends = friends.filter(username__icontains=query)
@@ -143,15 +144,6 @@ def incoming_requests(request):
     requests = FriendRequest.objects.filter(to_user=request.user, status='pending')
     return render(request, 'accounts/incoming_requests.html', {'requests': requests})
 
-
-
-
-
-
-
-
-# Altered Code
-
 @login_required
 def accept_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, to_user=request.user)
@@ -170,16 +162,6 @@ def accept_friend_request(request, request_id):
 
     return redirect('profile')
 
-# Altered Code
-
-
-
-
-
-
-
-
-
 @login_required
 def reject_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id)
@@ -189,15 +171,6 @@ def reject_friend_request(request, request_id):
         friend_request.save()
 
     return redirect('incoming_requests')
-
-
-
-
-
-
-
-
-# Altered Code
 
 @login_required
 @require_POST
@@ -218,11 +191,33 @@ def cancel_friend_request(request, request_id):
 
 
 @login_required
+@require_POST
+def remove_friend(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+    user_profile = request.user.profile
+    target_profile = target_user.profile
+
+    # Check if the target user is in the friends list
+    if target_user in user_profile.friends.all():
+        # Remove each other from the friends lists
+        user_profile.friends.remove(target_user)
+        target_profile.friends.remove(request.user)
+
+        # Add success message
+        messages.success(request, f"You are no longer friends with {target_user.username}.")
+    else:
+        # Add warning message if the user is not in the friends list
+        messages.warning(request, f"{target_user.username} is not in your friends list.")
+
+    # Redirect back to the friends index page
+    return redirect('friends_index')  # Correctly redirect to the friends page
+
+@login_required
 def view_user_profile(request, user_id):
     target_user = get_object_or_404(User, id=user_id)
     target_profile = get_object_or_404(Profile, user=target_user)
     pokemon_collection = target_profile.collection.all()
-    is_friend = target_user in request.user.profile.get_friends()
+    is_friend = target_profile in request.user.profile.get_friends()
 
     return render(request, "accounts/friend_profile.html", {
         "target_user": target_user,
