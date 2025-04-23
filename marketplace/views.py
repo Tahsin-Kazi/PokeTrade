@@ -7,11 +7,13 @@ import schedule
 from random import randint
 from datetime import date
 from .models import Listing
+from .forms import OnMarketplacePokemon
 
 @login_required(login_url='login')
 def index(request):
+    listings = Listing.objects.all()
     context = {
-        'listing' : Listing
+        'listing' : listings
     }
     return render(request, 'marketplace/index.html',context)
 
@@ -89,5 +91,16 @@ def detail(request, listing_id):
         'listing' : listing_id
     })
 
+@login_required
+def new(request):
+    form = OnMarketplacePokemon()
+
+
+    return render(request, 'form.html', {
+        'form' : form,
+        'title' : 'New Pokemon'
+    })
+
+    
 
 
