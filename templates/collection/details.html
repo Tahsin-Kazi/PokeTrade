@@ -15,12 +15,21 @@
             Back
         </a></btn>
 
+        <form id="favorite" method="POST" action="{% url 'collection.detail' data.internal_id %}">
+            {% csrf_token %}
+            {% if not data.favorite %}
+            <button type="submit" name="submit_favorite" class="btn btn-accent rounded-md ">Add to Favorites</button>
+            {% else %}
+            <button type="submit" name="submit_favorite" class="btn btn-accent rounded-md ">Remove from Favorites</button>
+            {% endif %}
+        </form>
+
         <button id="edit-name-btn" class="btn btn-accent rounded-md">Edit Nickname</button>
 
         <form class="flex items-center gap-2 hidden" id="edit-name" method="POST" action="{% url 'collection.detail' data.internal_id %}">
             {% csrf_token %}
             <input type="text" name="name" value="{{ data.nickname }}" required class="input flex-grow" placeholder="New Nickname">
-            <button type="submit" class="btn btn-accent rounded-md ">Save</button>
+            <button type="submit" name="submit_nickname" class="btn btn-accent rounded-md ">Save</button>
             <button type="button" id="cancel-edit" class="btn btn-accent rounded-md">Cancel</button>
         </form>
 

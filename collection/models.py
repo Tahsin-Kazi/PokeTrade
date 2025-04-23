@@ -8,6 +8,7 @@ class Pokemon(models.Model):
     owner = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, default=1)
     image = models.CharField(max_length=255, blank=True, null=True)
     date_collected = models.DateTimeField(auto_now_add=True)
+    favorite = models.BooleanField(default=False)
     data = models.JSONField(default=dict)
 
     def save(self, *args, **kwargs):

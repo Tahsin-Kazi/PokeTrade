@@ -1,7 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from tensorflow.python.ops.metrics_impl import false_negatives
+
 from .models import *
+from os.path import exists
 from poketrade.settings import GENAI_API_KEY
 from random import randint
 from google import genai
@@ -35,6 +38,7 @@ def index(request):
     collection = user.profile.collection.all()
     
     query = request.GET.get('q', '')
+    sort = request.GET.get('sort', 'name')
     search_field = request.GET.get('search_field', 'name')
     
     if not user.is_authenticated:
@@ -42,9 +46,10 @@ def index(request):
 
     if query:
         filter_kwargs = {f"{search_field}__icontains": query}
-        collection = user.profile.collection.filter(owner=user.profile, **filter_kwargs)
-    else:
-        collection = user.profile.collection.filter(owner=user.profile)
+        collection = user.profile.collection.filter(**filter_kwargs)
+
+    if sort:
+        collection = collection.order_by("-favorite", sort)
 
     context = {
         'user': user,
@@ -59,15 +64,23 @@ def detail(request, id):
     p = get_object_or_404(Pokemon, id=id)
 
     if request.method == 'POST':
-        new_name = request.POST.get('name', '').strip()
-        if new_name:
-            p.name = new_name
+        if "submit_nickname" in request.POST:
+            new_name = request.POST.get('name', '').strip()
+            if new_name:
+                p.name = new_name
+                p.save()
+                messages.success(request, "Nickname updated successfully!")
+            else:
+                messages.error(request, "Nickname is invalid!")
+        elif "submit_favorite" in request.POST:
+            if p.favorite:
+                p.favorite = False
+            else:
+                p.favorite = True
             p.save()
-            messages.success(request, "Nickname updated successfully!")
-        else:
-            messages.error(request, "Nickname is invalid!")
 
     data = p.data
+    data['favorite'] = p.favorite
     data['image'] = p.image
     data['nickname'] = p.name
     data['total'] = sum(data["stats"].values())
@@ -83,9 +96,10 @@ def get_custom_image(username, pokemon, prompt):
     client = genai.Client(api_key=GENAI_API_KEY)
 
     contents = ('Hi, can you generate a 2D, clipart, cartoony, '
-                'white background, no shadows, thin black outline,'
-                'Pokemon game style, square image of a'
-                'a Pokemon that is a') + prompt
+                'transparent background, no shadows, no border, '
+                'no margin, no padding, with a thin black outline,'
+                'Pokemon game style, square image of a Pokemon'
+                'that is a') + prompt
 
     response = client.models.generate_content(
         model="gemini-2.0-flash-exp-image-generation",
@@ -121,7 +135,7 @@ def create_pokemon(request):
                 "id": "X",
                 "name": pokemon,
                 "ability" : "None",
-                "height": round(random.uniform(0.5, 3.0)),
+                "height": random.uniform(0.5, 3.0),
                 "weight": round(random.uniform(5.0, 150.0)),
                 "types": types,
                 "stats": {
