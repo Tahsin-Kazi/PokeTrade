@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile 
+from .models import Profile, FriendRequest
 from django.utils.html import format_html
 
 @admin.register(Profile)
@@ -23,3 +23,13 @@ class ProfileAdmin(admin.ModelAdmin):
             return "No Friends"
         return format_html("<br>".join([f"{friend.username}" for friend in friends]))
     get_friends.short_description = "Friends"
+    
+@admin.register(FriendRequest)
+class FriendRequestAdmin(admin.ModelAdmin):
+    list_display = ('from_user', 'to_user', 'status', 'created_at')
+    search_fields = ('from_user__username', 'to_user__username')
+    ordering = ('-created_at',)
+    list_per_page = 30
+    list_select_related = ('from_user', 'to_user')
+    
+    

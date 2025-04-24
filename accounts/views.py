@@ -245,4 +245,4 @@ def view_user_profile(request, user_id):
         "is_friend": is_friend,
     })
 
-# Altered Code
+

@@ -3,40 +3,51 @@
 {% block title %}{{ target_user.username }}'s Profile{% endblock title %}
 
 {% block content %}
-<div class="container mx-auto max-w-4xl p-6 space-y-8">
 
-    <!-- User Profile Box -->
-    <div class="bg-white shadow-xl rounded-3xl p-8">
-        <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-6">{{ target_user.username }}'s Profile</h2>
-        <div class="space-y-4 text-gray-700">
-            <p><strong class="font-semibold">In-game Currency:</strong> {{ target_profile.currency }} PokeDollars</p>
-            <p><strong class="font-semibold">Member Since:</strong> {{ target_user.date_joined|date:"F j, Y" }}</p>
-            <p><strong class="font-semibold">Last Login:</strong> {{ target_user.last_login|date:"F j, Y, g:i a" }}</p>
-            {% if is_friend %}
-                <p class="text-green-600 font-medium">✓ You are friends</p>
-            {% else %}
-                <p class="text-gray-500 italic">You are not friends with this user.</p>
-            {% endif %}
+<div class="p-5">
+
+    <a href="{% url 'friends_index' %}" class="inline-flex items-center gap-1 btn btn-accent rounded-md mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        Back
+    </a>
+
+    <div class="mx-auto max-w-4xl space-y-8">
+
+        <!-- User Profile Box -->
+        <div class="bg-white shadow-xl rounded-3xl p-8">
+            <h2 class="text-4xl font-extrabold text-center text-gray-800 mb-6">{{ target_user.username }}'s Profile</h2>
+            <div class="space-y-4 text-gray-700">
+                <p><strong class="font-semibold">In-game Currency:</strong> {{ target_profile.currency }} PokeDollars</p>
+                <p><strong class="font-semibold">Member Since:</strong> {{ target_user.date_joined|date:"F j, Y" }}</p>
+                <p><strong class="font-semibold">Last Login:</strong> {{ target_user.last_login|date:"F j, Y, g:i a" }}</p>
+            </div>
         </div>
-    </div>
 
-    <!-- Pokémon Collection -->
-    <div class="bg-white shadow-xl rounded-3xl p-8">
-        <h3 class="text-2xl font-bold text-gray-800 mb-4">{{ target_user.username }}'s Pokémon Collection</h3>
-        {% if pokemon_collection %}
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Pokémon Collection -->
+        <div class="bg-white shadow-xl rounded-3xl p-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">{{ target_user.username }}'s Pokémon Collection</h3>
+            {% if pokemon_collection %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4 auto-rows-fr">
                 {% for pokemon in pokemon_collection %}
-                    <div class="border p-3 rounded-xl shadow hover:shadow-md transition text-center">
-                        <p class="font-semibold text-lg">{{ pokemon.name }}</p>
-                        {% if pokemon.image %}
-                            <img src="{{ pokemon.image.url }}" alt="{{ pokemon.name }}" class="h-24 mx-auto mt-2">
-                        {% endif %}
+                <div class="card bg-white border border-gray-200 w-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <figure>
+                    <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}" class="w-full object-cover">
+                    </figure>
+                    <div class="card-body flex flex-col justify-between">
+                    <div>
+                        <p class="text-xl font-semibold text-gray-800 truncate">{{ pokemon.name }}</p>
+                        <p class="text-lg text-gray-600 truncate">{{ pokemon.data.name }}</p>
                     </div>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
-        {% else %}
+            {% else %}
             <p class="text-gray-500 italic">This user has no Pokémon in their collection.</p>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
 
 </div>

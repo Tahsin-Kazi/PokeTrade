@@ -44,6 +44,9 @@ class FriendRequest(models.Model):
 
     def __str__(self):
         return f"{self.from_user} ➝ {self.to_user} [{self.status}]"
+    
+    class Meta:
+        verbose_name_plural = "Friend Requests"
 
 
 def send_friend_request(from_user, to_user):

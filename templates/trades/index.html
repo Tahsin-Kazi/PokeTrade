@@ -11,7 +11,7 @@
 
         {% if incoming_trades.count != 0 %}
 
-            <ul class="list bg-base-100 rounded-box shadow-md mb-8 bg-white">
+            <ul class="list bg-base-100 rounded-box shadow-md mb-4 bg-white">
 
             {% for trade in incoming_trades %}
                 <li class="list-row flex items-center gap-4 p-4">
@@ -51,7 +51,7 @@
 
         {% if outgoing_trades.count != 0 %}
 
-            <ul class="list bg-base-100 rounded-box shadow-md mb-8 bg-white">
+            <ul class="list bg-base-100 rounded-box shadow-md mb-4 bg-white">
 
             {% for trade in outgoing_trades %}
                 <li class="list-row flex items-center gap-4 p-4">
@@ -89,7 +89,7 @@
 
         {% if friends.count != 0 %}
 
-            <ul class="list bg-base-100 rounded-box shadow-md bg-white">
+            <ul class="list bg-base-100 rounded-box shadow-md mb-4 bg-white">
 
             {% for friend in friends %}
                 <li class="list-row flex items-center gap-4 p-4">
@@ -123,33 +123,33 @@
         {% endif %}
     </div>
 
-        <div>
+    <div>
 
-        <h1 class="text-2xl font-bold mb-4">Previous Trades:</h1>
+    <h1 class="text-2xl font-bold mb-4">Previous Trades:</h1>
 
-        {% if previous_trades.count != 0 %}
+    {% if previous_trades.count != 0 %}
 
-            <ul class="list bg-base-100 rounded-box shadow-md mb-8 bg-white">
+        <ul class="list bg-base-100 rounded-box shadow-md mb-4 bg-white">
 
-            {% for trade in previous_trades %}
-                <li class="list-row flex items-center gap-4 p-4">
-                    <div>
-                        <div class="font-semibold">From: {{ trade.sender }}</div>
-                        <div class="text-xs uppercase font-semibold opacity-60">
-                            {{ trade.date_posted }}
-                        </div>
+        {% for trade in previous_trades %}
+            <li class="list-row flex items-center gap-4 p-4">
+                <div>
+                    <div class="font-semibold">From: {{ trade.sender }}</div>
+                    <div class="text-xs uppercase font-semibold opacity-60">
+                        {{ trade.date_posted }}
                     </div>
-                    <a href="{% url 'trades.view' trade.id %}" class="btn btn-square btn-ghost ml-auto">
-                        <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor">
-                                <path d="M6 3L20 12 6 21 6 3z"></path>
-                            </g>
-                        </svg>
-                    </a>
-                </li>
-            {% endfor %}
+                </div>
+                <a href="{% url 'trades.view' trade.id %}" class="btn btn-square btn-ghost ml-auto">
+                    <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor">
+                            <path d="M6 3L20 12 6 21 6 3z"></path>
+                        </g>
+                    </svg>
+                </a>
+            </li>
+        {% endfor %}
 
-            </ul>
+        </ul>
 
         {% else %}
 

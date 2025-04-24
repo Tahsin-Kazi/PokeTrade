@@ -132,16 +132,16 @@ def create_pokemon(request):
                 "id": "X",
                 "name": pokemon,
                 "ability" : "None",
-                "height": random.uniform(0.5, 3.0),
-                "weight": round(random.uniform(5.0, 150.0)),
+                "height": round(random.uniform(0.1, 14.5), 1),
+                "weight": round(random.uniform(0.1, 200.0), 1),
                 "types": types,
                 "stats": {
-                    "hp": random.randint(30, 200),
-                    "attack": random.randint(30, 200),
-                    "defense": random.randint(30, 200),
-                    "specialattack": random.randint(30, 200),
-                    "specialdefense": random.randint(30, 200),
-                    "speed": random.randint(30, 200)
+                    "hp": random.randint(30, 120),
+                    "attack": random.randint(30, 120),
+                    "defense": random.randint(30, 120),
+                    "specialattack": random.randint(30, 120),
+                    "specialdefense": random.randint(30, 120),
+                    "speed": random.randint(30, 120)
                 },
                 "image_prompt": prompt,
             }

@@ -24,7 +24,7 @@ class Pokemon(models.Model):
                 
                 species_id = int(poke_data.species.url.split('/')[-2])
                 
-                excluded = ["ho-oh", "porygon-z", "jangmo-o", "hakomo-o", "kommo-o", "wo-chien", "chien-pao", "ting-lu", "chi-yu", "-mega", "-gmax", "-galar", "galarian", "-alola", "-paldea", "zygarde", "necrozma", "kyurem", "terapagos", "ogerpon", "gimmighoul", "palafin", "ursaluna", "calyrex", "zarude", "urshifu", "eternatus", "zacian", "zamazenta", "mimikyu", "silvally", "lycanroc", "minior", "oricorio", "wishiwashi", "toxtricity", "aegislash", "vivillon", "greninja", "tornadus", "thundurus", "landorus", "deoxys", "castform", "sawsbuck", "flabebe", "florges", "keldeo", "dialga", "palkia", "giratina", "darmanitan", "basculin", "shaymin", "rotom", "kyogre", "groudon", "unown", "pikachu"]
+                excluded = ["ho-oh", "porygon-z", "jangmo-o", "hakamo-o", "kommo-o", "wo-chien", "chien-pao", "ting-lu", "chi-yu", "-mega", "-gmax", "-galar", "galarian", "-alola", "-paldea", "zygarde", "necrozma", "kyurem", "terapagos", "ogerpon", "gimmighoul", "palafin", "ursaluna", "calyrex", "zarude", "urshifu", "eternatus", "zacian", "zamazenta", "mimikyu", "silvally", "lycanroc", "minior", "oricorio", "wishiwashi", "toxtricity", "aegislash", "vivillon", "greninja", "tornadus", "thundurus", "landorus", "deoxys", "castform", "sawsbuck", "flabebe", "florges", "keldeo", "dialga", "palkia", "giratina", "darmanitan", "basculin", "shaymin", "rotom", "kyogre", "groudon", "unown", "pikachu"]
                 
                 if any(exclusion in poke_data.name for exclusion in excluded):
                     name = poke_data.name.title()
