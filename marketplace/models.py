@@ -1,17 +1,14 @@
 from django.contrib.auth.models import User
 from django.db import models
 from datetime import date
+from collection.models import Pokemon
 
 class Listing(models.Model):
     STATUS_OPTIONS = [
         ('not_sold', 'Not Sold'),
         ('sold', 'Sold'),
     ]
-    BUYERS = [
-        ('none', 'None'),
-        ('someone', User)
-    ]
-    pokemon = models.ForeignKey("collection.Pokemon", on_delete=models.CASCADE, default=None) 
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, default=None) 
     price = models.PositiveBigIntegerField()
     date_posted = models.DateField(auto_now_add=True)
     status = models.CharField(max_length = 10, choices=STATUS_OPTIONS, default='not_sold')

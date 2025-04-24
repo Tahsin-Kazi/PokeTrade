@@ -8,12 +8,12 @@
         <a href="{% url 'new' %}">Add to Listing</a>
 
         <div class="grid grid-cols-4 gap-3">
-            {% for listing in listings %}
+            {% for listing in marketplace %}
                 <div>
-                    <a href="{% url 'listing:pokemon_detail' listing.pokemon %}">
+                    <a href="{% url 'detail' listing.id %}">
                         <div class="text-center">
                         <div>
-                            <p class="text-lg font-semibold">{{ listing.pokemon}}</p>                       
+                            <p class="text-lg font-semibold">{{ listing.pokemon.id }}</p>                       
                         </div>
 
                         <div class="p-6 bg-white rounded-b-xl">
