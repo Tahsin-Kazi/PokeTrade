@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -8,6 +8,7 @@ from random import randint
 from datetime import date
 from .models import Listing
 from .forms import OnMarketplacePokemon
+from accounts.models import Profile
 
 @login_required(login_url='login')
 def index(request):
@@ -93,12 +94,17 @@ def detail(request, listing_id):
 
 @login_required
 def new(request):
+        form = OnMarketplacePokemon(request.POST)
+        Listing = form.save(commit=False)
+        Listing.save()
+        Profile.collection.remove(Listing.pokemon)
+        
+        return redirect('listing:detail', pk=listing.pokemon)
+                
     form = OnMarketplacePokemon()
-
-
-    return render(request, 'form.html', {
+    return render(request, 'marketplace/form.html', {
         'form' : form,
-        'title' : 'New Pokemon'
+        'title' : 'New Listing'
     })
 
     

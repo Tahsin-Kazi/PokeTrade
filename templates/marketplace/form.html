@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -6,7 +6,7 @@
 <h1 class="mb-6 text-3xl">{{ title }}</h1>
 
 <form method="post" action=".">
-    {% crsf_token %}
+    {% csrf_token %}
 
     <div class="space-y-4">
         {{ form.as_p }}
@@ -21,6 +21,6 @@
         </div>
     {% endif %}
 
-    <button class="py-4 px-8 text-lg bg-teal-500 hover:bg-teal-700 rounded-xl text-white">Submit</button>
+    <button class="py-4 px-8 text-lg bg-orange-500 hover:bg-orange-700 rounded-xl text-black">Submit</button>
 </form>
-{% endblock &}
+{% endblock %}

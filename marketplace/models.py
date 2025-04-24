@@ -27,6 +27,7 @@ class Listing(models.Model):
                 status = 'Not Sold',
                 seller = 'PokeTrade',
                 buyer = None
+                buyer = 'None'
             )
             listing.save()
             Listing.append(pokemon)
