@@ -94,6 +94,7 @@ def detail(request, listing_id):
 
 @login_required
 def new(request):
+    if request.method == 'POST':
         form = OnMarketplacePokemon(request.POST)
         Listing = form.save(commit=False)
         Listing.save()
@@ -101,6 +102,7 @@ def new(request):
         
         return redirect('listing:detail', pk=listing.pokemon)
                 
+    
     form = OnMarketplacePokemon()
     return render(request, 'marketplace/form.html', {
         'form' : form,

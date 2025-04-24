@@ -26,7 +26,6 @@ class Listing(models.Model):
                 date_posted = date.today(),
                 status = 'Not Sold',
                 seller = 'PokeTrade',
-                buyer = None
                 buyer = 'None'
             )
             listing.save()
