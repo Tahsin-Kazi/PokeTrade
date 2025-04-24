@@ -3,7 +3,7 @@ from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import time
-import schedule
+# import schedule
 from random import randint
 from datetime import date
 from .models import Listing
@@ -36,11 +36,11 @@ def add_to_listing():
     else:
         print(f"There is no pokemon with that dex number")
 
-def run_scheduler():
-    schedule.every(24).hours.do(add_to_listing)
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+# def run_scheduler():
+#     schedule.every(24).hours.do(add_to_listing)
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)
 
 
 def detail(request, listing_id):
@@ -60,7 +60,7 @@ def new(request):
             deleted_pokemon = listing.pokemon
             Pokemon.delete(deleted_pokemon)
             print(f"Type of listing: {type(listing)}, Value of listing: {listing}")
-            return redirect('listing:detail', pk=listing.id)
+            return redirect('detail', pk=listing.id)
         else:
             print(form.errors)
             messages.error(request, "There is an error creating the listing")
