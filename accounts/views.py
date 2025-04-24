@@ -40,7 +40,7 @@ def user_login(request):
             password = form.cleaned_data.get("password")
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)  
+                login(request, user)
                 messages.success(request, "You have successfully logged in!")  # Success message
                 return redirect(home_view)  # Redirect to the home page
     else:
@@ -56,7 +56,7 @@ def user_logout(request):
 def profile(request):
     user = request.user
     sent_requests = FriendRequest.objects.filter(from_user=request.user, hidden_by_sender=False)
-    received_requests = FriendRequest.objects.filter(to_user=user)
+    received_requests = FriendRequest.objects.filter(to_user=user, hidden_by_sender=False)
 
     template_data = {
         'title': 'Profile',
@@ -115,7 +115,7 @@ def find_friends(request):
         users = users.filter(username__icontains=query)
 
     # Check which users have already been sent requests or are friends
-    sent_requests = FriendRequest.objects.filter(from_user=request.user)
+    sent_requests = FriendRequest.objects.filter(from_user=request.user, hidden_by_sender=False)
     sent_user_ids = [req.to_user.id for req in sent_requests]
     friends_ids = [friend.id for friend in request.user.profile.get_friends()]
 
@@ -127,17 +127,22 @@ def find_friends(request):
     })
 
 
+def create_friend_request(from_user, to_user):
+    if from_user != to_user:
+        existing = FriendRequest.objects.filter(from_user=from_user, to_user=to_user).first()
+        if existing:
+            if existing.hidden_by_sender:
+                existing.hidden_by_sender = False
+                existing.status = 'pending'
+                existing.save()
+        else:
+            FriendRequest.objects.create(from_user=from_user, to_user=to_user)
+
 @login_required
-def send_friend_request(request, user_id):
+def send_friend_request_view(request, user_id):
     to_user = get_object_or_404(User, id=user_id)
-
-    if to_user != request.user:
-        FriendRequest.objects.get_or_create(
-            from_user=request.user,
-            to_user=to_user
-        )
-
-    return redirect('find_friends')
+    create_friend_request(request.user, to_user)  # Call the helper function
+    return redirect('find_friends')  # or 'profile' or wherever you want to go next
 
 @login_required
 def incoming_requests(request):
@@ -172,22 +177,36 @@ def reject_friend_request(request, request_id):
 
     return redirect('incoming_requests')
 
+# @login_required
+# @require_POST
+# def delete_friend_request(request, request_id):
+#     friend_request = get_object_or_404(FriendRequest, id=request_id, from_user=request.user)
+#     if friend_request.status in ['accepted', 'rejected']:
+#         friend_request.delete()  # This removes the request from the database
+#     return redirect('profile')
+
 @login_required
 @require_POST
 def delete_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, from_user=request.user)
+
     if friend_request.status in ['accepted', 'rejected']:
+        # Mark the request as hidden instead of actually deleting it
         friend_request.hidden_by_sender = True
         friend_request.save()
-    return redirect('profile')  # Adjust as needed
+        messages.success(request, "Friend request successfully deleted.")
+    else:
+        messages.warning(request, "This friend request cannot be deleted yet.")
+
+    return redirect('profile')  # Adjust this to redirect to the correct page
+
 
 @login_required
 @require_POST
 def cancel_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, from_user=request.user, status='pending')
-    friend_request.hidden_by_sender = True
-    friend_request.save()
-    return redirect('profile')  # Adjust as needed
+    friend_request.delete()
+    return redirect('profile')
 
 
 @login_required
