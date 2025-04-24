@@ -81,10 +81,16 @@ def friends_index(request):
     friends = request.user.profile.get_friends()
     if query:
         friends = friends.filter(username__icontains=query)
+        
+    user = request.user
+    sent_requests = FriendRequest.objects.filter(from_user=request.user, hidden_by_sender=False)
+    received_requests = FriendRequest.objects.filter(to_user=user, hidden_by_sender=False)
 
     context = {
         'friends': friends,
         'sort_by': sort_by,
+        'sent_requests': sent_requests,
+        'received_requests': received_requests,
     }
     return render(request, 'friends/index.html', context)
 
@@ -165,7 +171,7 @@ def accept_friend_request(request, request_id):
     else:
         messages.warning(request, "This friend request has already been handled.")
 
-    return redirect('profile')
+    return redirect('friends_index')
 
 @login_required
 def reject_friend_request(request, request_id):
@@ -175,7 +181,7 @@ def reject_friend_request(request, request_id):
         friend_request.status = 'rejected'
         friend_request.save()
 
-    return redirect('incoming_requests')
+    return redirect('friends_index')
 
 # @login_required
 # @require_POST
@@ -198,7 +204,7 @@ def delete_friend_request(request, request_id):
     else:
         messages.warning(request, "This friend request cannot be deleted yet.")
 
-    return redirect('profile')  # Adjust this to redirect to the correct page
+    return redirect('friends_index')  # Adjust this to redirect to the correct page
 
 
 @login_required
@@ -206,7 +212,7 @@ def delete_friend_request(request, request_id):
 def cancel_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, from_user=request.user, status='pending')
     friend_request.delete()
-    return redirect('profile')
+    return redirect('friends_index')
 
 
 @login_required
