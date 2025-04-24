@@ -43,22 +43,19 @@ def add_to_listing():
 #         time.sleep(1)
 
 
-def detail(request, listing_id):
-    listing_id = get_object_or_404(Listing, id = listing_id)
-    return render(request, 'listing/detail.html', {
-        'listing' : listing_id
-    })
+def detail(request, pk):
+    listing_id = get_object_or_404(Listing, id = pk)
+    return render(request, 'marketplace/detail.html', {'listing': listing_id})
 
 @login_required
 def new(request):
     if request.method == 'POST':
         form = OnMarketplacePokemon(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             listing = form.save(commit=False)
             listing.seller = request.user.profile
             listing.save()
-            deleted_pokemon = listing.pokemon
-            Pokemon.delete(deleted_pokemon)
+            request.user.profile.collection.remove(listing.pokemon)
             print(f"Type of listing: {type(listing)}, Value of listing: {listing}")
             return redirect('detail', pk=listing.id)
         else:
