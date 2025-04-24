@@ -16,7 +16,7 @@ class OnMarketplacePokemon(forms.ModelForm):
         'price' : forms.TextInput(attrs={
             'class' : INPUT_CLASS
         }),
-        'status' : forms.CharField(attrs={
+        'status' : forms.TextInput(attrs={
             'class' : INPUT_CLASS
         }),
         'seller' : forms.HiddenInput(),
