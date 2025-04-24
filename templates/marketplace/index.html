@@ -10,7 +10,7 @@
         <div class="grid grid-cols-4 gap-3">
             {% for listing in listings %}
                 <div>
-                    <a href="{% url 'listing:pokemon' listing.pokemon %}">
+                    <a href="{% url 'listing:pokemon_detail' listing.pokemon %}">
                         <div class="text-center">
                         <div>
                             <p class="text-lg font-semibold">{{ listing.pokemon}}</p>                       
@@ -21,8 +21,8 @@
                             <p class="text-grey-500">Price: {{listing.price}} </p>
                             <p class="text-grey-500">Date Posted: {{listing.date_posted}}</p>
                             <p class="text-grey-500">Status: {{listing.status}}</p>
-                            <p class="text-grey-500">Seller: {{listing.seller}}</p>
-                            <p class="text-grey-500">Buyer: {{listing.buyer}}</p>
+                            <p class="text-grey-500">Seller: {{listing.seller.user}}</p>
+                            <p class="text-grey-500">Buyer: {{listing.buyer.user}}</p>
                         </div>
                     </a>
                 </div>

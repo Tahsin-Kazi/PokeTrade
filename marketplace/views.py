@@ -8,6 +8,7 @@ from random import randint
 from datetime import date
 from .models import Listing
 from .forms import OnMarketplacePokemon
+from collection.models import Pokemon
 from accounts.models import Profile
 
 @login_required(login_url='login')
@@ -18,46 +19,7 @@ def index(request):
     }
     return render(request, 'marketplace/index.html',context)
 
-@login_required
-def buyPokemon(request, listing_id):
-    listing = get_object_or_404(Listing, id=listing_id)
-    pokemon = listing.pokemon
-    user = request.user
-    profile = user.profile
-    if user.currency >= listing.price and listing.status == "Not Sold":
-        with transaction.atomic():
-            user.currency -= listing.price
-            user.save()
-            listing.status = "Sold"
-            listing.buyer = user
-            profile.collection.add(pokemon)
-            messages.success(request, f"You have purchased {pokemon.name} from {listing.seller}!")
-            return redirect('marketplace.index')
-    else:
-        messages.error(request, "You do not have enough")
-        return redirect('marketplace.index')
 
-@login_required
-def editPrice(request, listing_id):
-    listing = get_object_or_404(Listing, id=listing_id)
-    if listing.seller == request.user:
-        if request.method == 'POST':
-            try:
-                new_price = int(request.POST.get('price'))
-                if new_price >= 0:
-                    listing.price = new_price
-                    listing.save()
-                    messages.sussess(request, "Price updated")
-                    return redirect('marketplace.index')
-                else:
-                    messages.error(request, "This price is negative")
-            except ValueError:
-                messages.error(request, "Invalid proce. Please enter an non-negative integer")
-        return render(request, 'edit_price.html', {'listing': listing})
-    else:
-        messages.error(request, "You did not put this pokemon on the marketplace so you" \
-        "cannot edit its price")
-        return redirect('marketplace.index')
 
 def add_to_listing():
     random_dex = randint(1, 1025)
@@ -80,15 +42,10 @@ def run_scheduler():
         schedule.run_pending()
         time.sleep(1)
 
-def all_pokemon(request):
-    listings = Listing.pokemon.all()
-    return render(request, 'index.html', {'listings': listings})
 
 def detail(request, listing_id):
     listing_id = get_object_or_404(Listing, id = listing_id)
-
-
-    return render(request, 'item/detail.html', {
+    return render(request, 'listing/detail.html', {
         'listing' : listing_id
     })
 
@@ -96,13 +53,18 @@ def detail(request, listing_id):
 def new(request):
     if request.method == 'POST':
         form = OnMarketplacePokemon(request.POST)
-        Listing = form.save(commit=False)
-        Listing.save()
-        Profile.collection.remove(Listing.pokemon)
-        
-        return redirect('listing:detail', pk=listing.pokemon)
-                
-    
+        if form.is_valid:
+            listing = form.save(commit=False)
+            listing.seller = request.user.profile
+            listing.save()
+            deleted_pokemon = listing.pokemon
+            Pokemon.delete(deleted_pokemon)
+            print(f"Type of listing: {type(listing)}, Value of listing: {listing}")
+            return redirect('listing:detail', pk=listing.id)
+        else:
+            print(form.errors)
+            messages.error(request, "There is an error creating the listing")
+            return render(request, 'marketplace.form.html', {'form':form, 'title': 'New Listing'})
     form = OnMarketplacePokemon()
     return render(request, 'marketplace/form.html', {
         'form' : form,
