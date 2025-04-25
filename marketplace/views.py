@@ -14,10 +14,7 @@ from accounts.models import Profile
 @login_required(login_url='login')
 def index(request):
     listings = Listing.objects.all()
-    context = {
-        'listing' : listings
-    }
-    return render(request, 'marketplace/index.html',context)
+    return render(request, 'marketplace/index.html', {'marketplace':listings})
 
 
 
@@ -55,7 +52,7 @@ def add_to_listing():
 
 def detail(request, pk):
     listing_id = get_object_or_404(Listing, id = pk)
-    return render(request, 'listing/detail.html', {
+    return render(request, 'marketplace/detail.html', {
         'listing' : listing_id
     })
 
@@ -68,7 +65,7 @@ def new(request):
             listing = form.save(commit=False)
             listing.seller = request.user.profile
             listing.save()
-            listing.pokemon.delete()
+            request.user.profile.pokemon_collection.remove(listing.pokemon)
             print(f"Type of listing: {type(listing)}, Value of listing: {listing}")
             return redirect('detail', pk=listing.id)
         else:

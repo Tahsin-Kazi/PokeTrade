@@ -14,9 +14,9 @@ class OnMarketplacePokemon(forms.ModelForm):
             'status': forms.Select(attrs={'class': INPUT_CLASS}),  # Use Select for status since it's a choice field
         }
 
-    buyer = forms.ModelChoiceField(
+    seller = forms.ModelChoiceField(
         queryset=Profile.objects.all(),
         required=False,
         widget=forms.Select(attrs={'class': INPUT_CLASS}),
-        empty_label="Select Buyer"
+        empty_label="Select Seller"
     )
