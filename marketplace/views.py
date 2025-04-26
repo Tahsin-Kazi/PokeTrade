@@ -65,7 +65,7 @@ def new(request):
             listing = form.save(commit=False)
             listing.seller = request.user.profile
             listing.save()
-            request.user.profile.pokemon_collection.remove(listing.pokemon)
+            request.user.profile.collection.remove(listing.pokemon)
             print(f"Type of listing: {type(listing)}, Value of listing: {listing}")
             return redirect('detail', pk=listing.id)
         else:

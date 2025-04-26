@@ -11,12 +11,10 @@ class OnMarketplacePokemon(forms.ModelForm):
         widgets = {
             'pokemon': forms.Select(attrs={'class': INPUT_CLASS}),
             'price': forms.TextInput(attrs={'class': INPUT_CLASS}),
-            'status': forms.Select(attrs={'class': INPUT_CLASS}),  # Use Select for status since it's a choice field
+            'status': forms.Select(attrs={'class': INPUT_CLASS}),  
         }
-
-    seller = forms.ModelChoiceField(
-        queryset=Profile.objects.all(),
-        required=False,
-        widget=forms.Select(attrs={'class': INPUT_CLASS}),
-        empty_label="Select Seller"
-    )
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
