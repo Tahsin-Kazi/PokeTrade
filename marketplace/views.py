@@ -62,7 +62,7 @@ def new(request):
         'title' : 'New Listing'
     })
 
-def edit(request):
+def edit(request,pk):
     listing = get_object_or_404(Listing, pk=pk, seller=request.user.profile)
 
     form = EditPriceForm(request.POST or None, instance=listing)
