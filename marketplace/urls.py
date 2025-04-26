@@ -6,4 +6,5 @@ urlpatterns = [
     path('', views.index, name='marketplace.index'),
     path('new/', views.new, name='new'),
     path('listing/<int:pk>/', views.detail, name='detail'),
+    path('listing/<int:pk>/edit/', views.EditPriceForm, name='editPrice')
 ]

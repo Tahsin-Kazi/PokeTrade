@@ -7,7 +7,7 @@ import schedule
 from random import randint
 from datetime import date
 from .models import Listing
-from .forms import OnMarketplacePokemon
+from .forms import OnMarketplacePokemon, EditPriceForm
 from collection.models import Pokemon
 from accounts.models import Profile
 
@@ -15,7 +15,6 @@ from accounts.models import Profile
 def index(request):
     listings = Listing.objects.all()
     return render(request, 'marketplace/index.html', {'marketplace':listings})
-
 
 
 def add_to_listing():
@@ -32,22 +31,6 @@ def add_to_listing():
         )
     else:
         print(f"There is no pokemon with that dex number")
-#         Listing.objects.create(
-#             pokemon = random_pokemon,
-#             price = 200,
-#             date_posted = date.today(),
-#             status = "Not Sold",
-#             seller = "PokeTrade",
-#             buyer = None
-#         )
-#     else:
-#         print(f"There is no pokemon with that dex number")
-
-# def run_scheduler():
-#     #schedule.every(24).hours.do(add_to_listing)
-#     while True:
-#         #schedule.run_pending()
-#         time.sleep(1)
 
 
 def detail(request, pk):
@@ -64,6 +47,7 @@ def new(request):
         if form.is_valid():
             listing = form.save(commit=False)
             listing.seller = request.user.profile
+            listing.status = 'Not Sold'
             listing.save()
             request.user.profile.collection.remove(listing.pokemon)
             print(f"Type of listing: {type(listing)}, Value of listing: {listing}")
@@ -78,6 +62,23 @@ def new(request):
         'title' : 'New Listing'
     })
 
+def edit(request):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user.profile)
+
+    form = EditPriceForm(request.POST or None, instance=listing)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Listing price updated successfully!")
+            return redirect('detail', pk=listing.id)
+        else:
+            messages.error(request, "There was an error updating the price.")
+
+    return render(request, 'marketplace/form.html', {
+        'form': form,
+        'title': 'Edit Price'
+    })
     
 
 
