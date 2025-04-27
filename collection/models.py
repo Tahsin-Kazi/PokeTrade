@@ -7,7 +7,7 @@ import random
 class Pokemon(models.Model):
     name = models.CharField(max_length=100, blank=True)
     pokemon = models.CharField(max_length=100)
-    owner = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, default=1)
+    owner = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, default=1, blank=True, null=True)
     image = models.CharField(max_length=255, blank=True, null=True)
     date_collected = models.DateTimeField(auto_now_add=True)
     data = models.JSONField(default=dict)
@@ -60,3 +60,16 @@ class Pokemon(models.Model):
 
     def __str__(self):
         return f"{self.owner.user.username}'s {self.name}"
+
+class CollectedPokemon(models.Model):
+    owner = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=100, blank=True)
+    STATUS_CHOICES = [
+        ('available', 'Available'),
+        ('listed', 'Listed for Sale'),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='available')
+
+    def __str__(self):
+        return f"{self.owner.user.username}'s {self.nickname or self.pokemon.name} ({self.status})"

@@ -53,7 +53,6 @@ def index(request):
     return render(request, 'collection/index.html', context)
 
 def detail(request, id):
-    
     p = get_object_or_404(Pokemon, id=id)
 
     if request.method == 'POST':
@@ -65,17 +64,26 @@ def detail(request, id):
         else:
             messages.error(request, "Nickname is invalid!")
 
-    data = p.data
+    data = p.data or {}  # make sure it's a dict
     data['image'] = p.image
     data['nickname'] = p.name
-    data['total'] = sum(data['stats'].values())
+
+    stats = data.get('stats') or {}
+
+    expected_keys = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
+    for key in expected_keys:
+        stats.setdefault(key, 0)  # fill missing stats with 0
+
+    data['stats'] = stats  # <-- make sure 'stats' exists now in data
+    data['total'] = sum(stats.values())
     data['internal_id'] = p.id
-    
+
     data['types_with_colors'] = [
         {"type": t, "color": TYPE_COLORS.get(t, "bg-gray-200")} for t in data.get("types", [])
     ]
 
-    return render(request,'collection/details.html', {'data': data})
+    return render(request, 'collection/details.html', {'data': data})
+
 
 def add_pokemon(pokemon, profile):
     

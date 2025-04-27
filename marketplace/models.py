@@ -1,33 +1,21 @@
 from django.contrib.auth.models import User
 from django.db import models
 from datetime import date
+from collection.models import Pokemon
 
 class Listing(models.Model):
-    pokemon = models.ForeignKey("collection.Pokemon", on_delete=models.CASCADE, default=1) 
+    STATUS_OPTIONS = [
+        ('not_sold', 'Not Sold'),
+        ('sold', 'Sold'),
+    ]
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, default=None) 
     price = models.PositiveBigIntegerField()
-    date_posted = models.DateField(auto_now=True)
-    status = models.CharField(max_length = 100)
+    date_posted = models.DateField(auto_now_add=True)
+    status = models.CharField(max_length = 10, choices=STATUS_OPTIONS, default='not_sold')
     seller = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="seller_listing")
-    buyer = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="buyer_listing")
+    buyer = models.ForeignKey("accounts.profile", on_delete=models.CASCADE, related_name="buyer_listing", null=True, blank=True)
+    def __str__(self):
+        return str(self.pokemon)
 
-    def post_Pokemon(pokemon, collection):
-        if(Profile.contains(pokemon)):
-            Collection.remove(pokemon)
-            Listing.Pokemon.price == int(input('Price: '))
-            Listing.date_posted = date.today()
-            Listing.status = 'Not Sold'
-            Listing.seller = User
-            Listing.buyer = null
-
-            Listing.append(pokemon)
-
-    def post_Pokemon(Pokemon, Collection):
-        if(Profile.contains(Pokemon)):
-            Collection.remove(Pokemon)
-            Listing.Pokemon.price == int(input('Price: '))
-            Listing.date_posted = date.today()
-            Listing.status = 'Not Sold'
-            Listing.seller = User
-            Listing.buyer = null
-
-            Listing.append(Pokemon)
+    
+   
