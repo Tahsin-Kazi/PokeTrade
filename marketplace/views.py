@@ -18,23 +18,8 @@ def index(request):
     return render(request, 'marketplace/index.html', {'marketplace':listings})
 
 
-def add_to_listing():
-    random_dex = randint(1, 1025)  
-    random_pokemon = fetch_pokemon(random_dex)  
-    if random_pokemon:
-        Listing.objects.create(
-            pokemon=random_pokemon,  
-            price=200,  
-            date_posted=date.today(),  
-            status="Not Sold",  
-            seller="PokeTrade",  
-            buyer=None  
-        )
-        print(f"Added {random_pokemon.name} to the marketplace")
-    else:
-        print("There is no Pokémon with that Dex number")
 
-def add_starters(profile):
+def add_to_marketplace(profile):
     x, y, z = randint(1, 1025), randint(1, 1025), randint(1, 1025)
     x, y, z = fetch_pokemon(x), fetch_pokemon(y), fetch_pokemon(z)
 
@@ -97,37 +82,36 @@ def new(request):
     user = request.user
     profile = user.profile
 
-    # Get all Pokémon in the user's collection
-    pokemon_choices = profile.collection.all()
-
     if request.method == 'POST':
         pokemon_id = request.POST.get('pokemon')
         price = request.POST.get('price')
-
-        # Ensure the Pokémon exists in the collection and the price is valid
-        pokemon = profile.collection.filter(id=pokemon_id).first()
+        try:
+            # Try to get the Pokémon from the user's own collection only
+            pokemon = profile.collection.get(id=pokemon_id)
+        except Pokemon.DoesNotExist:
+            pokemon = None
 
         if not pokemon:
             messages.error(request, "You can only list Pokémon that belong to you.")
         elif not price.isdigit() or int(price) <= 0:
             messages.error(request, "The price must be a positive number.")
         else:
-            # Create the listing
             Listing.objects.create(
                 pokemon=pokemon,
                 price=int(price),
                 seller=profile,
                 status="Not Sold"
             )
-            # Add success message and redirect
+            request.user.profile.collection.remove(pokemon)
             messages.success(request, f'{pokemon.name} listed successfully!')
             return redirect('marketplace.index')
 
+    # FETCH collection after all processing!
+    pokemon_choices = profile.collection.all()
     return render(request, 'marketplace/form.html', {
         'title': 'New Listing',
         'pokemon_choices': pokemon_choices
     })
-
 
 
 
@@ -160,7 +144,7 @@ def buyPokemon(request, pk):
     user = request.user
     profile = user.profile
     
-    if profile.currency >= listing.price and listing.status == "Not Sold":
+    if profile.currency >= listing.price:
         with transaction.atomic():
             pokemon = listing.pokemon
 
@@ -180,4 +164,5 @@ def buyPokemon(request, pk):
         messages.error(request, "You do not have enough currency or the Pokémon has already been sold.")
         return redirect('marketplace.index')
     
+
 
