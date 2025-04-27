@@ -60,3 +60,16 @@ class Pokemon(models.Model):
 
     def __str__(self):
         return f"{self.owner.user.username}'s {self.name}"
+
+class CollectedPokemon(models.Model):
+    owner = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE)
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=100, blank=True)
+    STATUS_CHOICES = [
+        ('available', 'Available'),
+        ('listed', 'Listed for Sale'),
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='available')
+
+    def __str__(self):
+        return f"{self.owner.user.username}'s {self.nickname or self.pokemon.name} ({self.status})"
