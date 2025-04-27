@@ -29,10 +29,10 @@ class Profile(models.Model):
     def get_friends(self):
         return self.friends.all()
 
-#
-class User(AbstractUser):
-    friends = models.ManyToManyField("User", blank=True)
-#
+###
+# class User(AbstractUser):
+#     friends = models.ManyToManyField("User", blank=True)
+###
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)

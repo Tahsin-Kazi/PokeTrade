@@ -26,7 +26,7 @@ class ProfileAdmin(admin.ModelAdmin):
     
 @admin.register(FriendRequest)
 class FriendRequestAdmin(admin.ModelAdmin):
-    list_display = ('from_user', 'to_user', 'status', 'created_at')
+    list_display = ('from_user', 'to_user', 'status', )
     search_fields = ('from_user__username', 'to_user__username')
     ordering = ('-created_at',)
     list_per_page = 30

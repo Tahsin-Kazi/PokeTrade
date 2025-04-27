@@ -38,6 +38,7 @@
             <ul class="absolute right-0 left-auto top-full mt-2 bg-accent rounded-box p-2 min-w-[8rem] shadow z-50">
               {% if user.is_authenticated %}
                 <li><a href="{% url 'friends_index' %}">Friends</a></li>
+                <li><a href="{% url 'marketplace.index' %}">Marketplace</a></li>
                 <li><a href="{% url 'trades.index' %}">Trades</a></li>
                 <li><a href="{% url 'collection.index' %}">Collection</a></li>
                 <li>
@@ -62,6 +63,7 @@
 			<ul class="menu menu-horizontal px-1 hidden sm:flex">
         {% if user.is_authenticated %}
           <li><a href="{% url 'friends_index' %}">Friends</a></li>
+          <li><a href="{% url 'marketplace.index' %}">Marketplace</a></li>
           <li><a href="{% url 'trades.index' %}">Trades</a></li>
           <li><a href="{% url 'collection.index' %}">Collection</a></li>
           <li>
