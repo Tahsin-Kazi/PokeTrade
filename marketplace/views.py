@@ -92,6 +92,7 @@ def detail(request, pk):
     })
 
 
+@login_required
 def new(request):
     user = request.user
     profile = user.profile
@@ -106,24 +107,27 @@ def new(request):
         # Ensure the Pokémon exists in the collection and the price is valid
         pokemon = profile.collection.filter(id=pokemon_id).first()
 
-        if pokemon and price.isdigit():
+        if not pokemon:
+            messages.error(request, "You can only list Pokémon that belong to you.")
+        elif not price.isdigit() or int(price) <= 0:
+            messages.error(request, "The price must be a positive number.")
+        else:
             # Create the listing
             Listing.objects.create(
                 pokemon=pokemon,
-                price=price,
+                price=int(price),
                 seller=profile,
                 status="Not Sold"
             )
             # Add success message and redirect
             messages.success(request, f'{pokemon.name} listed successfully!')
             return redirect('marketplace.index')
-        else:
-            messages.error(request, "There was an issue with your listing.")
 
     return render(request, 'marketplace/form.html', {
         'title': 'New Listing',
         'pokemon_choices': pokemon_choices
     })
+
 
 
 
