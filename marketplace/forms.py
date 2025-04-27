@@ -16,6 +16,8 @@ class OnMarketplacePokemon(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        if user:
+            self.fields['pokemon'].queryset = user.collection.pokemon_set.all()
 
 class EditPriceForm(forms.ModelForm):
     class Meta:

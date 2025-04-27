@@ -11,7 +11,7 @@
             <p class="text-lg text-gray-700"><strong class="font-semibold">User Email:</strong> {{ user.email }}</p>
             <p class="text-lg text-gray-700"><strong class="font-semibold">Joined On:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
             <p class="text-lg text-gray-700"><strong class="font-semibold">Last Login:</strong> {{ user.last_login|date:"F j, Y, g:i a" }}</p>
-            <p class="text-lg text-gray-700"><strong class="font-semibold">Account Funds:</strong> 14 BILLION RIGHT NOW???</p>
+            <p class="text-lg text-gray-700"><strong class="font-semibold">Account Funds:</strong> {{ request.user.profile.currency}}</p>
         </div>
         <div class="mt-6 text-center">
             <a href="{% url 'logout' %}" class="btn btn-error btn-soft rounded-full">Logout</a>

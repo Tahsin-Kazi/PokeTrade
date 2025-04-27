@@ -3,7 +3,6 @@ from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import time
-import schedule
 from random import randint
 from datetime import date
 from .models import Listing
@@ -49,8 +48,10 @@ def new(request):
             listing.seller = request.user.profile
             listing.status = 'Not Sold'
             listing.save()
-            request.user.profile.collection.remove(listing.pokemon)
-            print(f"Type of listing: {type(listing)}, Value of listing: {listing}")
+            deleted_pokemon = listing.pokemon
+            request.user.profile.collection.remove(deleted_pokemon)
+            request.user.profile.save()
+            print(f"Removed {listing.pokemon} from {request.user.profile}'s collection")
             return redirect('detail', pk=listing.id)
         else:
             print(form.errors)
@@ -62,23 +63,52 @@ def new(request):
         'title' : 'New Listing'
     })
 
+@login_required
 def edit(request,pk):
     listing = get_object_or_404(Listing, pk=pk, seller=request.user.profile)
 
     form = EditPriceForm(request.POST or None, instance=listing)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and listing.seller == request.user:
         if form.is_valid():
             form.save()
             messages.success(request, "Listing price updated successfully!")
             return redirect('detail', pk=listing.id)
         else:
             messages.error(request, "There was an error updating the price.")
+    else:
+        messages.error(request, "You are not not the pokemon's seller")
+        return redirect('marketplace.index')
 
     return render(request, 'marketplace/form.html', {
         'form': form,
         'title': 'Edit Price'
     })
+
+@login_required
+def buyPokemon(request, pk):
+    listing = get_object_or_404(Listing, id=pk)
+    user = request.user
+    profile = user.profile
+    
+    if profile.currency >= listing.price and listing.status == "Not Sold":
+        with transaction.atomic():
+            pokemon = listing.pokemon
+
+            profile.currency -= listing.price
+            profile.save()
+
+            request.user.profile.collection.add(pokemon)
+            request.user.profile.save()
+
+            listing.delete()
+
+            messages.success(request, f"You have purchased {pokemon.name} from {listing.seller}!")
+            return redirect('marketplace.index')
+    else:
+        # Error message if the user cannot afford the Pokémon or the listing is sold
+        messages.error(request, "You do not have enough currency or the Pokémon has already been sold.")
+        return redirect('marketplace.index')
     
 
 
