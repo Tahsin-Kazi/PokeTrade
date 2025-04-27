@@ -1,10 +1,12 @@
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.utils.text import capfirst
 from .models import *
+from poketrade.settings import GENAI_API_KEY
 from random import randint
+from google import genai
+from PIL import Image
+from io import BytesIO
 
 TYPE_COLORS = {
     "Normal": "bg-gray-400",
@@ -33,16 +35,18 @@ def index(request):
     collection = user.profile.collection.all()
     
     query = request.GET.get('q', '')
+    sort = request.GET.get('sort', 'name')
     search_field = request.GET.get('search_field', 'name')
-    
+
     if not user.is_authenticated:
         return redirect('login')
 
     if query:
         filter_kwargs = {f"{search_field}__icontains": query}
-        collection = Pokemon.objects.filter(owner=user.profile, **filter_kwargs)
-    else:
-        collection = Pokemon.objects.filter(owner=user.profile)
+        collection = user.profile.collection.filter(**filter_kwargs)
+
+    if sort:
+        collection = collection.order_by("-favorite", sort)
 
     context = {
         'user': user,
@@ -56,26 +60,26 @@ def detail(request, id):
     p = get_object_or_404(Pokemon, id=id)
 
     if request.method == 'POST':
-        new_name = request.POST.get('name', '').strip()
-        if new_name:
-            p.name = new_name
+        if "submit_nickname" in request.POST:
+            new_name = request.POST.get('name', '').strip()
+            if new_name:
+                p.name = new_name
+                p.save()
+                messages.success(request, "Nickname updated successfully!")
+            else:
+                messages.error(request, "Nickname is invalid!")
+        elif "submit_favorite" in request.POST:
+            if p.favorite:
+                p.favorite = False
+            else:
+                p.favorite = True
             p.save()
-            messages.success(request, "Nickname updated successfully!")
-        else:
-            messages.error(request, "Nickname is invalid!")
 
-    data = p.data or {}  # make sure it's a dict
+    data = p.data
+    data['favorite'] = p.favorite
     data['image'] = p.image
     data['nickname'] = p.name
-
-    stats = data.get('stats') or {}
-
-    expected_keys = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
-    for key in expected_keys:
-        stats.setdefault(key, 0)  # fill missing stats with 0
-
-    data['stats'] = stats  # <-- make sure 'stats' exists now in data
-    data['total'] = sum(stats.values())
+    data['total'] = sum(data["stats"].values())
     data['internal_id'] = p.id
 
     data['types_with_colors'] = [
@@ -85,8 +89,87 @@ def detail(request, id):
     return render(request, 'collection/details.html', {'data': data})
 
 
+def get_custom_image(username, pokemon, prompt):
+    client = genai.Client(api_key=GENAI_API_KEY)
+
+    contents = ('Hi, can you generate a 2D, clipart, cartoony, '
+                'transparent background, no shadows, no border, '
+                'no margin, no padding, with a thin black outline,'
+                'Pokemon game style, square image of a Pokemon'
+                'that is a') + prompt
+
+    response = client.models.generate_content(
+        model="gemini-2.0-flash-exp-image-generation",
+        contents=contents,
+        config=genai.types.GenerateContentConfig(
+            response_modalities=['TEXT', 'IMAGE']
+        )
+    )
+
+    part = response.candidates[0].content.parts[0]
+    if part.text is not None:
+        print(part.text)
+    elif part.inline_data is not None:
+        image = Image.open(BytesIO(part.inline_data.data))
+        path = "static/custom/" + username.strip().lower() + '_' + pokemon.strip().lower() + '.png'
+        image.save(path)
+        path = "/" + path
+        return path
+    else:
+        return ''
+
+
+def create_pokemon(request):
+    if request.method == 'POST':
+        if 'confirm' in request.POST and request.user.profile.currency >= 100:
+            user = request.user
+            name = request.POST.get("name")
+            pokemon = request.POST.get("pokemon")
+            prompt = request.POST.get("prompt")
+            types = request.POST.getlist("types")
+
+            data = {
+                "id": "X",
+                "name": pokemon,
+                "ability" : "None",
+                "height": round(random.uniform(0.1, 14.5), 1),
+                "weight": round(random.uniform(0.1, 200.0), 1),
+                "types": types,
+                "stats": {
+                    "hp": random.randint(30, 120),
+                    "attack": random.randint(30, 120),
+                    "defense": random.randint(30, 120),
+                    "specialattack": random.randint(30, 120),
+                    "specialdefense": random.randint(30, 120),
+                    "speed": random.randint(30, 120)
+                },
+                "image_prompt": prompt,
+            }
+
+            pokemon = Pokemon(
+                owner=user.profile,
+                name=name,
+                pokemon=pokemon,
+                image=get_custom_image(request.user.username, pokemon, prompt),
+                data=data
+            )
+
+            pokemon.save()
+            user.profile.collection.add(pokemon)
+            user.profile.currency -= 100
+            user.profile.save()
+            return redirect('collection.detail', id=pokemon.id)
+        else:
+            messages.error(request, "Cannot create a Pokemon, you need to have 1000 PokeDollars and confirm!")
+            return redirect('collection.create')
+
+    context = {
+        'types' : [(t, TYPE_COLORS[t]) for t in TYPE_COLORS.keys()],
+    }
+
+    return render(request, 'collection/create.html', context=context)
+
 def add_pokemon(pokemon, profile):
-    
     name = pokemon.name
     p = Pokemon(
         pokemon = name,
@@ -102,10 +185,3 @@ def add_starters(profile):
     add_pokemon(x, profile)
     add_pokemon(y, profile)
     add_pokemon(z, profile)
-
-def database_filler(i):
-    profile = User.objects.all()[i].profile
-    names = {1 : "Ahad", 2 : "Kazi", 3 : "Matthew", 4 : "Jason"}
-    pokemons = {1 : "pikachu", 2 : "ditto", 3 : "clefairy", 4 : "bulbasaur", 5 : "charizard"}
-    for x in range(3):
-        add_pokemon(names[randint(1, 4)], pokemons[randint(1, 5)], profile)

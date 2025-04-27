@@ -8,19 +8,30 @@
     
     <div class="flex justify-between">
 
-        <button class="btn btn-accent rounded-md"><a href="{% url 'collection.index' %}" class="flex items-center gap-1">
+        <a href="{% url 'collection.index' %}" class="flex items-center gap-1 btn btn-accent rounded-md mr-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
             </svg>
             Back
-        </a></btn>
+        </a>
 
-        <button id="edit-name-btn" class="btn btn-accent rounded-md">Edit Nickname</button>
+        <div class="flex gap-2">
+            <form id="favorite" method="POST" action="{% url 'collection.detail' data.internal_id %}">
+                {% csrf_token %}
+                {% if not data.favorite %}
+                <button type="submit" name="submit_favorite" class="btn btn-accent rounded-md">Add to Favorites</button>
+                {% else %}
+                <button type="submit" name="submit_favorite" class="btn btn-accent rounded-md">Remove from Favorites</button>
+                {% endif %}
+            </form>
+
+            <button id="edit-name-btn" class="btn btn-accent rounded-md">Edit Nickname</button>
+        </div>
 
         <form class="flex items-center gap-2 hidden" id="edit-name" method="POST" action="{% url 'collection.detail' data.internal_id %}">
             {% csrf_token %}
             <input type="text" name="name" value="{{ data.nickname }}" required class="input flex-grow" placeholder="New Nickname">
-            <button type="submit" class="btn btn-accent rounded-md ">Save</button>
+            <button type="submit" name="submit_nickname" class="btn btn-accent rounded-md">Save</button>
             <button type="button" id="cancel-edit" class="btn btn-accent rounded-md">Cancel</button>
         </form>
 
@@ -31,14 +42,12 @@
             <img src="{{ data.image }}" alt="{{data.name}}" class="w-full object-cover">
         </div>
         <div class="sm:col-start-3">
-            <h1 class="text-5xl font-semibold mb-4">{{ data.nickname }}
-                
-
-
-            </h1>
+            <p class="text-5xl font-semibold mb-4 truncate">{{ data.nickname }}</p>
             <ul class="gap-4 space-y-4 text-2xl">
-                <h1 class=""><span class="text-gray-500">Species:</span> {{ data.name }}</h1>
-                <h1 class=""><span class="text-gray-500">Pokedex Number:</span> {{ data.id }}</h1>
+                <p class=""><span class="text-gray-500">Species:</span> {{ data.name }}</p>
+                {% if data.id != "X" %}
+                    <h1 class=""><span class="text-gray-500">Pokedex Number:</span> {{ data.id }}</h1>
+                {% endif %}
                 <h1 class="">
                     <span class="text-gray-500">Type:</span>
                     {% for type in data.types_with_colors %}
@@ -48,9 +57,6 @@
                 <h1 class=""><span class="text-gray-500">Ability:</span> {{ data.ability }}</h1>
                 <h1 class=""><span class="text-gray-500">Height:</span> {{ data.height }} m</h1>
                 <h1 class=""><span class="text-gray-500">Weight:</span> {{ data.weight }} kg</h1>
-
-
-
             </ul>
         </div>
         <div class="sm:col-start-4">
@@ -72,12 +78,14 @@
 <script>
     document.getElementById('edit-name-btn').addEventListener('click', function() {
         this.classList.add('hidden'); 
+        document.getElementById('favorite').classList.add('hidden');
         document.getElementById('edit-name').classList.remove('hidden'); 
     });
     
     document.getElementById('cancel-edit').addEventListener('click', function() {
         document.getElementById('edit-name').classList.add('hidden'); 
         document.getElementById('edit-name-btn').classList.remove('hidden');
+        document.getElementById('favorite').classList.remove('hidden'); 
     });
 </script>
 

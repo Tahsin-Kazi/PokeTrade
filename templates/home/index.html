@@ -7,15 +7,22 @@
 <div class="hero min-h-[calc(100vh-5rem)]">
   <div class="hero-content text-center">
     <div class="max-w-md">
+      <img src="{% static 'images/pokeball.png' %}" class="mx-auto size-44 align-middle mb-4">
       <h1 class="text-5xl font-bold">PokeTrade</h1>
       <p class="py-6">
         The best place to trade Pokemon!
       </p>
       {% if user.is_authenticated %}
+      <div class="flex flex-wrap justify-center gap-4 mt-4">
         <a href="{% url 'collection.index' %}"><button class="btn btn-accent rounded-full">Collection</button></a>
+        <a href="{% url 'trades.index' %}"><button class="btn btn-accent rounded-full">Trades</button></a>
+        <a href="{% url 'friends_index' %}"><button class="btn btn-accent rounded-full">Friends</button></a>
+      </div>
       {% else %}
-        <a href="{% url 'login' %}"><button class="btn btn-accent rounded-full mr-1">Login</button></a>
-        <a href="{% url 'register' %}"><button class="btn btn-info rounded-full ml-1">Register</button></a>
+      <div class="flex flex-wrap justify-center gap-4 mt-4">
+        <a href="{% url 'login' %}"><button class="btn btn-accent rounded-full">Login</button></a>
+        <a href="{% url 'register' %}"><button class="btn btn-info rounded-full">Register</button></a>
+      </div>
       {% endif %}
     </div>
   </div>

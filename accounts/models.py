@@ -18,23 +18,16 @@ class Profile(models.Model):
         return f"{self.user.username}"
 
     @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
+    def create_or_save_user_profile(sender, instance, created, **kwargs):
         if created:
             profile = Profile.objects.create(user=instance)
             add_starters(profile)
             profile.save()
-
-    @receiver(post_save, sender=User)
-    def save_user_profile(sender, instance, **kwargs):
-        try:
+        else:
             instance.profile.save()
-        except:
-            Profile.objects.create(user=instance)
 
-    def get_friends(user):
-        sent = FriendRequest.objects.filter(from_user=user, is_accepted=True).values_list('to_user', flat=True)
-        received = FriendRequest.objects.filter(to_user=user, is_accepted=True).values_list('from_user', flat=True)
-        return User.objects.filter(id__in=list(sent) + list(received))
+    def get_friends(self):
+        return self.friends.all()
 
 #
 class User(AbstractUser):
@@ -42,23 +35,49 @@ class User(AbstractUser):
 #
 
 class FriendRequest(models.Model):
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('accepted', 'Accepted'),
-        ('rejected', 'Rejected'),
-    ]
-
     from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
     to_user = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=10,
+        choices=[
+            ('pending', 'Pending'),
+            ('accepted', 'Accepted'),
+            ('rejected', 'Rejected'),
+        ],
+        default='pending'  # ✅ add this
+    )
 
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('from_user', 'to_user')  # Prevent duplicate requests
+    hidden_by_sender = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.from_user} -> {self.to_user}"
+        return f"{self.from_user} ➝ {self.to_user} [{self.status}]"
+    
+    class Meta:
+        verbose_name_plural = "Friend Requests"
 
 
+def send_friend_request(from_user, to_user):
+    if from_user != to_user and not FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
+        FriendRequest.objects.create(from_user=from_user, to_user=to_user)
+
+def accept_friend_request(request_id):
+    try:
+        request = FriendRequest.objects.get(id=request_id)
+        request.status = 'accepted'
+        request.save()
+
+        # Add each other as friends
+        request.from_user.profile.friends.add(request.to_user)
+        request.to_user.profile.friends.add(request.from_user)
+    except FriendRequest.DoesNotExist:
+        pass
+
+def reject_friend_request(request_id):
+    try:
+        request = FriendRequest.objects.get(id=request_id)
+        request.status = 'rejected'
+        request.save()
+    except FriendRequest.DoesNotExist:
+        pass
 

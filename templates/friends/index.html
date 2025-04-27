@@ -4,45 +4,116 @@
 
 {% block content %}
 <div class="p-5">
-    <div class="grid grid-cols-2">
-        <h1 class="text-3xl font-semibold">Friends:</h1>
 
-        <form method="GET" action="{% url 'friends_index' %}" class="grid grid-cols-3 sm:grid-cols-10 gap-2">
-            <input type="text" name="q" placeholder="Search for a friend..." class="input col-span-2 sm:col-span-3 sm:col-start-7" value="{{ request.GET.q }}">
-            <button type="submit" class="btn btn-accent rounded-lg sm:col-start-10">Search</button>
-        </form>
-    </div>
+    
 
-    {% if request.GET.q and friends.count != 0 %}
-    <div class="text-center mt-4">
-      <p class="text-lg font-normal">Showing results for "{{ request.GET.q }}"</p>
-    </div>
-    {% endif %}
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
-        {% for friend in friends %} 
-            <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                <div class="p-4 text-center">
-                    <h3 class="text-lg font-semibold text-gray-800">{{ friend.username }}</h3>
-                </div>
-            </div>
-        {% endfor %}
+    <!-- Friends List (Left Column) -->
+    <div class="lg:col-span-2">
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h1 class="text-3xl font-semibold">Friends:</h1>
+          <form method="GET" action="{% url 'friends_index' %}" class="flex gap-2">
+            <input type="text" name="q" placeholder="Search for a friend..." class="input" value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-accent rounded-lg">Search</button>
+          </form>
         </div>
-    </div>
+        {% if request.GET.q and friends.count != 0 %}
+        <div class="text-center mt-2">
+          <p class="text-lg font-normal">Showing results for "{{ request.GET.q }}"</p>
+        </div>
+        {% endif %}
 
-    {% if friends.count == 0 %}
-    <div class="flex justify-center items-center min-h-[calc(100vh-14rem)]">
-      <div class="grid place-content-center">
-        <h1 class="text-3xl font-semibold text-center">No friends found...</h1>
-        <img src="{% static 'images/empty.png' %}" alt="empty" class="mt-5 w-1/4 mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+          {% for friend in friends %}
+            <div class="card bg-white border border-gray-200 w-full shadow-md hover:shadow-lg transition-shadow duration-300">
+              <div class="card-body flex flex-col items-center gap-3">
+                <a href="{% url 'view_user_profile' friend.id %}" class="text-lg font-semibold text-gray-800 text-center truncate block hover:text-blue-600 transition-colors">
+                  {{ friend.username }}
+                </a>
+                <form method="POST" action="{% url 'remove_friend' friend.id %}" onsubmit="return confirm('Are you sure you want to remove {{ friend.username }} from your friends list?');">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-error btn-sm rounded-lg">
+                    Remove
+                  </button>
+                </form>
+              </div>
+            </div>
+          {% empty %}
+            <div class="col-span-full flex flex-col items-center justify-center min-h-[10rem]">
+              <h1 class="text-2xl font-semibold text-center">No friends found...</h1>
+              <img src="{% static 'images/empty.png' %}" alt="empty" class="mt-5 w-1/4 mx-auto">
+            </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
-  {% endif %}
 
-    <div class
+    <!-- Friend Management (Right Column) -->
+    <div>
+      <div class="bg-white shadow-xl rounded-3xl p-8 mb-8">
+        <div class="flex flex-col sm:flex-row sm:justify-between gap-4 mb-6">
+          <a href="{% url 'find_friends' %}" class="btn btn-outline btn-primary w-full sm:w-auto">Find Friends</a>
+          <a href="{% url 'incoming_requests' %}" class="btn btn-outline btn-warning w-full sm:w-auto">View Friend Requests</a>
+        </div>
 
+        <!-- Friend Requests Sent -->
+        <div class="mb-8">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Friend Requests Sent</h3>
+          <ul class="space-y-2">
+            {% for request in sent_requests %}
+              <li class="text-gray-700 flex justify-between items-center">
+                <span>
+                  To: <strong>{{ request.to_user.username }}</strong> — Status: <span class="capitalize">{{ request.get_status_display }}</span>
+                </span>
+                <span class="space-x-2">
+                  {% if request.status == 'pending' %}
+                    <form method="post" action="{% url 'cancel_friend_request' request.id %}" class="inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-outline btn-warning">Cancel</button>
+                    </form>
+                  {% else %}
+                    <form method="post" action="{% url 'delete_friend_request' request.id %}" class="inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-outline btn-error">Delete</button>
+                    </form>
+                  {% endif %}
+                </span>
+              </li>
+            {% empty %}
+              <li class="text-gray-500">You haven't sent any friend requests.</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Friend Requests Received -->
+        <div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Friend Requests Received</h3>
+          <ul class="space-y-2">
+            {% for request in received_requests %}
+              <li class="text-gray-700 flex justify-between items-center">
+                <span>
+                  From: <strong>{{ request.from_user.username }}</strong>
+                </span>
+                {% if request.status == 'pending' %}
+                  <span class="space-x-2">
+                    <a href="{% url 'accept_friend_request' request.id %}" class="btn btn-success btn-sm">Accept</a>
+                    <a href="{% url 'reject_friend_request' request.id %}" class="btn btn-danger btn-sm">Reject</a>
+                  </span>
+                {% else %}
+                  <span class="text-sm text-grey-500 italic">You have {{ request.status }} this request.</span>
+                {% endif %}
+              </li>
+            {% empty %}
+              <li class="text-gray-500">No incoming friend requests.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+{% endblock content %}
 
-{% endblock content%}
 
-{#Edit this template to display all current users for the website#}

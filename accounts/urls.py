@@ -11,17 +11,25 @@ urlpatterns = [
     path("login/", views.user_login, name="login"),
     path("logout/", views.user_logout, name="logout"),
     path("profile/", views.profile, name="profile"),
-    path("friends/", views.friends_index, name ='friends_index'),
-    # path('send_request/<int:user_id>/', views.send_friend_request, name='send_friend_request'),
-    # path('accept_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
+    path('friends/', views.friends_index, name='friends_index'),
+    path('send_request/<int:user_id>/', views.send_friend_request_view, name='send_friend_request'),
+    path('accept_request/<int:request_id>/', views.accept_friend_request, name='accept_friend_request'),
+    path('reject_request/<int:request_id>/', views.reject_friend_request, name='reject_friend_request'),
+    path("user/<int:user_id>/", views.view_user_profile, name="view_user_profile"),
+    path("find_friends/", views.find_friends, name="find_friends"),
+    path("incoming_requests/", views.incoming_requests, name="incoming_requests"),
+    path("leaderboard/", views.leaderboard, name="leaderboard"),
+    path("profile/<int:user_id>/", views.view_user_profile, name="view_user_profile"),
+    path('delete_request/<int:request_id>/', views.delete_friend_request, name='delete_friend_request'),
 
-    #
-    path('send_friend_request/<int:userID>/', send_friend_request, name='send friend request'),
-    path('accept_friend_request/<int:requestID>/', accept_friend_request, name='accept friend request'),
-    #
+    # path('delete_friend_request/<int:request_id>/', delete_friend_request, name='delete_friend_request')
 
-
-
+    path('friend-request/<int:request_id>/cancel/', views.cancel_friend_request, name='cancel_friend_request'),
+    path("profile/<int:user_id>/", views.view_user_profile, name="view_user_profile"),
+    path('delete_request/<int:request_id>/', views.delete_friend_request, name='delete_friend_request'),
+    path('friend-request/<int:request_id>/cancel/', views.cancel_friend_request, name='cancel_friend_request'),
+    path('friend-request/<int:request_id>/delete/', views.delete_friend_request, name='delete_friend_request'),
+    path('friends/remove/<int:user_id>/', views.remove_friend, name='remove_friend'),
 
     path(
         "password-reset/",

@@ -4,7 +4,7 @@ class Trade(models.Model):
 
     status_choices = [
         ('pending', 'Pending'),
-        ('Accepted', 'Accepted'),
+        ('accepted', 'Accepted'),
     ]
 
     sender = models.ForeignKey("accounts.Profile", on_delete=models.CASCADE, related_name="sender_trade")

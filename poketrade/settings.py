@@ -153,3 +153,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Tailwind CSS settings
 TAILWIND_APP_NAME = 'theme'
 NPM_BIN_PATH = which('npm')
+
+GENAI_API_KEY = "AIzaSyCOwxs9CI-63CeMUAlsxZHuPTmqQYEeEVM"

@@ -1,19 +1,18 @@
 from django.db import models
-from pokebase import pokemon as fetch_pokemon  # Import the pokebase library
-import os
-from django.conf import settings
+from pokebase import pokemon as fetch_pokemon
 import random
 
 class Pokemon(models.Model):
-    name = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=50, blank=True)
     pokemon = models.CharField(max_length=100)
     owner = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE, default=1, blank=True, null=True)
     image = models.CharField(max_length=255, blank=True, null=True)
     date_collected = models.DateTimeField(auto_now_add=True)
+    favorite = models.BooleanField(default=False)
     data = models.JSONField(default=dict)
 
     def save(self, *args, **kwargs):
-        if not self.pk or not self.image:
+        if not self.image:
             try:
                 poke_data = fetch_pokemon(self.pokemon.lower())  # Fetch Pokemon by name
                 
@@ -25,7 +24,7 @@ class Pokemon(models.Model):
                 
                 species_id = int(poke_data.species.url.split('/')[-2])
                 
-                excluded = ["ho-oh", "porygon-z", "jangmo-o", "hakomo-o", "kommo-o", "wo-chien", "chien-pao", "ting-lu", "chi-yu", "-mega", "-gmax", "-galar", "galarian", "-alola", "-paldea", "zygarde", "necrozma", "kyurem", "terapagos", "ogerpon", "gimmighoul", "palafin", "ursaluna", "calyrex", "zarude", "urshifu", "eternatus", "zacian", "zamazenta", "mimikyu", "silvally", "lycanroc", "minior", "oricorio", "wishiwashi", "toxtricity", "aegislash", "vivillon", "greninja", "tornadus", "thundurus", "landorus", "deoxys", "castform", "sawsbuck", "flabebe", "florges", "keldeo", "dialga", "palkia", "giratina", "darmanitan", "basculin", "shaymin", "rotom", "kyogre", "groudon", "unown", "pikachu"]
+                excluded = ["ho-oh", "porygon-z", "jangmo-o", "hakamo-o", "kommo-o", "wo-chien", "chien-pao", "ting-lu", "chi-yu", "-mega", "-gmax", "-galar", "galarian", "-alola", "-paldea", "zygarde", "necrozma", "kyurem", "terapagos", "ogerpon", "gimmighoul", "palafin", "ursaluna", "calyrex", "zarude", "urshifu", "eternatus", "zacian", "zamazenta", "mimikyu", "silvally", "lycanroc", "minior", "oricorio", "wishiwashi", "toxtricity", "aegislash", "vivillon", "greninja", "tornadus", "thundurus", "landorus", "deoxys", "castform", "sawsbuck", "flabebe", "florges", "keldeo", "dialga", "palkia", "giratina", "darmanitan", "basculin", "shaymin", "rotom", "kyogre", "groudon", "unown", "pikachu"]
                 
                 if any(exclusion in poke_data.name for exclusion in excluded):
                     name = poke_data.name.title()
@@ -53,7 +52,7 @@ class Pokemon(models.Model):
                 print(f"Error fetching data from PokeAPI: {e}")
                 self.data = {"error": "Could not fetch data from PokeAPI"}
 
-        super().save(*args, **kwargs)  # Call the parent class's save method
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Pokemon"
