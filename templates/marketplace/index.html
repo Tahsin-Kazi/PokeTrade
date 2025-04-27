@@ -5,7 +5,7 @@
 {% block content%}
     <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
         <h2 class="mb-12 text-2xl text-center">On Sale</h2>
-        <a href="{% url 'new' %}">Add to Listing</a>
+        <a href="{% url 'marketplace_new' %}">Add to Listing</a>
 
         <div class="grid grid-cols-4 gap-3">
             {% for listing in marketplace %}
