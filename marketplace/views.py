@@ -86,7 +86,6 @@ def new(request):
         pokemon_id = request.POST.get('pokemon')
         price = request.POST.get('price')
         try:
-            # Try to get the Pokémon from the user's own collection only
             pokemon = profile.collection.get(id=pokemon_id)
         except Pokemon.DoesNotExist:
             pokemon = None
@@ -106,7 +105,6 @@ def new(request):
             messages.success(request, f'{pokemon.name} listed successfully!')
             return redirect('marketplace.index')
 
-    # FETCH collection after all processing!
     pokemon_choices = profile.collection.all()
     return render(request, 'marketplace/form.html', {
         'title': 'New Listing',
@@ -137,6 +135,24 @@ def edit(request, pk):
         'title': 'Edit Price'
     })
 
+@login_required
+def deleteListing(request, pk):
+    listing = get_object_or_404(Listing, pk=pk, seller=request.user.profile)
+    user = request.user
+    profile = user.profile
+
+    if request.method == 'POST':
+        with transaction.atomic():
+            pokemon = listing.pokemon
+            profile.collection.add(pokemon)
+            pokemon.owner = profile
+            pokemon.save()
+            listing.delete()
+            messages.success(request, f"You have removed {pokemon.name} from the marketplace!")
+            return redirect('marketplace.index')
+    else:
+        return redirect('detail', pk=pk)
+
 
 @login_required
 def buyPokemon(request, pk):
@@ -150,6 +166,8 @@ def buyPokemon(request, pk):
 
             profile.currency -= listing.price
             profile.save()
+            listing.seller.currency += listing.price
+            listing.seller.save()
 
             profile.collection.add(pokemon)
             pokemon.owner = profile
@@ -164,5 +182,8 @@ def buyPokemon(request, pk):
         messages.error(request, "You do not have enough currency or the Pokémon has already been sold.")
         return redirect('marketplace.index')
     
+
+
+
 
 

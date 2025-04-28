@@ -26,9 +26,17 @@
                 </div>
                 <button type="submit" name="edit_price" class="py-2 px-4 text-lg bg-orange-500 hover:bg-orange-700 rounded-xl text-black">Update Price</button>
             </form>
+            <form method="POST" action="{% url 'delete_listing' listing.id %}">
+                {% csrf_token %}
+                <button type="submit" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-red-700">
+                    Delete Listing
+                </button>
+            </form>
         {% endif %}
 
-        <a href="{% url 'buy' listing.id %}" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-orange-500 text-black rounded-xl hover:bg-orange-700">Buy</a>
+        {% if listing.seller.user != request.user %}
+            <a href="{% url 'buy' listing.id %}" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-orange-500 text-black rounded-xl hover:bg-orange-700">Buy</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
