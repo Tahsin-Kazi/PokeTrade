@@ -8,4 +8,5 @@ urlpatterns = [
     path('listing/<int:pk>/', views.detail, name='detail'),
     path('marketplace/listing/<int:pk>/buy/', views.buyPokemon, name='buy'),
     path('listing/<int:pk>/edit/', views.edit, name='marketplace_edit_price'),
+    path('marketplace/listing/<int:pk>/delete', views.deleteListing, name='delete_listing')
 ]
