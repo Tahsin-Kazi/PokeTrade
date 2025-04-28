@@ -4,9 +4,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from collection.views import add_starters
 
-#
-from django.contrib.auth.models import AbstractUser
-#
+
+#from django.contrib.auth.models import AbstractUser
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
