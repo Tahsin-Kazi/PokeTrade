@@ -1,31 +1,47 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Marketplace{% endblock %}
 
-{% block content%}
-    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-        <h2 class="mb-12 text-2xl text-center">On Sale</h2>
-        <a href="{% url 'marketplace_new' %}" class="inline-block py-3 px-6 bg-orange-500 hover:bg-orange-700 text-black font-semibold rounded-xl">
-          Add to Listing
+{% block content %}
+
+<div class="p-5">
+
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+    <h2 class="text-3xl font-semibold">Marketplace</h2>
+    <a href="{% url 'marketplace_new' %}" class="btn btn-accent rounded-lg">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 mr-2 inline">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      Add Listing
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    {% for listing in marketplace %}
+      <div class="card bg-white border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col">
+        <a href="{% url 'detail' listing.id %}" class="block">
+          <figure class="p-4">
+            <img src="{{ listing.pokemon.image }}" alt="{{ listing.pokemon.name }}" class="w-full h-40 object-contain rounded-xl border border-gray-100 bg-gray-50" />
+          </figure>
+          <div class="card-body flex flex-col justify-between p-4">
+            <div>
+              <h2 class="text-xl font-semibold text-gray-800 truncate">{{ listing.pokemon.name }}</h2>
+              <p class="text-gray-500 text-sm truncate">Seller: {{ listing.seller.user }}</p>
+            </div>
+            <div class="mt-2 space-y-1">
+              <p class="text-lg font-bold text-accent">Price: ${{ listing.price }}</p>
+              <p class="text-gray-500 text-xs">Posted: {{ listing.date_posted|date:"M d, Y" }}</p>
+            </div>
+          </div>
         </a>
+      </div>
+    {% empty %}
+      <div class="col-span-full flex flex-col items-center justify-center min-h-[10rem]">
+        <h1 class="text-2xl font-semibold text-center">No listings found...</h1>
+        <img src="{% static 'images/empty.png' %}" alt="empty" class="mt-5 w-48 mx-auto">
+      </div>
+    {% endfor %}
+  </div>
 
-        <div class="grid grid-cols-4 gap-3">
-            {% for listing in marketplace %}
-                <div>
-                    <img src="{{ listing.pokemon.image }}" alt="{{ listing.pokemon.name }}" class="w-48 h-48 object-contain mb-4 rounded-xl border border-gray-300">
-                    <a href="{% url 'detail' listing.id %}">
-                        <div class="text-center">
-
-                        <div class="p-6 bg-white rounded-b-xl">
-                            <h2 class="text-2xl">{{listing.pokemon}}</h2>
-                            <p class="text-grey-500">Price: ${{listing.price}} </p>
-                            <p class="text-grey-500">Date Posted: {{listing.date_posted}}</p>
-                            <p class="text-grey-500">Status: {{listing.status}}</p>
-                            <p class="text-grey-500">Seller: {{listing.seller.user}}</p>
-                        </div>
-                    </a>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+</div>
 {% endblock %}

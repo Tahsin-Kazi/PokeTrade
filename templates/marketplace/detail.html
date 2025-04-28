@@ -1,42 +1,68 @@
 {% extends 'base.html'%}
 
-{% block title%}{{ listing.pokemon }}{%endblock%}
+{% block title %}{{ listing.pokemon.name }}{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-5 gap-6">
-    <div class="col-span-3">
-        <p class="text-lg font-semibold">Pokemon: {{ listing.pokemon.name }} </p>
+<div class="p-5">
+
+    <btn class="btn btn-accent rounded-md mr-2 mb-4"><a href="{% url 'collection.index' %}" class="flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        Back
+    </a></btn>
+
+  <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+
+    <!-- Left: Pokemon Image & Name -->
+    <div class="flex flex-col items-center bg-white rounded-3xl shadow-xl p-8">
+      <img src="{{ listing.pokemon.image }}" alt="{{ listing.pokemon.name }}" class="w-64 h-64 object-contain mb-6 rounded-xl border border-gray-200 bg-gray-50" />
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ listing.pokemon.name }}</h1>
+      <p class="text-gray-500 text-lg mb-1">Species: {{ listing.pokemon.data.name }}</p>
+      {% if listing.pokemon.data.id %}
+        <p class="text-gray-400 text-sm mb-1">Pokédex #{{ listing.pokemon.data.id }}</p>
+      {% endif %}
+      {% if listing.pokemon.data.types_with_colors %}
+      <div class="flex flex-wrap gap-2 mt-2">
+        {% for type in listing.pokemon.data.types_with_colors %}
+          <span class="px-2 py-1 rounded-md shadow-md text-white font-semibold {{ type.color }}">{{ type.type }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
     </div>
 
-    <div class="col-span-2 p-6 bg-gray-100 rounded-xl">
-        <img src="{{ listing.pokemon.image }}" alt="{{ listing.pokemon.name }}" class="w-48 h-48 object-contain mb-4 rounded-xl border border-gray-300">
-        <h1 class="mb-6 text-3xl">{{ listing.pokemon.name }}</h1>
-        <p class="text-gray-500"><strong>Price: ${{ listing.price }}</strong></p>
-        <p class="text-gray-500"><strong>Date Posted: {{ listing.date_posted }}</strong></p>
-        <p class="text-gray-500"><strong>Status: {{ listing.status }}</strong></p>
-        <p class="text-gray-500"><strong>Seller:</strong> {{ listing.seller.user.username }}</p>
+    <!-- Right: Listing Details & Actions -->
+    <div class="flex flex-col gap-6 bg-white rounded-3xl shadow-xl p-8">
+      <div>
+        <p class="text-lg font-semibold mb-2">Listing Details</p>
+        <ul class="space-y-1 text-gray-700">
+          <li><strong>Price:</strong> <span class="text-accent font-bold">${{ listing.price }}</span></li>
+          <li><strong>Date Posted:</strong> {{ listing.date_posted|date:"M d, Y" }}</li>
+          <li><strong>Seller:</strong> {{ listing.seller.user.username }}</li>
+        </ul>
+      </div>
 
-        {% if listing.seller.user == request.user %}
-            <h2 class="mt-4 text-xl">Edit Price</h2>
-            <form method="POST" action=".">
-                {% csrf_token %}
-                <div class="mb-4">
-                    <label for="price" class="block text-sm font-semibold">New Price</label>
-                    <input type="text" name="price" value="{{ listing.price }}" class="w-full px-4 py-2 border rounded-lg" placeholder="Enter new price" required>
-                </div>
-                <button type="submit" name="edit_price" class="py-2 px-4 text-lg bg-orange-500 hover:bg-orange-700 rounded-xl text-black">Update Price</button>
-            </form>
-            <form method="POST" action="{% url 'delete_listing' listing.id %}">
-                {% csrf_token %}
-                <button type="submit" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-red-700">
-                    Delete Listing
-                </button>
-            </form>
-        {% endif %}
-
-        {% if listing.seller.user != request.user %}
-            <a href="{% url 'buy' listing.id %}" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-orange-500 text-black rounded-xl hover:bg-orange-700">Buy</a>
-        {% endif %}
+      {% if listing.seller.user == request.user %}
+        <div>
+          <h2 class="text-xl font-semibold mb-2">Edit Price</h2>
+          <form method="POST" action=".">
+            {% csrf_token %}
+            <div class="mb-4">
+              <label for="price" class="block text-sm font-semibold mb-1">New Price</label>
+              <input type="text" name="price" value="{{ listing.price }}" class="w-full px-4 py-2 border rounded-lg" placeholder="Enter new price" required>
+            </div>
+            <button type="submit" name="edit_price" class="btn btn-accent w-full mb-2">Update Price</button>
+          </form>
+          <form method="POST" action="{% url 'delete_listing' listing.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-error w-full">Delete Listing</button>
+          </form>
+        </div>
+      {% else %}
+        <a href="{% url 'buy' listing.id %}" class="btn btn-accent w-full text-lg font-semibold">Buy</a>
+      {% endif %}
     </div>
+  </div>
+
 </div>
 {% endblock %}

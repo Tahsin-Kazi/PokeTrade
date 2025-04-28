@@ -5,33 +5,37 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="mb-6 text-3xl">{{ title }}</h1>
+<div class="p-5 flex justify-center">
+  <div class="bg-white shadow-xl rounded-3xl p-8 w-full max-w-lg">
+    <h1 class="mb-6 text-3xl font-bold text-center">{{ title }}</h1>
 
     <form method="post" action=".">
-        {% csrf_token %}
-        
-        <div>
-            <label for="pokemon">Select Pokémon</label>
-            <select name="pokemon" id="pokemon" class="w-full py-6 px-6 rounded-xl border">
-                {% for pokemon in pokemon_choices %}
-                    <option value="{{ pokemon.id }}">{{ pokemon.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        
-        <div>
-            <label for="price">Price</label>
-            <input type="text" name="price" id="price" class="w-full py-6 px-6 rounded-xl border" />
-        </div>
+      {% csrf_token %}
 
-        {% if messages %}
-            <div class="mb-6 text-red-500">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+      <div class="mb-6">
+        <label for="pokemon" class="block mb-2 font-semibold">Select Pokémon</label>
+        <select name="pokemon" id="pokemon" class="w-full py-3 px-4 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent">
+          {% for pokemon in pokemon_choices %}
+            <option value="{{ pokemon.id }}">{{ pokemon.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-        <button type="submit" class="py-4 px-8 text-lg bg-orange-500 hover:bg-orange-700 rounded-xl text-black">Submit</button>
+      <div class="mb-6">
+        <label for="price" class="block mb-2 font-semibold">Price</label>
+        <input type="text" name="price" id="price" class="w-full py-3 px-4 rounded-lg border focus:outline-none focus:ring-2 focus:ring-accent" placeholder="Enter price" />
+      </div>
+
+      {% if messages %}
+        <div class="mb-6 text-red-500">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <button type="submit" class="w-full py-3 px-8 text-lg bg-orange-500 hover:bg-orange-600 rounded-lg text-white font-semibold transition">Submit</button>
     </form>
+  </div>
+</div>
 {% endblock %}

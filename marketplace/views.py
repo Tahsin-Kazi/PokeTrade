@@ -10,7 +10,26 @@ from collection.models import Pokemon
 from accounts.models import Profile
 from pokebase import pokemon as fetch_pokemon
 
-
+TYPE_COLORS = {
+    "Normal": "bg-gray-400",
+    "Fire": "bg-red-500",
+    "Water": "bg-blue-500",
+    "Electric": "bg-yellow-400",
+    "Grass": "bg-green-500",
+    "Ice": "bg-blue-300",
+    "Fighting": "bg-red-700",
+    "Poison": "bg-purple-500",
+    "Ground": "bg-yellow-600",
+    "Flying": "bg-blue-400",
+    "Psychic": "bg-pink-500",
+    "Bug": "bg-green-600",
+    "Rock": "bg-yellow-700",
+    "Ghost": "bg-purple-700",
+    "Dragon": "bg-indigo-500",
+    "Dark": "bg-gray-700",
+    "Steel": "bg-gray-500",
+    "Fairy": "bg-pink-300",
+}
 
 @login_required(login_url='login')
 def index(request):
@@ -58,6 +77,11 @@ def add_to_marketplace(profile):
 @login_required
 def detail(request, pk):
     listing = get_object_or_404(Listing, pk=pk)
+    
+    data = listing.pokemon.data
+    data['types_with_colors'] = [
+        {"type": t, "color": TYPE_COLORS.get(t, "bg-gray-200")} for t in data.get("types", [])
+    ]
 
     if request.method == 'POST' and 'edit_price' in request.POST:
         if listing.seller.user == request.user:
@@ -73,7 +97,7 @@ def detail(request, pk):
                 messages.error(request, "Price is required.")
             return redirect('detail', pk=listing.pk)  
     return render(request, 'marketplace/detail.html', {
-        'listing': listing
+        'listing': listing, 'data': data
     })
 
 
