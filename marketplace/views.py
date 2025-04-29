@@ -185,22 +185,33 @@ def buyPokemon(request, pk):
     profile = user.profile
     
     if profile.currency >= listing.price:
-        with transaction.atomic():
-            pokemon = listing.pokemon
+        if listing.status == 'Static':
+            with transaction.atomic():
+                pokemon = Pokemon.objects.create(pokemon=listing.pokemon.pokemon, owner=profile)
+                pokemon.save()
+                profile.currency -= listing.price
+                profile.collection.add(pokemon)
+                profile.save()
 
-            profile.currency -= listing.price
-            profile.save()
-            listing.seller.currency += listing.price
-            listing.seller.save()
+                messages.success(request, f"You have purchased {pokemon.name} from {listing.seller}!")
+                return redirect('marketplace.index')
+        else:
+            with transaction.atomic():
+                pokemon = listing.pokemon
 
-            profile.collection.add(pokemon)
-            pokemon.owner = profile
-            pokemon.save()
+                profile.currency -= listing.price
+                profile.save()
+                listing.seller.currency += listing.price
+                listing.seller.save()
 
-            listing.delete()
+                profile.collection.add(pokemon)
+                pokemon.owner = profile
+                pokemon.save()
 
-            messages.success(request, f"You have purchased {pokemon.name} from {listing.seller}!")
-            return redirect('marketplace.index')
+                listing.delete()
+
+                messages.success(request, f"You have purchased {pokemon.name} from {listing.seller}!")
+                return redirect('marketplace.index')
     else:
         # Error message if the user cannot afford the Pokémon or the listing is sold
         messages.error(request, "You do not have enough currency or the Pokémon has already been sold.")
